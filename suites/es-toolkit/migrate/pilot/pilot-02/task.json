@@ -1,0 +1,33 @@
+{
+  "id": "pilot-02",
+  "file": "src/settings.ts",
+  "inputRange": "applyPatch(base, patch): 둘 다 JSON으로 표현되는 객체이고 깊이는 4 이하이며 값은 문자열, 숫자, 불리언, null, 배열, 객체다. toTitle(key): key는 길이 0~40의 문자열이고 ASCII 영문자, 숫자, 공백, 하이픈, 밑줄, 마침표로 이루어진다. 대문자가 연속되거나 숫자가 글자 사이에 올 수 있다. preview(text): text는 길이 0~200의 문자열이다.",
+  "exports": [
+    {
+      "name": "applyPatch",
+      "examples": [
+        [
+          {
+            "theme": {
+              "dark": true,
+              "accent": "blue"
+            }
+          },
+          {
+            "theme": {
+              "accent": "red"
+            }
+          }
+        ]
+      ]
+    },
+    {
+      "name": "toTitle",
+      "examples": [["fontSize"], ["line-height"]]
+    },
+    {
+      "name": "preview",
+      "examples": [["The quick brown fox jumps over the lazy dog"], ["short"]]
+    }
+  ]
+}

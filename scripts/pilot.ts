@@ -2,7 +2,7 @@
  * 파일럿 실행. 본 과제가 아닌 과제로 실행기와 채점기를 끝까지 연결해 보고,
  * 1회 실행의 토큰·턴 수·시간을 측정한다.
  *
- * 사용: pnpm tsx scripts/pilot.ts <모델> <반복 횟수>
+ * 사용: pnpm tsx scripts/pilot.ts <모델> <반복 횟수> <과제 ID>
  */
 import {
   cpSync,
@@ -23,7 +23,7 @@ import { loadMigrateTask } from '../src/tasks/spec.js';
 
 const repoRoot = fileURLToPath(new URL('../', import.meta.url));
 const pilotDir = join(repoRoot, '.pilot');
-const taskDir = join(repoRoot, 'suites/es-toolkit/migrate/pilot/pilot-01');
+const taskDir = join(repoRoot, 'suites/es-toolkit/migrate/pilot', process.argv[4] ?? 'pilot-01');
 const model = process.argv[2] ?? 'haiku';
 const repeats = Number(process.argv[3] ?? '2');
 const EPSILON = 0.05;
@@ -127,7 +127,11 @@ for (let k = 1; k <= repeats; k++) {
         prompt: arm.prefix + taskSentence,
         timeoutMs: TIMEOUT_MS,
       });
-      writeFileSync(join(pilotDir, 'runs', `${arm.name}-${k}.jsonl`), run.stdout, 'utf8');
+      writeFileSync(
+        join(pilotDir, 'runs', `${task.id}-${arm.name}-${k}.jsonl`),
+        run.stdout,
+        'utf8',
+      );
       const transcript = parseTranscript(run.stdout);
       const submission = collectSubmission(workspace);
       const grade = await gradeMigrate(task, source, submission.code, repoRoot);

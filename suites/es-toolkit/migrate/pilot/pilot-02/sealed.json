@@ -1,0 +1,117 @@
+{
+  "slots": [
+    {
+      "name": "merge",
+      "original": "import merge from 'lodash/merge';",
+      "variants": {
+        "strict": "import { merge } from 'es-toolkit';",
+        "compat": "import { merge } from 'es-toolkit/compat';"
+      }
+    },
+    {
+      "name": "startCase",
+      "original": "import startCase from 'lodash/startCase';",
+      "variants": {
+        "strict": "import { startCase } from 'es-toolkit';",
+        "compat": "import { startCase } from 'es-toolkit/compat';"
+      }
+    },
+    {
+      "name": "truncate",
+      "original": "import truncate from 'lodash/truncate';",
+      "variants": {
+        "compat": "import { truncate } from 'es-toolkit/compat';"
+      }
+    }
+  ],
+  "hidden": {
+    "applyPatch": [
+      [{}, {}],
+      [
+        {
+          "a": 1
+        },
+        {
+          "b": {
+            "c": [1, 2]
+          }
+        }
+      ],
+      [
+        {
+          "list": [
+            {
+              "x": 1
+            },
+            {
+              "y": 2
+            }
+          ]
+        },
+        {
+          "list": [
+            {
+              "z": 3
+            }
+          ]
+        }
+      ],
+      [
+        {
+          "a": {
+            "b": {
+              "c": {
+                "d": 1
+              }
+            }
+          }
+        },
+        {
+          "a": {
+            "b": {
+              "c": {
+                "e": null
+              }
+            }
+          }
+        }
+      ],
+      [
+        {
+          "a": [1, 2, 3]
+        },
+        {
+          "a": [9]
+        }
+      ],
+      [
+        {
+          "a": "x",
+          "n": 0,
+          "t": true
+        },
+        {
+          "a": {
+            "deep": false
+          }
+        }
+      ]
+    ],
+    "toTitle": [
+      [""],
+      ["XMLHttpRequest"],
+      ["userID"],
+      ["MAX_WIDTH"],
+      ["foo.bar"],
+      ["a1B2c3"],
+      ["iOS15Device"],
+      ["already_snake"]
+    ],
+    "preview": [
+      [""],
+      ["exactly twenty-four char"],
+      ["exactly twenty-five chars"],
+      ["Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor"]
+    ]
+  }
+}

@@ -28,9 +28,32 @@ export interface BehaviourResult {
   readonly mismatches: readonly Mismatch[];
 }
 
+/**
+ * 인자를 깊이 복제한다. 함수는 복제할 수 없으므로 참조를 그대로 둔다.
+ * structuredClone은 함수를 만나면 예외를 내서 콜백을 받는 함수의 입력에 쓸 수 없다.
+ */
+function cloneValue(value: unknown): unknown {
+  if (typeof value === 'function') return value;
+  if (Array.isArray(value)) return value.map(cloneValue);
+  if (
+    typeof value === 'object' &&
+    value !== null &&
+    Object.getPrototypeOf(value) === Object.prototype
+  ) {
+    const out: Record<string, unknown> = {};
+    for (const [key, inner] of Object.entries(value)) out[key] = cloneValue(inner);
+    return out;
+  }
+  return structuredClone(value);
+}
+
+function cloneArgs(input: readonly unknown[]): unknown[] {
+  return input.map(cloneValue);
+}
+
 function run(fn: AnyFunction, input: readonly unknown[]): Outcome {
   // 두 구현이 같은 인자 객체를 공유하면 한쪽의 변경이 다른 쪽 결과를 오염시킨다.
-  const args = structuredClone(input) as unknown[];
+  const args = cloneArgs(input);
   try {
     const value = (fn as (...a: unknown[]) => unknown)(...args);
     return { threw: false, value, args };

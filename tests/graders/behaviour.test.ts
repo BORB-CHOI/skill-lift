@@ -40,6 +40,12 @@ describe('compareBehaviour', () => {
     expect(r.passed).toBe(true);
   });
 
+  it('콜백 함수가 들어 있는 입력도 실행한다', () => {
+    const apply = (xs: number[], f: (x: number) => number): number[] => xs.map(f);
+    const r = compareBehaviour(fn(apply), fn(apply), [[[1, 2], (x: number) => x * 2]]);
+    expect(r.passed).toBe(true);
+  });
+
   it('둘 다 예외를 내면 같은 동작으로 본다', () => {
     const boom = (): never => {
       throw new Error('a');
