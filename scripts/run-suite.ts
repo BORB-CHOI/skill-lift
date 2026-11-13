@@ -32,6 +32,7 @@ const PLAN_SEED = 20261113;
 const MAX_TURNS = 40;
 const TIMEOUT_MS = 10 * 60 * 1000;
 const MAX_ATTEMPTS = 3;
+const RETRY_DELAY_MS = 90_000;
 const TARGET_PREFIX = 'es-toolkit:';
 
 interface Arm {
@@ -145,6 +146,10 @@ async function runOne(spec: RunSpec): Promise<RunState | 'skipped'> {
     }
     // 인프라와 하네스의 실패만 다시 실행한다. 모델 쪽 결과(completed, limit)는 그대로 둔다.
     if (state !== 'infra' && state !== 'harness') break;
+    // 일시 차단(예: 인증 요청의 403)은 몇 분 이어진다. 바로 다시 시도하면 같은 구간에서 또 실패한다.
+    if (attempt < MAX_ATTEMPTS) {
+      await new Promise((resolve) => setTimeout(resolve, attempt * RETRY_DELAY_MS));
+    }
   }
   console.log(`${spec.runId}  ${state}`);
   return state;
