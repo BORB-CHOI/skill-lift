@@ -1,4 +1,4 @@
-# skill-route-eval
+# skill-lift
 
 LLM 에이전트에게 Agent Skill(`SKILL.md`)을 줬을 때 결과물이 실제로 나아지는지를 대조 실행과 통계 판정으로 측정하는 평가 도구다. 첫 평가 대상은 토스가 [es-toolkit](https://github.com/toss/es-toolkit)에 공식 배포한 Claude Code Skill `es-toolkit:migrate`(lodash 코드를 es-toolkit으로 옮기는 Skill)다.
 
