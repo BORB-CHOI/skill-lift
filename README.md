@@ -56,6 +56,26 @@ Skill을 만든 사람은 보통 Skill을 적용한 결과만 보고 "잘 된다
 
 따라서 이 결과는 "Skill이 효과가 없다"는 근거가 아니다. "이 과제 집합과 Haiku에서는 효과를 구분하지 못했고, 이 과제 형식은 모델이 스스로 검증할 수 있어 Skill 효과에 둔감하다"는 결과다. 해로운 Skill을 악화로 잡아내는 양성 대조도 실제 실행에서는 실패했다. 전체 결과는 [docs/results/migrate-haiku-v1.md](docs/results/migrate-haiku-v1.md)에 있다.
 
+## 후속 평가(v2): lodash를 뺀 작업 폴더, Haiku·Sonnet
+
+v1의 원인 분석을 확인하려고 작업 폴더에서 원본 lodash를 빼고 Haiku와 Sonnet으로 다시 실행했다. 사전 등록은 `prereg-migrate-v2.1`이다. 1차 가설이 모델당 하나씩 두 개라서 모델별 α를 0.025로 낮췄다.
+
+| 항목                              | Haiku             | Sonnet            |
+| --------------------------------- | ----------------- | ----------------- |
+| Skill 조건 평균 통과율(요구 충족) | 68.8%             | 95.8%             |
+| 대조 조건 평균 통과율(앞 3회)     | 75.0%             | 85.4%             |
+| 차이                              | -6.2pp            | +10.4pp           |
+| 과제 단위 BCa 95% 구간            | [-25.0pp, +6.3pp] | [-2.1pp, +29.2pp] |
+| 부호 뒤집기 검정 p                | 0.59              | 0.31              |
+| **판정**                          | **판정 불가**     | **판정 불가**     |
+
+- 같은 Skill이 두 모델에서 반대 방향의 차이를 냈고, 둘 다 우연 변동과 구분되지 않는다.
+- 두 모델 모두 일부러 틀린 `sabotage`가 공식 Skill보다 높았다(Haiku 85.4%, Sonnet 97.9%).
+- lodash를 빼자 대부분의 실행이 원본을 불러오다 실패했다. 그래도 모델은 설치된 es-toolkit 소스(lodash 동작을 재현한 compat 구현)를 읽어 스스로 검증했다. 작업 폴더를 바꾸는 것만으로는 자체 검증을 막지 못했다.
+- 판정 절차는 차이 없는 데이터에서 1% 미만으로만 잘못 판정했고, 약 30pp 악화는 79~85% 확률로 잡는다. 판정 불가가 나온 원인은 과제 집합에 있다. 대조 조건이 천장에 가깝고, 모델이 정답을 스스로 확인할 수 있다.
+
+전체 결과와 기록 정정(잘못 붙은 태그 `prereg-migrate-v2`)은 [docs/results/migrate-v2.md](docs/results/migrate-v2.md)에 있다. 두 평가의 실행 기록 전체(사용자 이름과 세션 ID 제거)는 `runs/`에, v1 비공개 자료와 솔트는 `revealed/`에 있다.
+
 ## 사용법
 
 필요한 것: Node.js 20 이상, pnpm, Claude Code CLI(로그인된 상태).
@@ -117,7 +137,9 @@ suites/es-toolkit/migrate/
   lib/gen.mjs          입력 범위 생성기
   tasks/               과제 16개(+탈락 3개)의 공개 부분
   arms/                변형 Skill 본문(placebo, procedure, sabotage)
-  preregistration.json 사전 등록
+  preregistration*.json 사전 등록(v1, v2)
+revealed/              실행 뒤 공개한 v1 비공개 자료와 솔트
+runs/                  실행 기록 공개 사본
 vendor/es-toolkit      평가 대상 Skill(서브모듈, 고정 커밋)
 docs/                  방법론, 결과
 tests/                 단위 테스트
@@ -127,7 +149,8 @@ tests/                 단위 테스트
 
 [docs/methodology.md](docs/methodology.md)의 8절에 정리했다. 주요한 것은 다음과 같다.
 
-- 모델은 Haiku 하나, 과제는 작은 합성 파일 16개다.
+- 모델은 Haiku와 Sonnet 두 개, 과제는 작은 합성 파일 16개다.
+- 모델이 정답을 스스로 검증할 수 있는 과제라 Skill 효과에 둔감하다. 양성 대조(`sabotage`)가 v1·v2 모두 악화를 만들지 못했다.
 - 작성자가 `SKILL.md`를 읽은 뒤 함수 목록을 정했고, 사전 등록 전에 과제를 한 번씩 실행해 봤다.
 - 플러그인을 설치만 하고 자연어로 요청했을 때의 효과(Skill 자동 호출)는 측정하지 않았다.
 - 사람 감사를 하지 않았다. `recommend`, `guide` Skill은 평가하지 않았다.
