@@ -15,6 +15,7 @@ import {
 } from '../src/graders/migrate.js';
 import type { RunState } from '../src/runner/state.js';
 import { holm, mean, minNonzeroForAlpha, signFlipPValue } from '../src/stats/paired.js';
+import { powerCurve, splitHalf } from '../src/stats/validation.js';
 import { decide } from '../src/stats/verdict.js';
 import { loadTaskWithGeneratedInputs } from '../src/tasks/generated.js';
 
@@ -176,4 +177,34 @@ for (const arm of Object.keys(states)) {
     `${arm}: 평균 턴 ${avg((s) => s.turns ?? 0)}, 시간 ${avg((s) => s.durationMs / 1000)}초, 출력 토큰 ${avg((s) => s.usage?.output ?? 0)}, ` +
       `입력 ${avg((s) => (s.usage?.input ?? 0) + (s.usage?.cacheRead ?? 0) + (s.usage?.cacheCreation ?? 0))}`,
   );
+}
+
+// 분석 절차의 검증. 대조 arm의 요구 충족 점수만 쓴다(사전 등록 6.5).
+const baselineRuns = planFile.taskIds
+  .map((taskId) =>
+    scores
+      .filter((s) => s.taskId === taskId && s.arm === 'baseline' && s.requirement !== null)
+      .sort((a, b) => a.repeat - b.repeat)
+      .map((s) => s.requirement ?? 0),
+  )
+  .filter((runs) => runs.length >= 2 * K);
+if (baselineRuns.length >= 2) {
+  const trimmed = baselineRuns.map((runs) => runs.slice(0, 2 * K));
+  const split = splitHalf(trimmed, 1000, ALPHA, hypotheses, 1);
+  console.log(`\n[분석 검증] 대조 arm 실행이 2K회 모두 있는 과제 ${trimmed.length}개`);
+  console.log(
+    `  반분 재표집 1,000회: 개선·악화 판정 비율 ${(split.falseVerdictRate * 100).toFixed(1)}%`,
+  );
+  const strengths = [0.05, 0.1, 0.2, 0.4];
+  for (const direction of ['improve', 'worsen'] as const) {
+    const curve = powerCurve(trimmed, K, strengths, direction, 500, ALPHA, hypotheses, 2);
+    console.log(
+      `  검출력(${direction === 'improve' ? '개선' : '악화'} 방향): ` +
+        curve
+          .map((pt) => `${Math.round(pt.strength * 100)}pp ${(pt.detectionRate * 100).toFixed(0)}%`)
+          .join(', '),
+    );
+  }
+} else {
+  console.log('\n[분석 검증] 대조 arm 실행이 2K회 모두 있는 과제가 2개 미만이라 계산하지 않았다');
 }
