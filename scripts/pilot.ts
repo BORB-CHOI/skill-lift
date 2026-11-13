@@ -19,7 +19,7 @@ import { fileURLToPath } from 'node:url';
 import { computeReference, gradeMigrate, meetsRequirement } from '../src/graders/migrate.js';
 import { buildArgs, runProcess } from '../src/runner/claude.js';
 import { parseTranscript } from '../src/runner/stream.js';
-import { loadMigrateTask } from '../src/tasks/spec.js';
+import { loadTaskWithGeneratedInputs } from '../src/tasks/generated.js';
 
 const repoRoot = fileURLToPath(new URL('../', import.meta.url));
 const pilotDir = join(repoRoot, '.pilot');
@@ -27,6 +27,8 @@ const taskDir = join(repoRoot, 'suites/es-toolkit/migrate/pilot', process.argv[4
 const model = process.argv[2] ?? 'haiku';
 const repeats = Number(process.argv[3] ?? '2');
 const EPSILON = 0.05;
+/** 어댑터용으로 허용하는 자기 코드의 추가 바이트. 사전 등록 전에 오너가 확정할 값이다. */
+const OWN_CODE_ALLOWANCE = 200;
 const MAX_TURNS = 40;
 const TIMEOUT_MS = 10 * 60 * 1000;
 
@@ -34,17 +36,18 @@ const SIZE_SCRIPT = `import { build } from 'esbuild';
 import { gzipSync } from 'node:zlib';
 const file = process.argv[2] ?? 'src/report.ts';
 const r = await build({ entryPoints: [file], bundle: true, minify: true, treeShaking: true,
-  format: 'esm', platform: 'browser', target: 'es2022', write: false, logLevel: 'silent' });
-console.log(file, gzipSync(r.outputFiles[0].contents, { level: 9 }).byteLength, 'bytes (min+gzip)');
+  format: 'esm', platform: 'browser', target: 'es2022', write: false, metafile: true, logLevel: 'silent' });
+const own = Object.entries(Object.values(r.metafile.outputs)[0].inputs).filter(([p]) => !p.includes('node_modules/')).reduce((s, [, i]) => s + i.bytesInOutput, 0);
+console.log(file, gzipSync(r.outputFiles[0].contents, { level: 9 }).byteLength, 'bytes (min+gzip),', own, 'bytes of own code');
 `;
 
-const { task, source } = loadMigrateTask(taskDir, join(taskDir, 'sealed.json'));
+const { task, source } = await loadTaskWithGeneratedInputs(taskDir, join(taskDir, 'sealed.json'));
 const targetName = task.file.split('/').pop() ?? task.file;
 
 const examples = task.exports
   .map((e) => `${e.name}: ${e.examples.map((args) => JSON.stringify(args)).join(' ; ')}`)
   .join('\n');
-const taskSentence = `Migrate the lodash usage in ${task.file} to es-toolkit. Keep the exported function signatures and the existing behaviour. Put the result in a single file and do not create other source files. The goal is to reduce bundle size. Grading checks (1) that results equal the original for inputs within the input range below, (2) that type checking passes, and (3) that the bundle size measured by \`npm run size -- <file>\` is small enough, so make it as small as you can. Do not install anything. Write the whole migrated file to out/${targetName}.
+const taskSentence = `Migrate the lodash usage in ${task.file} to es-toolkit. Keep the exported function signatures and the existing behaviour. Put the result in a single file and do not create other source files. The goal is to reduce bundle size while relying on a maintained library. Use es-toolkit functions and do not hand-write replacements for the utilities; keep a lodash import only when no es-toolkit function preserves the behaviour, and add at most a small adapter around a library call when the call shape differs. Grading checks (1) that results equal the original for inputs within the input range below, (2) that type checking passes, (3) that the bundle size printed by \`npm run size -- <file>\` is close to the smallest size reachable with library functions, and (4) that the bytes of your own code in the bundle, also printed by that command, stay within a small allowance over the original. Do not install anything. Write the whole migrated file to out/${targetName}.
 
 Input range: ${task.inputRange}
 
@@ -106,6 +109,11 @@ console.log(
   `기준 해답 ${reference.size}B ${JSON.stringify(reference.choices)}, 모델 ${model}, K=${repeats}`,
 );
 
+const ownCodeLimit = reference.ownBytes + OWN_CODE_ALLOWANCE;
+console.log(
+  `자기 코드 한도 ${ownCodeLimit}B (기준 해답 ${reference.ownBytes}B + ${OWN_CODE_ALLOWANCE}B)`,
+);
+
 const arms = [
   { name: 'baseline', pluginDir: null, prefix: '' },
   { name: 'skill', pluginDir: join(pilotDir, 'plugin-migrate'), prefix: '/es-toolkit:migrate ' },
@@ -143,7 +151,8 @@ for (let k = 1; k <= repeats; k++) {
           `동작=${grade.behaviour.passed ? 'O' : 'X'}`,
           `타입=${grade.types.passed ? 'O' : 'X'}`,
           `크기=${grade.size ?? '-'}B`,
-          `요구충족=${meetsRequirement(grade, reference.size, EPSILON) ? 'O' : 'X'}`,
+          `자기코드=${grade.ownBytes ?? '-'}B`,
+          `요구충족=${meetsRequirement(grade, reference.size, EPSILON, ownCodeLimit) ? 'O' : 'X'}`,
           `종료=${run.timedOut ? 'timeout' : (transcript.result?.subtype ?? `exit ${run.exitCode}`)}`,
           `턴=${transcript.result?.numTurns ?? '-'}`,
           `시간=${Math.round(run.durationMs / 1000)}s`,

@@ -13,6 +13,20 @@ export interface BundleSize {
   readonly minified: number;
   /** 압축한 번들을 gzip한 바이트 수. 판정에는 이 값을 쓴다. */
   readonly gzipped: number;
+  /**
+   * 압축한 번들에서 node_modules 밖의 코드(제출 파일 자신)가 차지하는 바이트 수.
+   * 라이브러리 함수를 쓰지 않고 직접 구현하면 이 값이 커진다.
+   */
+  readonly ownBytes: number;
+}
+
+/** 번들러가 보고한 입력 파일별 바이트에서 라이브러리 밖의 코드만 더한다. */
+function sumOwnBytes(inputs: Readonly<Record<string, { bytesInOutput: number }>>): number {
+  let total = 0;
+  for (const [path, info] of Object.entries(inputs)) {
+    if (!path.replace(/\\/g, '/').includes('node_modules/')) total += info.bytesInOutput;
+  }
+  return total;
 }
 
 /** 사전 등록 대상. 바꾸면 이전 측정값과 비교할 수 없다. */
@@ -42,14 +56,17 @@ export async function measureBundleSize(
     ...BUNDLE_OPTIONS,
     entryPoints: [entryFile],
     absWorkingDir: resolveDir,
+    metafile: true,
   });
   const output = result.outputFiles[0];
-  if (output === undefined) {
+  const meta = Object.values(result.metafile.outputs)[0];
+  if (output === undefined || meta === undefined) {
     throw new Error(`번들 결과가 없다: ${entryFile}`);
   }
   return {
     minified: output.contents.byteLength,
     gzipped: gzipSync(output.contents, { level: GZIP_LEVEL }).byteLength,
+    ownBytes: sumOwnBytes(meta.inputs),
   };
 }
 

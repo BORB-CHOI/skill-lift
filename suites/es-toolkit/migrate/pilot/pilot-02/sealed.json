@@ -113,5 +113,9 @@
       ["exactly twenty-five chars"],
       ["Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor"]
     ]
+  },
+  "generated": {
+    "seed": 20261113,
+    "count": 3000
   }
 }

@@ -5,14 +5,14 @@
 import { join, resolve } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { computeReference, isSizeSeparated } from '../src/graders/migrate.js';
-import { loadMigrateTask } from '../src/tasks/spec.js';
+import { loadTaskWithGeneratedInputs } from '../src/tasks/generated.js';
 
 const repoRoot = fileURLToPath(new URL('../', import.meta.url));
 const taskDir = resolve(process.argv[2] ?? '');
 const sealed = resolve(process.argv[3] ?? join(taskDir, 'sealed.json'));
 const epsilon = Number(process.argv[4] ?? '0.05');
 
-const { task, source } = loadMigrateTask(taskDir, sealed);
+const { task, source } = await loadTaskWithGeneratedInputs(taskDir, sealed);
 const reference = await computeReference(task, source, repoRoot);
 const rows = [...reference.candidates]
   .filter((c) => c.correct && c.size !== null)

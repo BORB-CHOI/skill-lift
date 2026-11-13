@@ -20,6 +20,10 @@ export const ISOLATION_ARGS = [
 
 /** 에이전트에게 허용하는 Bash 명령. 탐색 명령을 포함해 Skill 없는 arm이 불리하지 않게 한다. */
 export const ALLOWED_TOOLS = [
+  // migrate Skill은 frontmatter의 allowed-tools로 Bash 전체를 승인받는다. 대조 arm에도 같은 권한을
+  // 줘야 한다. 파일럿에서 대조 arm만 실행당 6~8건이 거부돼 턴 수가 2~3배로 늘었다.
+  // 네트워크로 나가는 명령은 DISALLOWED_TOOLS가 막는다.
+  'Bash',
   'Read',
   'Glob',
   'Grep',
