@@ -5,3 +5,4 @@ coverage/
 .DS_Store
 # 본 실행 전에는 공개하지 않는 채점 자료 (사전 등록에는 해시만 올린다)
 sealed/
+.size-test-*/
