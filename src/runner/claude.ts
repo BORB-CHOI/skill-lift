@@ -35,6 +35,11 @@ export const ALLOWED_TOOLS = [
   'Bash(cd:*)',
   'Bash(pwd:*)',
   'Bash(mkdir:*)',
+  // 파일럿에서 `cd ... && ls && echo ---` 같은 복합 명령이 echo 때문에 통째로 거부됐다.
+  'Bash(echo:*)',
+  'Bash(head:*)',
+  'Bash(tail:*)',
+  'Bash(wc:*)',
 ] as const;
 
 /** 네트워크로 나가는 경로와 평가와 무관한 도구. */

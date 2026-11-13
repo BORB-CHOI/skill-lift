@@ -7,3 +7,4 @@ coverage/
 sealed/
 .size-test-*/
 .grade-tmp/
+.pilot/
