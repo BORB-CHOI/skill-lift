@@ -15,7 +15,16 @@
     "lint": "eslint src tests scripts eslint.config.js",
     "format": "prettier --write .",
     "format:check": "prettier --check .",
-    "test": "vitest run"
+    "test": "vitest run",
+    "eval:setup": "tsx scripts/setup.ts",
+    "eval:build-tasks": "tsx scripts/build-tasks.ts",
+    "eval:validate-tasks": "tsx scripts/validate-tasks.ts",
+    "eval:prepare-arms": "tsx scripts/prepare-arms.ts",
+    "eval:preregister": "tsx scripts/preregister.ts",
+    "eval:run": "tsx scripts/run-suite.ts",
+    "eval:rescore": "tsx scripts/rescore.ts",
+    "eval:find-mismatch": "tsx scripts/find-mismatch.ts",
+    "eval:probe-functions": "tsx scripts/probe-functions.ts"
   },
   "devDependencies": {
     "@eslint/js": "^9.17.0",
