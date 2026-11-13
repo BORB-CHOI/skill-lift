@@ -1,0 +1,23 @@
+{
+  "runId": "task-01__placebo__2",
+  "taskId": "task-01",
+  "arm": "placebo",
+  "repeat": 2,
+  "state": "completed",
+  "attempt": 1,
+  "submissionKind": "out",
+  "model": "claude-haiku-5-5",
+  "loadedSkills": [
+    "es-toolkit:migrate"
+  ],
+  "turns": 12,
+  "durationMs": 112664,
+  "usage": {
+    "input": 24,
+    "output": 12303,
+    "cacheRead": 578929,
+    "cacheCreation": 38493
+  },
+  "deniedTools": 0,
+  "malformedLines": 0
+}

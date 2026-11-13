@@ -1,0 +1,23 @@
+{
+  "runId": "task-20__procedure__1",
+  "taskId": "task-20",
+  "arm": "procedure",
+  "repeat": 1,
+  "state": "completed",
+  "attempt": 1,
+  "submissionKind": "out",
+  "model": "claude-sonnet-5-5",
+  "loadedSkills": [
+    "es-toolkit:migrate"
+  ],
+  "turns": 5,
+  "durationMs": 56213,
+  "usage": {
+    "input": 10,
+    "output": 1708,
+    "cacheRead": 169985,
+    "cacheCreation": 12163
+  },
+  "deniedTools": 0,
+  "malformedLines": 0
+}

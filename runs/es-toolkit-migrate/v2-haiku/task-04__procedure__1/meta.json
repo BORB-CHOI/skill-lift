@@ -1,0 +1,23 @@
+{
+  "runId": "task-04__procedure__1",
+  "taskId": "task-04",
+  "arm": "procedure",
+  "repeat": 1,
+  "state": "completed",
+  "attempt": 1,
+  "submissionKind": "out",
+  "model": "claude-haiku-5-5",
+  "loadedSkills": [
+    "es-toolkit:migrate"
+  ],
+  "turns": 8,
+  "durationMs": 98511,
+  "usage": {
+    "input": 16,
+    "output": 8559,
+    "cacheRead": 329577,
+    "cacheCreation": 27660
+  },
+  "deniedTools": 0,
+  "malformedLines": 0
+}

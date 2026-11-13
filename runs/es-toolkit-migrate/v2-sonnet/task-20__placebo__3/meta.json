@@ -1,0 +1,23 @@
+{
+  "runId": "task-20__placebo__3",
+  "taskId": "task-20",
+  "arm": "placebo",
+  "repeat": 3,
+  "state": "completed",
+  "attempt": 1,
+  "submissionKind": "out",
+  "model": "claude-sonnet-5-5",
+  "loadedSkills": [
+    "es-toolkit:migrate"
+  ],
+  "turns": 5,
+  "durationMs": 34112,
+  "usage": {
+    "input": 8,
+    "output": 1274,
+    "cacheRead": 133984,
+    "cacheCreation": 11375
+  },
+  "deniedTools": 0,
+  "malformedLines": 0
+}
