@@ -1,0 +1,67 @@
+{
+  "slots": [
+    {
+      "name": "groupBy",
+      "original": "import groupBy from 'lodash/groupBy';",
+      "variants": {
+        "strict": "import { groupBy } from 'es-toolkit';",
+        "compat": "import { groupBy } from 'es-toolkit/compat';"
+      }
+    },
+    {
+      "name": "uniqBy",
+      "original": "import uniqBy from 'lodash/uniqBy';",
+      "variants": {
+        "strict": "import { uniqBy } from 'es-toolkit';",
+        "compat": "import { uniqBy } from 'es-toolkit/compat';",
+        "adapted": "import { uniqBy as uniqByWith } from 'es-toolkit';\nconst uniqBy = <T, K extends keyof T>(items: readonly T[], key: K): T[] =>\n  uniqByWith(items, (item) => item[key]);"
+      }
+    },
+    {
+      "name": "fromPairs",
+      "original": "import fromPairs from 'lodash/fromPairs';",
+      "variants": {
+        "compat": "import { fromPairs } from 'es-toolkit/compat';"
+      }
+    },
+    {
+      "name": "sortedUniq",
+      "original": "import sortedUniq from 'lodash/sortedUniq';",
+      "variants": {}
+    }
+  ],
+  "hidden": {
+    "byName": [
+      [[]],
+      [
+        [
+          { "id": 3, "name": "p" },
+          { "id": 4, "name": "q" },
+          { "id": 5, "name": "p" }
+        ]
+      ]
+    ],
+    "uniqueRows": [
+      [[]],
+      [
+        [
+          { "id": 0, "name": "x" },
+          { "id": 9, "name": "y" },
+          { "id": 0, "name": "z" },
+          { "id": 9, "name": "w" }
+        ]
+      ]
+    ],
+    "toLookup": [
+      [[]],
+      [
+        [
+          ["k", 0],
+          ["k", 5],
+          ["m", -3]
+        ]
+      ]
+    ],
+    "dedupeSorted": [[[]], [[-2, -2, 0, 0, 0, 4]], [[5]]]
+  }
+}
