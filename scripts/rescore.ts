@@ -36,7 +36,7 @@ const ALPHA = 0.05;
 
 const repoRoot = fileURLToPath(new URL('../', import.meta.url));
 const publicRoot = join(repoRoot, 'suites/es-toolkit/migrate/tasks');
-const sealedRoot = join(repoRoot, 'sealed/es-toolkit/migrate');
+const sealedRoot = process.env['SKILL_EVAL_SEALED'] ?? join(repoRoot, 'sealed/es-toolkit/migrate');
 const outRoot = join(repoRoot, 'results/es-toolkit-migrate', label);
 
 interface Meta {

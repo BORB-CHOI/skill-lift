@@ -24,8 +24,10 @@ const concurrency = Number(concurrencyArg);
 
 const repoRoot = fileURLToPath(new URL('../', import.meta.url));
 const publicRoot = join(repoRoot, 'suites/es-toolkit/migrate/tasks');
-const sealedRoot = join(repoRoot, 'sealed/es-toolkit/migrate');
+const sealedRoot = process.env['SKILL_EVAL_SEALED'] ?? join(repoRoot, 'sealed/es-toolkit/migrate');
 const pilotDir = join(repoRoot, '.pilot');
+/** 작업 폴더에 복사할 의존성. v2는 lodash를 뺀 폴더를 쓴다. */
+const depsNodeModules = process.env['SKILL_EVAL_DEPS'] ?? join(pilotDir, 'deps/node_modules');
 const outRoot = join(repoRoot, 'results/es-toolkit-migrate', label);
 
 const PLAN_SEED = 20261113;
@@ -88,7 +90,7 @@ const plan = buildRunPlan(
 mkdirSync(outRoot, { recursive: true });
 writeFileSync(
   join(outRoot, `plan-${stage}.json`),
-  `${JSON.stringify({ label, stage, model, K, concurrency, seed: PLAN_SEED, maxTurns: MAX_TURNS, timeoutMs: TIMEOUT_MS, taskIds, arms, plan }, null, 2)}\n`,
+  `${JSON.stringify({ label, stage, model, K, concurrency, seed: PLAN_SEED, sealedRoot, depsNodeModules, maxTurns: MAX_TURNS, timeoutMs: TIMEOUT_MS, taskIds, arms, plan }, null, 2)}\n`,
   'utf8',
 );
 
@@ -110,7 +112,7 @@ async function runOne(spec: RunSpec): Promise<RunState | 'skipped'> {
 
   let state: RunState = 'infra';
   for (let attempt = 1; attempt <= MAX_ATTEMPTS; attempt++) {
-    const workspace = prepareWorkspace(taskDir, join(pilotDir, 'deps/node_modules'));
+    const workspace = prepareWorkspace(taskDir, depsNodeModules);
     try {
       const run = await runProcess({
         command: 'claude',

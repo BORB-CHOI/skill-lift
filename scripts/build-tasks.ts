@@ -204,14 +204,14 @@ const BD: readonly Entry[] = [
 /** 조합 규칙을 몇 번째까지 적용할지. 채택된 과제가 16개가 되도록 22번째까지 만든다. */
 const TASK_COUNT = 22;
 const HIDDEN_COUNT = 3000;
-const HIDDEN_SEED = 20261113;
+const HIDDEN_SEED = Number(process.env['SKILL_EVAL_HIDDEN_SEED'] ?? '20261113');
 const EXAMPLE_SEED = 7;
 const HEADER =
   'export interface Row {\n  id: number;\n  name: string;\n  age: number;\n}\n\nexport type Config = Record<string, unknown>;\n';
 
 const repoRoot = fileURLToPath(new URL('../', import.meta.url));
 const publicRoot = join(repoRoot, 'suites/es-toolkit/migrate/tasks');
-const sealedRoot = join(repoRoot, 'sealed/es-toolkit/migrate');
+const sealedRoot = process.env['SKILL_EVAL_SEALED'] ?? join(repoRoot, 'sealed/es-toolkit/migrate');
 const { ranges } = (await import(
   pathToFileURL(join(repoRoot, 'suites/es-toolkit/migrate/lib/gen.mjs')).href
 )) as { ranges: Record<string, { describe: string; make: (random: () => number) => unknown[] }> };

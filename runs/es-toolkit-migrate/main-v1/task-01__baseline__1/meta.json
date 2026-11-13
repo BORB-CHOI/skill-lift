@@ -1,0 +1,21 @@
+{
+  "runId": "task-01__baseline__1",
+  "taskId": "task-01",
+  "arm": "baseline",
+  "repeat": 1,
+  "state": "completed",
+  "attempt": 1,
+  "submissionKind": "out",
+  "model": "claude-haiku-5-5",
+  "loadedSkills": [],
+  "turns": 17,
+  "durationMs": 125572,
+  "usage": {
+    "input": 34,
+    "output": 17395,
+    "cacheRead": 856914,
+    "cacheCreation": 39609
+  },
+  "deniedTools": 0,
+  "malformedLines": 0
+}

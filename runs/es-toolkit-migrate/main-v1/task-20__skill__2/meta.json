@@ -1,0 +1,23 @@
+{
+  "runId": "task-20__skill__2",
+  "taskId": "task-20",
+  "arm": "skill",
+  "repeat": 2,
+  "state": "completed",
+  "attempt": 1,
+  "submissionKind": "out",
+  "model": "claude-haiku-5-5",
+  "loadedSkills": [
+    "es-toolkit:migrate"
+  ],
+  "turns": 10,
+  "durationMs": 57402,
+  "usage": {
+    "input": 20,
+    "output": 7126,
+    "cacheRead": 414132,
+    "cacheCreation": 23562
+  },
+  "deniedTools": 0,
+  "malformedLines": 0
+}

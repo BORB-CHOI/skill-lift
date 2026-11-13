@@ -1,0 +1,30 @@
+{
+  "slots": [
+    {
+      "name": "camelCase",
+      "original": "import camelCase from 'lodash/camelCase';",
+      "variants": {
+        "strict": "import { camelCase } from 'es-toolkit';",
+        "compat": "import { camelCase } from 'es-toolkit/compat';"
+      }
+    },
+    {
+      "name": "startCase",
+      "original": "import startCase from 'lodash/startCase';",
+      "variants": {
+        "strict": "import { startCase } from 'es-toolkit';",
+        "compat": "import { startCase } from 'es-toolkit/compat';"
+      }
+    },
+    {
+      "name": "sortedUniq",
+      "original": "import sortedUniq from 'lodash/sortedUniq';",
+      "variants": {}
+    }
+  ],
+  "hidden": {},
+  "generated": {
+    "seed": 20261513,
+    "count": 3000
+  }
+}

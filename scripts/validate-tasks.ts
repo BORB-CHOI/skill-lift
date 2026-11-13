@@ -22,7 +22,7 @@ import { loadTaskWithGeneratedInputs } from '../src/tasks/generated.js';
 
 const repoRoot = fileURLToPath(new URL('../', import.meta.url));
 const publicRoot = join(repoRoot, 'suites/es-toolkit/migrate/tasks');
-const sealedRoot = join(repoRoot, 'sealed/es-toolkit/migrate');
+const sealedRoot = process.env['SKILL_EVAL_SEALED'] ?? join(repoRoot, 'sealed/es-toolkit/migrate');
 const epsilon = Number(process.argv[2] ?? '0.05');
 const OWN_CODE_ALLOWANCE = 200;
 

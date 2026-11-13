@@ -1,0 +1,31 @@
+{
+  "slots": [
+    {
+      "name": "keyBy",
+      "original": "import keyBy from 'lodash/keyBy';",
+      "variants": {
+        "strict": "import { keyBy } from 'es-toolkit';",
+        "compat": "import { keyBy } from 'es-toolkit/compat';"
+      }
+    },
+    {
+      "name": "sumBy",
+      "original": "import sumBy from 'lodash/sumBy';",
+      "variants": {
+        "strict": "import { sumBy } from 'es-toolkit';",
+        "compat": "import { sumBy } from 'es-toolkit/compat';",
+        "adapted": "import { sumBy as sumByWith } from 'es-toolkit';\nconst sumBy = <T, K extends keyof T>(items: readonly T[], key: K): number =>\n  sumByWith(items, (item) => Number(item[key]));"
+      }
+    },
+    {
+      "name": "sortedUniq",
+      "original": "import sortedUniq from 'lodash/sortedUniq';",
+      "variants": {}
+    }
+  ],
+  "hidden": {},
+  "generated": {
+    "seed": 20262513,
+    "count": 3000
+  }
+}

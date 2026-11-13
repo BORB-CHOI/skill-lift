@@ -1,0 +1,33 @@
+{
+  "slots": [
+    {
+      "name": "kebabCase",
+      "original": "import kebabCase from 'lodash/kebabCase';",
+      "variants": {
+        "strict": "import { kebabCase } from 'es-toolkit';",
+        "compat": "import { kebabCase } from 'es-toolkit/compat';"
+      }
+    },
+    {
+      "name": "keyBy",
+      "original": "import keyBy from 'lodash/keyBy';",
+      "variants": {
+        "strict": "import { keyBy } from 'es-toolkit';",
+        "compat": "import { keyBy } from 'es-toolkit/compat';",
+        "adapted": "import { keyBy as keyByWith } from 'es-toolkit';\nconst keyBy = <T, K extends keyof T>(items: readonly T[], key: K): Record<string, T> =>\n  keyByWith(items, (item) => String(item[key]));"
+      }
+    },
+    {
+      "name": "truncate",
+      "original": "import truncate from 'lodash/truncate';",
+      "variants": {
+        "compat": "import { truncate } from 'es-toolkit/compat';"
+      }
+    }
+  ],
+  "hidden": {},
+  "generated": {
+    "seed": 20262613,
+    "count": 3000
+  }
+}
