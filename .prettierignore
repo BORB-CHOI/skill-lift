@@ -4,3 +4,6 @@ pnpm-lock.yaml
 results
 .grade-tmp
 .pilot
+.arms
+vendor
+sealed

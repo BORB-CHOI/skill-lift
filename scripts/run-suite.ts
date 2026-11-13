@@ -1,7 +1,7 @@
 /**
  * migrate 과제의 본 실행. 에이전트를 실행해 실행 기록과 산출물만 저장한다. 채점은 rescore.ts가 한다.
  *
- * 사용: pnpm tsx scripts/run-suite.ts <실행 이름> <모델> <K> <동시 실행 수> [과제 수]
+ * 사용: pnpm tsx scripts/run-suite.ts <실행 이름> <모델> <K> <동시 실행 수> [primary|controls] [과제 수]
  * 출력: results/es-toolkit-migrate/<실행 이름>/<runId>/{transcript.jsonl, submission.ts, meta.json}
  *
  * 같은 실행 이름으로 다시 돌리면 끝난 실행은 건너뛴다. 인프라·하네스 실패는 다시 실행한다.
@@ -16,7 +16,7 @@ import { parseTranscript } from '../src/runner/stream.js';
 import { buildTaskPrompt, collectSubmission, prepareWorkspace } from '../src/runner/workspace.js';
 import { loadMigrateTask } from '../src/tasks/spec.js';
 
-const [label = '', model = 'haiku', kArg = '3', concurrencyArg = '4', limitArg] =
+const [label = '', model = 'haiku', kArg = '3', concurrencyArg = '4', stage = 'primary', limitArg] =
   process.argv.slice(2);
 if (label === '') throw new Error('실행 이름을 지정해야 한다');
 const K = Number(kArg);
@@ -43,17 +43,30 @@ interface Arm {
   readonly expectedSkill: string | null;
 }
 
-// 대조 arm은 과제당 2K회 실행한다. 앞의 K회는 주 비교에, 2K회 전부는 분석 절차의 검증에 쓴다.
-const arms: readonly Arm[] = [
-  { name: 'baseline', repeats: 2 * K, pluginDir: null, prefix: '', expectedSkill: null },
-  {
-    name: 'skill',
+/** Skill을 로드하는 arm. 플러그인 폴더는 scripts/prepare-arms.ts가 만든다. */
+function skillArm(name: string): Arm {
+  return {
+    name,
     repeats: K,
-    pluginDir: join(pilotDir, 'plugin-migrate'),
+    pluginDir: join(repoRoot, '.arms', name),
     prefix: '/es-toolkit:migrate ',
     expectedSkill: 'es-toolkit:migrate',
-  },
-];
+  };
+}
+
+// 실행은 두 단계로 나눈다. primary는 1차 가설(skill 대 baseline)의 실행이고 두 arm을 한 블록에서
+// 섞는다. controls는 탐색용 대조 arm이다. 대조 arm은 과제당 2K회 실행한다. 앞의 K회는 주 비교에,
+// 2K회 전부는 분석 절차의 검증에 쓴다.
+const STAGES: Readonly<Record<string, readonly Arm[]>> = {
+  primary: [
+    { name: 'baseline', repeats: 2 * K, pluginDir: null, prefix: '', expectedSkill: null },
+    skillArm('skill'),
+  ],
+  controls: [skillArm('placebo'), skillArm('procedure'), skillArm('sabotage')],
+};
+const stageArms = STAGES[stage];
+if (stageArms === undefined) throw new Error(`알 수 없는 단계: ${stage} (primary 또는 controls)`);
+const arms: readonly Arm[] = stageArms;
 
 interface Validation {
   readonly id: string;
@@ -74,8 +87,8 @@ const plan = buildRunPlan(
 );
 mkdirSync(outRoot, { recursive: true });
 writeFileSync(
-  join(outRoot, 'plan.json'),
-  `${JSON.stringify({ label, model, K, concurrency, seed: PLAN_SEED, maxTurns: MAX_TURNS, timeoutMs: TIMEOUT_MS, taskIds, arms, plan }, null, 2)}\n`,
+  join(outRoot, `plan-${stage}.json`),
+  `${JSON.stringify({ label, stage, model, K, concurrency, seed: PLAN_SEED, maxTurns: MAX_TURNS, timeoutMs: TIMEOUT_MS, taskIds, arms, plan }, null, 2)}\n`,
   'utf8',
 );
 

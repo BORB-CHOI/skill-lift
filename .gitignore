@@ -10,3 +10,4 @@ sealed/
 .pilot/
 # 본 실행 결과는 감사와 스크럽을 거친 뒤 공개한다
 results/
+.arms/

@@ -57,7 +57,7 @@ interface Score extends Meta {
   readonly ownBytes: number | null;
 }
 
-const planFile = JSON.parse(readFileSync(join(outRoot, 'plan.json'), 'utf8')) as {
+const planFile = JSON.parse(readFileSync(join(outRoot, 'plan-primary.json'), 'utf8')) as {
   K: number;
   taskIds: string[];
 };
