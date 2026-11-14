@@ -87,7 +87,7 @@ const models = list(values.models, DESIGN_MODELS);
 const TARGET = 0.8;
 
 const repoRoot = fileURLToPath(new URL('../', import.meta.url));
-const runs = loadRuns(join(repoRoot, 'results/es-toolkit-migrate', label));
+const runs = loadRuns(join(repoRoot, 'results/es-toolkit-migrate-project', label));
 
 interface Estimate {
   readonly cell: CellModel;

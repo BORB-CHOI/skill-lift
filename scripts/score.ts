@@ -7,7 +7,7 @@
  * 8개와 동등 p값 8개에 따로 적용한다.
  *
  * 사용: pnpm tsx scripts/score.ts <실행 이름> <사전 등록 JSON>
- * 출력: results/es-toolkit-migrate/<실행 이름>/report.md
+ * 출력: results/es-toolkit-migrate-project/<실행 이름>/report.md
  */
 import { readFileSync, writeFileSync } from 'node:fs';
 import { join } from 'node:path';
@@ -50,7 +50,7 @@ if (label === '' || preregPath === '') {
 }
 
 const repoRoot = fileURLToPath(new URL('../', import.meta.url));
-const outRoot = join(repoRoot, 'results/es-toolkit-migrate', label);
+const outRoot = join(repoRoot, 'results/es-toolkit-migrate-project', label);
 const prereg = parsePreregistration(JSON.parse(readFileSync(preregPath, 'utf8')));
 const runs = loadRuns(outRoot);
 const { alpha, delta } = prereg;

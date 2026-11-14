@@ -209,9 +209,13 @@ export function judgeProjectTests(
   const failed = report.tests.filter((t) => t.status === 'failed');
   const excused = failed.filter((t) => baseline.some((e) => matchesBaseline(t, e)));
   const unexpected = failed.filter((t) => !excused.includes(t));
+  // 제외 목록의 테스트가 가리키는 "쓰이지 않은 스냅샷" 오류는 그 테스트가 통과했어도 뺀다.
+  // swagger의 네트워크 의존 테스트는 통과해도 스냅샷 번호가 어긋나 이 오류를 낸다(스모크 채점에서 관측).
+  const baselineTests = report.tests.filter((t) => baseline.some((e) => matchesBaseline(t, e)));
   const fileErrors = report.fileErrors.filter(
     (f) =>
-      !baseline.some((e) => fileMatchesBaseline(f.file, e)) && !isObsoleteFromExcused(f, excused),
+      !baseline.some((e) => fileMatchesBaseline(f.file, e)) &&
+      !isObsoleteFromExcused(f, baselineTests),
   );
   return {
     pass:

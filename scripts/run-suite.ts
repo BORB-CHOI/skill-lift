@@ -205,14 +205,20 @@ if (!existsSync(emptyMcpConfig)) throw new Error(`${emptyMcpConfig}가 없다`);
 const env = networkBlockEnv();
 
 const armPlans: ArmPlan[] = arms.map(({ name }) => ({ name, ...range }));
+// 같은 실행 이름 아래에 모델 여러 개를 모으므로 실행 ID에 모델을 넣는다.
+// 넣지 않으면 다른 모델의 끝난 실행을 이미 끝난 것으로 보고 건너뛴다(스모크 실행에서 관측).
+const modelTag = model.replace(/^claude-/, '').replace(/-\d+(?:-\d+)*$/, '');
 const plan = buildRunPlan(
   fixtures.map((f) => f.name),
   armPlans,
   seed,
-);
+).map((spec) => ({ ...spec, runId: `${spec.taskId}__${modelTag}__${spec.arm}__${spec.repeat}` }));
 mkdirSync(outRoot, { recursive: true });
 writeFileSync(
-  join(outRoot, `plan-${mode}-${String(range.fromRepeat)}-${String(range.toRepeat)}.json`),
+  join(
+    outRoot,
+    `plan-${modelTag}-${mode}-${String(range.fromRepeat)}-${String(range.toRepeat)}.json`,
+  ),
   `${JSON.stringify({ label, mode, model, concurrency, seed, maxTurns, timeoutMs, fixturesRoot, workspaceRoot, fixtures, prompt: PROJECT_PROMPT, env, arms, repeats: range, plan }, null, 2)}\n`,
   'utf8',
 );

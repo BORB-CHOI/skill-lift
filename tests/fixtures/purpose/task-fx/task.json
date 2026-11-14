@@ -1,9 +1,0 @@
-{
-  "id": "task-fx",
-  "file": "src/module.ts",
-  "items": [
-    { "fn": "upperFirst", "name": "toSentence", "type": "S" },
-    { "fn": "camelCase", "name": "toPropName", "type": "D" },
-    { "fn": "padStart", "name": "toCode", "type": "C" }
-  ]
-}
