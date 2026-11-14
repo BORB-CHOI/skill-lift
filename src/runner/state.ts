@@ -14,7 +14,10 @@ export type RunState =
   | 'limit'
   /** 프로세스 오류, API 오류, 사용 한도. arm과 무관한 규칙으로 다시 실행한다. */
   | 'infra'
-  /** 대조 arm에 평가 대상 Skill이 로드됐다. 실행 묶음 전체를 무효로 한다. */
+  /**
+   * 오염. 대조 arm에 평가 대상 Skill이 로드됐거나, 도구 입력에 외부 네트워크 접근 시도가 있다.
+   * 분석에서 빼고 arm별 개수를 보고한다.
+   */
   | 'contaminated'
   /** 처리 arm인데 평가 대상 Skill이 로드 목록에 없다. 하네스의 결함이다. */
   | 'harness';
@@ -49,4 +52,17 @@ export function classifyRun(outcome: RunOutcome, arm: ArmExpectation): RunState 
   if (result.subtype === 'error_max_turns') return 'limit';
   if (result.isError || result.subtype !== 'success') return 'infra';
   return 'completed';
+}
+
+/**
+ * 턴 상태와 네트워크 검사 결과로 실행 하나의 상태를 정한다.
+ *
+ * 1. infra·harness면 그 상태다. 실행 전체를 다시 한다.
+ * 2. 프록시를 우회할 수 있는 접근 시도가 있으면 contaminated다. 한도에 걸린 실행이어도 오염이 우선한다.
+ * 3. 그 밖에는 턴 상태 그대로다(completed, limit, 대조 arm에 대상 Skill이 로드된 contaminated).
+ */
+export function finalState(turn: RunState, bypassAttempts: number): RunState {
+  if (turn === 'infra' || turn === 'harness') return turn;
+  if (bypassAttempts > 0) return 'contaminated';
+  return turn;
 }

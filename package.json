@@ -2,7 +2,7 @@
   "name": "skill-lift",
   "version": "0.0.0",
   "private": true,
-  "description": "Agent Skill의 효과를 대조 실행과 통계 판정으로 평가하는 CLI",
+  "description": "Agent Skill이 목적을 달성하는지 실제 프로젝트 전환 과제로 판정하는 평가 도구",
   "license": "MIT",
   "type": "module",
   "engines": {
@@ -17,16 +17,16 @@
     "format:check": "prettier --check .",
     "test": "vitest run",
     "eval:setup": "tsx scripts/setup.ts",
-    "eval:build-tasks": "tsx scripts/build-tasks.ts",
-    "eval:validate-tasks": "tsx scripts/validate-tasks.ts",
     "eval:prepare-arms": "tsx scripts/prepare-arms.ts",
-    "eval:preregister": "tsx scripts/preregister.ts",
+    "eval:prepare-fixtures": "tsx scripts/prepare-fixtures.ts",
+    "eval:probe-network": "tsx scripts/probe-network.ts",
+    "eval:gate": "tsx scripts/gate-project.ts",
     "eval:run": "tsx scripts/run-suite.ts",
-    "eval:rescore": "tsx scripts/rescore.ts",
-    "eval:find-mismatch": "tsx scripts/find-mismatch.ts",
-    "eval:probe-functions": "tsx scripts/probe-functions.ts",
-    "eval:verify-reveal": "tsx scripts/verify-reveal.ts",
-    "eval:publish-results": "tsx scripts/publish-results.ts"
+    "eval:rescan": "tsx scripts/rescan-checks.ts",
+    "eval:grade": "tsx scripts/grade-project.ts",
+    "eval:power": "tsx scripts/power.ts",
+    "eval:preregister": "tsx scripts/preregister.ts",
+    "eval:score": "tsx scripts/score.ts"
   },
   "devDependencies": {
     "@eslint/js": "^9.17.0",

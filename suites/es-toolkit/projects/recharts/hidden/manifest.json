@@ -1,0 +1,342 @@
+[
+  {
+    "id": "recharts-lodash-01",
+    "file": "lodash-parity.spec.tsx",
+    "test": "lodash parity (hidden) > util/ChartUtils.ts:get: dataKey deep paths (dot, bracket) resolve like lodash.get",
+    "srcFile": "src/util/ChartUtils.ts",
+    "lodashFn": "get",
+    "divergence": "native obj[key] / strict es-toolkit lacks string-path get ('a.b', 'a[1]', 'a.2') and default",
+    "passesAtBase": true,
+    "failsOnHumanPR": false
+  },
+  {
+    "id": "recharts-lodash-02",
+    "file": "lodash-parity.spec.tsx",
+    "test": "lodash parity (hidden) > util/ChartUtils.ts:get: null value is returned as null, default only for undefined",
+    "srcFile": "src/util/ChartUtils.ts",
+    "lodashFn": "get",
+    "divergence": "lodash default only for undefined; `?? default` replaces null",
+    "passesAtBase": true,
+    "failsOnHumanPR": false
+  },
+  {
+    "id": "recharts-lodash-03",
+    "file": "lodash-parity.spec.tsx",
+    "test": "lodash parity (hidden) > util/ChartUtils.ts:get: own key containing a dot wins over path traversal",
+    "srcFile": "src/util/ChartUtils.ts",
+    "lodashFn": "get",
+    "divergence": "literal own key 'v1.2' must win over path traversal (split('.') replacements fail)",
+    "passesAtBase": true,
+    "failsOnHumanPR": false
+  },
+  {
+    "id": "recharts-lodash-04",
+    "file": "lodash-parity.spec.tsx",
+    "test": "lodash parity (hidden) > util/ChartUtils.ts:get: numeric dataKey on tuple-shaped rows",
+    "srcFile": "src/util/ChartUtils.ts",
+    "lodashFn": "get",
+    "divergence": "numeric path index on tuple rows + default when out of range",
+    "passesAtBase": true,
+    "failsOnHumanPR": false
+  },
+  {
+    "id": "recharts-lodash-05",
+    "file": "lodash-parity.spec.tsx",
+    "test": "lodash parity (hidden) > util/ChartUtils.ts:sortBy: sorts frozen tick arrays numerically without mutating them",
+    "srcFile": "src/util/ChartUtils.ts",
+    "lodashFn": "sortBy",
+    "divergence": "must not mutate frozen store arrays (Array#sort throws) and must sort numerically",
+    "passesAtBase": true,
+    "failsOnHumanPR": false
+  },
+  {
+    "id": "recharts-lodash-06",
+    "file": "lodash-parity.spec.tsx",
+    "test": "lodash parity (hidden) > state/selectors/selectors.ts:sortBy: ordered tooltip ticks are a new, numerically sorted, stable array",
+    "srcFile": "src/state/selectors/selectors.ts",
+    "lodashFn": "sortBy",
+    "divergence": "new array, numeric, stable for ties; in-place sort on frozen input throws",
+    "passesAtBase": true,
+    "failsOnHumanPR": false
+  },
+  {
+    "id": "recharts-lodash-07",
+    "file": "lodash-parity.spec.tsx",
+    "test": "lodash parity (hidden) > component/DefaultLegendContent.tsx:sortBy: default string itemSorter \"value\" (property shorthand), stable",
+    "srcFile": "src/component/DefaultLegendContent.tsx",
+    "lodashFn": "sortBy",
+    "divergence": "string property shorthand iteratee ('value' default); strict es-toolkit sortBy needs criteria array; stability",
+    "passesAtBase": true,
+    "failsOnHumanPR": false
+  },
+  {
+    "id": "recharts-lodash-08",
+    "file": "lodash-parity.spec.tsx",
+    "test": "lodash parity (hidden) > component/DefaultLegendContent.tsx:sortBy: itemSorter \"dataKey\" puts entries without dataKey last",
+    "srcFile": "src/component/DefaultLegendContent.tsx",
+    "lodashFn": "sortBy",
+    "divergence": "undefined sort keys placed last",
+    "passesAtBase": true,
+    "failsOnHumanPR": false
+  },
+  {
+    "id": "recharts-lodash-09",
+    "file": "lodash-parity.spec.tsx",
+    "test": "lodash parity (hidden) > component/DefaultTooltipContent.tsx:sortBy: itemSorter \"value\" sorts numbers numerically (not lexicographically)",
+    "srcFile": "src/component/DefaultTooltipContent.tsx",
+    "lodashFn": "sortBy",
+    "divergence": "numeric vs lexicographic ordering",
+    "passesAtBase": true,
+    "failsOnHumanPR": false
+  },
+  {
+    "id": "recharts-lodash-10",
+    "file": "lodash-parity.spec.tsx",
+    "test": "lodash parity (hidden) > component/DefaultTooltipContent.tsx:sortBy: itemSorter \"name\" (Tooltip default) and function iteratee",
+    "srcFile": "src/component/DefaultTooltipContent.tsx",
+    "lodashFn": "sortBy",
+    "divergence": "string shorthand ('name' Tooltip default) and function iteratee",
+    "passesAtBase": true,
+    "failsOnHumanPR": false
+  },
+  {
+    "id": "recharts-lodash-11",
+    "file": "lodash-parity.spec.tsx",
+    "test": "lodash parity (hidden) > util/DataUtils.ts:get: findEntryInArray with nested string key and numeric key",
+    "srcFile": "src/util/DataUtils.ts",
+    "lodashFn": "get",
+    "divergence": "nested string path and numeric key in findEntryInArray",
+    "passesAtBase": true,
+    "failsOnHumanPR": false
+  },
+  {
+    "id": "recharts-lodash-12",
+    "file": "lodash-parity.spec.tsx",
+    "test": "lodash parity (hidden) > util/ReactUtils.ts:get: findAllByType tolerates text children and prefers displayName",
+    "srcFile": "src/util/ReactUtils.ts",
+    "lodashFn": "get",
+    "divergence": "get on string/number children must yield undefined, not throw; displayName before name",
+    "passesAtBase": true,
+    "failsOnHumanPR": false
+  },
+  {
+    "id": "recharts-lodash-13",
+    "file": "lodash-parity.spec.tsx",
+    "test": "lodash parity (hidden) > util/payload/getUniqPayload.ts:uniqBy: keeps first occurrence in original order (default and custom iteratee)",
+    "srcFile": "src/util/payload/getUniqPayload.ts",
+    "lodashFn": "uniqBy",
+    "divergence": "first occurrence kept, order preserved, undefined keys collapse, false returns same reference",
+    "passesAtBase": true,
+    "failsOnHumanPR": false
+  },
+  {
+    "id": "recharts-lodash-14",
+    "file": "lodash-parity.spec.tsx",
+    "test": "lodash parity (hidden) > util/CartesianUtils.ts:mapValues+every: labeled scales apply/isInRange over coordinate objects",
+    "srcFile": "src/util/CartesianUtils.ts",
+    "lodashFn": [
+      "mapValues",
+      "every"
+    ],
+    "divergence": "mapValues/every over objects (not arrays), every({}) === true",
+    "passesAtBase": true,
+    "failsOnHumanPR": false
+  },
+  {
+    "id": "recharts-lodash-15",
+    "file": "lodash-parity.spec.tsx",
+    "test": "lodash parity (hidden) > util/ActiveShapeUtils.tsx:isPlainObject: null-prototype option object is treated as shape props",
+    "srcFile": "src/util/ActiveShapeUtils.tsx",
+    "lodashFn": "isPlainObject",
+    "divergence": "Object.create(null) is plain (constructor === Object checks fail)",
+    "passesAtBase": true,
+    "failsOnHumanPR": false
+  },
+  {
+    "id": "recharts-lodash-16",
+    "file": "lodash-parity.spec.tsx",
+    "test": "lodash parity (hidden) > util/ActiveShapeUtils.tsx:isPlainObject: class-instance option is NOT treated as shape props",
+    "srcFile": "src/util/ActiveShapeUtils.tsx",
+    "lodashFn": "isPlainObject",
+    "divergence": "class instance is not plain (typeof === 'object' replacements merge it)",
+    "passesAtBase": true,
+    "failsOnHumanPR": false
+  },
+  {
+    "id": "recharts-lodash-17",
+    "file": "lodash-parity.spec.tsx",
+    "test": "lodash parity (hidden) > chart/Treemap.tsx:get: tooltip index path \"children[0]children[1]\" (no dots) resolves",
+    "srcFile": "src/chart/Treemap.tsx",
+    "lodashFn": "get",
+    "divergence": "dot-less bracket path 'children[0]children[1]' (split('.') fails)",
+    "passesAtBase": true,
+    "failsOnHumanPR": false
+  },
+  {
+    "id": "recharts-lodash-18",
+    "file": "lodash-parity.spec.tsx",
+    "test": "lodash parity (hidden) > chart/SunburstChart.tsx:get: tooltip index path \"children[1]children[0]\" resolves",
+    "srcFile": "src/chart/SunburstChart.tsx",
+    "lodashFn": "get",
+    "divergence": "dot-less bracket path 'children[1]children[0]'",
+    "passesAtBase": true,
+    "failsOnHumanPR": false
+  },
+  {
+    "id": "recharts-lodash-19",
+    "file": "lodash-parity.spec.tsx",
+    "test": "lodash parity (hidden) > chart/Sankey.tsx:get: sankeyPayloadSearcher resolves \"node-1\" via `${type}s[${i}]` path",
+    "srcFile": "src/chart/Sankey.tsx",
+    "lodashFn": "get",
+    "divergence": "template path `${type}s[${i}]`, out-of-range index -> undefined",
+    "passesAtBase": true,
+    "failsOnHumanPR": false
+  },
+  {
+    "id": "recharts-lodash-20",
+    "file": "lodash-parity.spec.tsx",
+    "test": "lodash parity (hidden) > chart/Sankey.tsx:maxBy+min+sumBy+get: node layout with partial margin and an isolated node",
+    "srcFile": "src/chart/Sankey.tsx",
+    "lodashFn": [
+      "maxBy",
+      "min",
+      "sumBy",
+      "get"
+    ],
+    "divergence": "layout smoke: maxBy depth, min over ratios, sumBy node values, get(margin,'left') missing -> 0",
+    "passesAtBase": true,
+    "failsOnHumanPR": false
+  },
+  {
+    "id": "recharts-lodash-21",
+    "file": "lodash-parity.spec.tsx",
+    "test": "lodash parity (hidden) > chart/Treemap.tsx:omit+get: nest treemap renders nodes and the \"root\" breadcrumb default",
+    "srcFile": "src/chart/Treemap.tsx",
+    "lodashFn": [
+      "omit",
+      "get"
+    ],
+    "divergence": "get(item, nameKey, 'root') default for missing key; omit children before spreading; breadcrumb after drill-down",
+    "passesAtBase": true,
+    "failsOnHumanPR": false
+  },
+  {
+    "id": "recharts-lodash-22",
+    "file": "lodash-parity.spec.tsx",
+    "test": "lodash parity (hidden) > cartesian/Funnel.tsx:omit: a data field named \"width\" does not override the computed trapezoid width",
+    "srcFile": "src/cartesian/Funnel.tsx",
+    "lodashFn": "omit",
+    "divergence": "omit with bare string key 'width' (strict es-toolkit omit iterates characters)",
+    "passesAtBase": true,
+    "failsOnHumanPR": false
+  },
+  {
+    "id": "recharts-lodash-23",
+    "file": "lodash-parity.spec.tsx",
+    "test": "lodash parity (hidden) > component/ResponsiveContainer.tsx:throttle: leading=false/trailing=true call timing with debounce",
+    "srcFile": "src/component/ResponsiveContainer.tsx",
+    "lodashFn": "throttle",
+    "divergence": "leading:false/trailing:true timing; strict es-toolkit throttle(edges:['trailing']) cancels the pending trailing call when a later call arrives after wait",
+    "passesAtBase": true,
+    "failsOnHumanPR": true
+  },
+  {
+    "id": "recharts-lodash-24",
+    "file": "lodash-parity.spec.tsx",
+    "test": "lodash parity (hidden) > cartesian/Area.tsx:max: animated clip rect width uses the max x of points/baseLine",
+    "srcFile": "src/cartesian/Area.tsx",
+    "lodashFn": "max",
+    "divergence": "smoke: max over non-empty points (empty array unreachable: points[0] is read first)",
+    "passesAtBase": true,
+    "failsOnHumanPR": false
+  },
+  {
+    "id": "recharts-lodash-25",
+    "file": "lodash-parity.spec.tsx",
+    "test": "lodash parity (hidden) > cartesian/CartesianAxis.tsx:get: axisLine/tickLine className from object, boolean true tolerated",
+    "srcFile": "src/cartesian/CartesianAxis.tsx",
+    "lodashFn": "get",
+    "divergence": "get(true,'className') must be undefined; className from object",
+    "passesAtBase": true,
+    "failsOnHumanPR": false
+  },
+  {
+    "id": "recharts-lodash-26",
+    "file": "lodash-parity.spec.tsx",
+    "test": "lodash parity (hidden) > cartesian/ReferenceLine.tsx:some: ifOverflow=\"discard\" drops a segment with any point out of range",
+    "srcFile": "src/cartesian/ReferenceLine.tsx",
+    "lodashFn": "some",
+    "divergence": "smoke: some over segment points with ifOverflow=discard",
+    "passesAtBase": true,
+    "failsOnHumanPR": false
+  },
+  {
+    "id": "recharts-lodash-27",
+    "file": "lodash-parity.spec.tsx",
+    "test": "lodash parity (hidden) > cartesian/Brush.tsx+state/selectors/axisSelectors.ts:range: index domain for axis without dataKey and brush",
+    "srcFile": [
+      "src/cartesian/Brush.tsx",
+      "src/state/selectors/axisSelectors.ts"
+    ],
+    "lodashFn": "range",
+    "divergence": "smoke: range(0, n) index domain for axis and brush scale",
+    "passesAtBase": true,
+    "failsOnHumanPR": false
+  },
+  {
+    "id": "recharts-lodash-28",
+    "file": "lodash-parity.spec.tsx",
+    "test": "lodash parity (hidden) > state/selectors/selectChartOffset.ts:get: top-oriented XAxis height is added to offset.top",
+    "srcFile": "src/state/selectors/selectChartOffset.ts",
+    "lodashFn": "get",
+    "divergence": "smoke: get(result, orientation) accumulation of axis heights",
+    "passesAtBase": true,
+    "failsOnHumanPR": false
+  },
+  {
+    "id": "recharts-lodash-29",
+    "file": "lodash-parity.spec.tsx",
+    "test": "lodash parity (hidden) > component/LabelList.tsx:last: range values label with their last element",
+    "srcFile": "src/component/LabelList.tsx",
+    "lodashFn": "last",
+    "divergence": "smoke: last of range tuple",
+    "passesAtBase": true,
+    "failsOnHumanPR": false
+  },
+  {
+    "id": "recharts-lodash-30",
+    "file": "lodash-parity.spec.tsx",
+    "test": "lodash parity (hidden) > polar/Radar.tsx:last+first: range radar uses last for outer and first for base radius",
+    "srcFile": "src/polar/Radar.tsx",
+    "lodashFn": [
+      "last",
+      "first"
+    ],
+    "divergence": "smoke: last/first of range values, scalar values pass through",
+    "passesAtBase": true,
+    "failsOnHumanPR": false
+  },
+  {
+    "id": "recharts-lodash-31",
+    "file": "lodash-parity.spec.tsx",
+    "test": "lodash parity (hidden) > polar/PolarRadiusAxis.tsx:maxBy+minBy: label viewBox spans min..max tick radius",
+    "srcFile": "src/polar/PolarRadiusAxis.tsx",
+    "lodashFn": [
+      "maxBy",
+      "minBy"
+    ],
+    "divergence": "smoke: maxBy/minBy over ticks with iteratee",
+    "passesAtBase": true,
+    "failsOnHumanPR": false
+  },
+  {
+    "id": "recharts-lodash-32",
+    "file": "lodash-parity.spec.tsx",
+    "test": "lodash parity (hidden) > polar/Pie.tsx:get: paddingAngle read from sector entries during animation",
+    "srcFile": "src/polar/Pie.tsx",
+    "lodashFn": "get",
+    "divergence": "smoke: get(entry,'paddingAngle',0) in animated branch",
+    "passesAtBase": true,
+    "failsOnHumanPR": false
+  }
+]

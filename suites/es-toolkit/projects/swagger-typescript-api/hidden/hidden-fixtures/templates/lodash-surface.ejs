@@ -1,0 +1,92 @@
+<%
+/*
+ * Custom extra template that uses `utils._` exactly the way the bundled
+ * default templates do (templates/base/*.ejs, templates/default/*.ejs,
+ * templates/modular/*.ejs). Every input mirrors the shape of the data the
+ * bundled template passes at that call site; the call site is named per entry.
+ * The results are serialised as one base64 string literal so the formatter cannot
+ * reshape them.
+ */
+const { utils, routes, modelTypes, apiConfig } = it;
+const { _, internalCase, pascalCase, formatDescription } = utils;
+
+const allRoutes = [
+  ...((routes && routes.outOfModule) || []),
+  ...(((routes && routes.combined) || []).flatMap((group) => group.routes)),
+];
+const firstWithPathParams = allRoutes.find((route) => _.size(route.request.parameters) > 0);
+
+const usedFns = [
+  "isUndefined", "compact", "camelCase", "map", "replace", "get", "upperCase",
+  "values", "lowerCase", "join", "isObject", "uniq", "size", "isString", "isEmpty",
+];
+
+const results = {
+  // the `_` object must still be a lodash-compatible bag of functions
+  fnTypes: usedFns.map((name) => `${name}:${typeof _[name]}`),
+
+  // route-name.ejs: `_.camelCase(operationId)` on Springfox / snake / ordinal operationIds
+  camelOperationIds: ["getUserUsingGET", "listUsingGET_1", "list_2nd_factor_methods", "Rechnungsübersicht", "crème-brûlée_list"].map((v) => _.camelCase(v)),
+  // route-name.ejs: `_.camelCase(`${_.lowerCase(method)}Root`)` and `_.lowerCase(method) + "_" + moduleName`
+  lowerMethods: ["GET", "delete", "PATCH"].map((m) => _.lowerCase(m)),
+  camelRoot: _.camelCase(`${_.lowerCase("GET")}Root`),
+  camelMethodModule: _.camelCase(_.lowerCase("POST") + "_" + ["Übersicht"].join("_")),
+  // route-docs.ejs / procedure-call.ejs: `_.upperCase(request.method)`
+  upperMethods: ["get", "patch", "deleteAll", "list_2nd"].map((m) => _.upperCase(m)),
+
+  // data-contract-jsdoc.ejs: `_.compact([... !_.isUndefined(x) && `@tag ${x}` ...])`
+  compactJsDoc: _.compact([
+    "@format int32",
+    !_.isUndefined(undefined) && "@min 0",
+    0,
+    "",
+    null,
+    Number.NaN,
+    "@pattern ^[a-z]+$",
+  ]),
+  // object-field-jsdoc.ejs: `_.uniq(_.compact([...]))` (title === description duplicates)
+  uniqComments: _.uniq(_.compact(["Pet name", "Pet name", "@example Rex", "", "@example Rex"])),
+  // procedure-call.ejs: `_.join(pathParamsNames, ", ")`
+  joinNames: _.join(["storeId", "itemId"], ", "),
+  // route-docs.ejs: `_.size(raw.tags)` for missing / empty / filled tags, plus object & string inputs
+  sizes: [_.size(undefined), _.size([]), _.size(["pets", "store"]), _.size({ a: 1, b: 2 }), _.size("tags")],
+  // data-contract-jsdoc.ejs: `jsDocLines.every(_.isEmpty)` and general emptiness checks
+  isEmptyValues: [42, 0, "", "x", [], {}, new Map(), new Map([["k", 1]]), null, undefined].map((v) => _.isEmpty(v)),
+  everyIsEmpty: [["", ""].every(_.isEmpty), ["", "@format int32"].every(_.isEmpty)],
+
+  // data-contract-jsdoc.ejs: `_.isObject(value) ? JSON.stringify(value) : _.isString(value) ? ... : value`
+  isUndefinedValues: [undefined, null, 0, false, ""].map((v) => _.isUndefined(v)),
+  isObjectValues: [{}, [], () => 1, null, "s", 1, new Date(0)].map((v) => _.isObject(v)),
+  isStringValues: ["a", "", 1, null, ["a"]].map((v) => _.isString(v)),
+  stringifyDefaults: [{ a: 1 }, ["x"], "text", 5, null, false].map((value) =>
+    _.isObject(value) ? JSON.stringify(value) : _.isString(value) ? `"${value}"` : String(value)),
+
+  // procedure-call.ejs: `_.values(parameters)` + `_.map(pathParams, "name")` on the real path params map
+  pathParamNames: firstWithPathParams ? _.map(_.values(firstWithPathParams.request.parameters), "name") : null,
+  mapShorthandObject: _.map({ storeId: { name: "storeId" }, itemId: { name: "itemId" } }, "name"),
+  mapOfUndefined: _.map(undefined, "name"),
+  valuesOfUndefined: _.values(undefined),
+  valuesOfString: _.values("ab"),
+  // route-types.ejs / modular api.ejs: `_.map(modelTypes, "name")`
+  modelTypeNames: _.map(modelTypes, "name"),
+  // procedure-call.ejs: `_.get(payload, "name") || null` / `_.get(requestConfigParam, "name")`
+  getValues: [
+    _.get(undefined, "name") || null,
+    _.get({ name: "data" }, "name"),
+    _.get({ info: { contact: { email: "a@b.c" } } }, "info.contact.email"),
+    _.get({ info: {} }, ["info", "license", "name"], "MIT"),
+    _.get({ "x.y": 1 }, "x.y"),
+    _.get({ list: [{ id: 7 }] }, "list[0].id"),
+  ],
+  // route-docs.ejs: `_.replace(_.replace(type, /\/\*/g, "\\*"), /\*\//g, "*\\")`; api.ejs newline replace
+  replaceComment: _.replace(_.replace("Array</* legacy */ Item>", /\/\*/g, "\\*"), /\*\//g, "*\\"),
+  replaceNewlines: _.replace("line one\nline two", /\n/g, "\n * "),
+
+  // utils exposed next to `_`
+  internalCase: ["XMLHttpRequest", "list_2nd", "Ärger", "INTEGER"].map((v) => internalCase(v)),
+  pascalCase: ["list_2nd_factor", "oauth2_token", "crème-brûlée", "用户Controller"].map((v) => pascalCase(v)),
+  formatDescriptionInline: formatDescription("First line.\n\n   Second line.  \n", true),
+  title: apiConfig.info.title,
+};
+%>
+export const RESULTS = "<%~ Buffer.from(JSON.stringify(results), "utf8").toString("base64") %>";

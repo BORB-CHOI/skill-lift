@@ -1,0 +1,120 @@
+{
+  "openapi": "3.1.0",
+  "info": { "title": "Schema edge cases", "version": "2.1.0" },
+  "paths": {
+    "/pets": {
+      "get": {
+        "operationId": "listPets",
+        "responses": {
+          "200": {
+            "description": "ok",
+            "content": {
+              "application/json": { "schema": { "type": "array", "items": { "$ref": "#/components/schemas/Pet" } } }
+            }
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "User": {
+        "description": "A registered user of the shop",
+        "type": "object",
+        "required": ["id"],
+        "properties": {
+          "id": { "type": "string", "format": "uuid" },
+          "name": { "type": "string" }
+        }
+      },
+      "Pet": {
+        "type": "object",
+        "required": ["name", "owner"],
+        "properties": {
+          "name": { "type": "string" },
+          "owner": {
+            "allOf": [
+              { "$ref": "#/components/schemas/User" },
+              { "description": "Current owner of the pet" }
+            ]
+          },
+          "previousOwner": { "$ref": "#/components/schemas/User" },
+          "born": { "type": "string", "format": "date-time" },
+          "photo": { "type": "string", "format": "binary" },
+          "tagline": { "type": "string" },
+          "legacyStatus": { "type": "string", "enum": [] },
+          "nickname": { "type": ["string", "null"] }
+        }
+      },
+      "Dog": {
+        "allOf": [
+          { "$ref": "#/components/schemas/Pet" },
+          { "description": "A dog is a pet that barks" }
+        ],
+        "type": "object",
+        "properties": { "bark": { "type": "boolean" } }
+      },
+      "Shape": {
+        "type": "object",
+        "required": ["kind"],
+        "properties": {
+          "kind": { "$ref": "#/components/schemas/ShapeKind" }
+        },
+        "discriminator": {
+          "propertyName": "kind",
+          "mapping": {
+            "circle": "#/components/schemas/Circle",
+            "square": "#/components/schemas/Square"
+          }
+        },
+        "oneOf": [
+          { "$ref": "#/components/schemas/Circle" },
+          { "$ref": "#/components/schemas/Square" }
+        ]
+      },
+      "ShapeKind": { "type": "string", "enum": ["circle", "square"] },
+      "Circle": {
+        "type": "object",
+        "properties": { "kind": { "type": "string" }, "radius": { "type": "number" } }
+      },
+      "Square": {
+        "type": "object",
+        "properties": { "kind": { "type": "string" }, "side": { "type": "number" } }
+      },
+      "Event": {
+        "type": "object",
+        "required": ["type"],
+        "properties": { "type": { "type": "string" } },
+        "discriminator": { "propertyName": "type" },
+        "oneOf": [
+          { "$ref": "#/components/schemas/Click" },
+          { "$ref": "#/components/schemas/Scroll" }
+        ]
+      },
+      "Click": { "type": "object", "properties": { "x": { "type": "integer" } } },
+      "Scroll": { "type": "object", "properties": { "delta": { "type": "integer" } } },
+      "IdOrCode": {
+        "oneOf": [
+          { "type": "string" },
+          { "type": "integer" },
+          { "type": "string" },
+          { "type": "number" }
+        ]
+      },
+      "Address": {
+        "type": "object",
+        "required": ["street", "city"],
+        "allOf": [
+          {
+            "type": "object",
+            "properties": { "street": { "type": "string" }, "zip": { "type": "string" } }
+          },
+          {
+            "type": "object",
+            "properties": { "city": { "type": "string" } }
+          }
+        ]
+      }
+    }
+  }
+}
