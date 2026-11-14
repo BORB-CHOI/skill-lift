@@ -1,0 +1,175 @@
+{
+  "schemaVersion": 1,
+  "registeredAt": "2026-11-13T18:01:35.341Z",
+  "target": {
+    "skill": "es-toolkit:migrate",
+    "source": "toss/es-toolkit, es-toolkit-plugin/skills/migrate",
+    "arms": {
+      "source": "toss/es-toolkit",
+      "commit": "4d5963eb2df129021efdba0de5a3a16bbb3c7bec",
+      "arms": {
+        "skill": {
+          "sha256": "cca4099c964a72748ff716a03846e06ad486f0e7d0adbb4e343152a6b3f9f497",
+          "bytes": 8231
+        },
+        "placebo": {
+          "sha256": "701fe0f0fa4b12514aec7cd3500a731881ff098d79d1a35bb36cfbbb72d27a38",
+          "bytes": 3960
+        },
+        "procedure": {
+          "sha256": "d272de499046d9b76d6d4af6e3594528b9d4372e5b9e28e4dd457e3e92557b49",
+          "bytes": 993
+        },
+        "sabotage": {
+          "sha256": "67451eaa0f7ff09c3b34281c6d2c5976d445a5c47b62e63335567af0e84f1f5b",
+          "bytes": 2599
+        }
+      }
+    }
+  },
+  "claim": "고정한 과제 집합에서 /es-toolkit:migrate로 Skill을 강제 호출한 에이전트의 결과가 플러그인 없는 에이전트보다 과제의 명시된 요구를 더 잘 충족하는가. 과제 집합, 모델, 버전 밖으로 일반화하지 않는다.",
+  "environment": {
+    "models": ["haiku", "sonnet"],
+    "workspaceDependencies": ["es-toolkit", "typescript", "esbuild"],
+    "claudeCode": "2.1.316",
+    "esToolkit": "1.53.2",
+    "lodash": "4.18.1",
+    "esbuild": "0.28.2",
+    "maxTurns": 40,
+    "timeoutMs": 600000,
+    "isolationArgs": ["--setting-sources", "", "--strict-mcp-config", "--no-session-persistence"],
+    "permissionMode": "acceptEdits",
+    "allowedTools": [
+      "Bash",
+      "Read",
+      "Glob",
+      "Grep",
+      "Edit",
+      "Write",
+      "Bash(node:*)",
+      "Bash(npm run size:*)",
+      "Bash(npx tsc:*)",
+      "Bash(ls:*)",
+      "Bash(cat:*)",
+      "Bash(find:*)",
+      "Bash(grep:*)",
+      "Bash(cd:*)",
+      "Bash(pwd:*)",
+      "Bash(mkdir:*)",
+      "Bash(echo:*)",
+      "Bash(head:*)",
+      "Bash(tail:*)",
+      "Bash(wc:*)"
+    ],
+    "disallowedTools": [
+      "WebFetch",
+      "WebSearch",
+      "Bash(curl:*)",
+      "Bash(wget:*)",
+      "Bash(npm install:*)",
+      "Bash(npm i:*)",
+      "Bash(npm view:*)",
+      "Bash(npm info:*)",
+      "Bash(pnpm:*)",
+      "Bash(yarn:*)",
+      "Bash(git:*)"
+    ],
+    "bundleOptions": {
+      "bundle": true,
+      "minify": true,
+      "treeShaking": true,
+      "format": "esm",
+      "platform": "browser",
+      "target": "es2022",
+      "write": false,
+      "logLevel": "silent"
+    }
+  },
+  "design": {
+    "tasks": [
+      "task-01",
+      "task-03",
+      "task-04",
+      "task-06",
+      "task-07",
+      "task-08",
+      "task-09",
+      "task-11",
+      "task-12",
+      "task-14",
+      "task-15",
+      "task-16",
+      "task-17",
+      "task-19",
+      "task-20",
+      "task-22"
+    ],
+    "taskSelection": "함수 목록(A 8개, C 4개, B·D 5개)을 순환 조합해 22번째까지 생성하고, 같은 lodash 함수가 겹치는 조합은 건너뛴다. 기준 해답 계산, 크기 분리 조건, 치환 스크립트 3종 불통과를 모두 충족한 과제만 채택한다.",
+    "repeats": 3,
+    "baselineRepeats": 6,
+    "planSeed": 20261113,
+    "stages": {
+      "primary": ["baseline", "skill"],
+      "controls": ["placebo", "procedure", "sabotage"]
+    },
+    "prompt": "src/runner/workspace.ts의 buildTaskPrompt. 모든 arm에서 같고, Skill을 로드하는 arm은 앞에 \"/es-toolkit:migrate \"를 붙인다."
+  },
+  "grading": {
+    "primaryMetric": "요구 충족 = 동작 보존 ∧ 타입 검사 ∧ 번들 크기 ≤ 기준 × (1 + ε) ∧ 자기 코드 바이트 ≤ 기준 해답의 값 + 허용치",
+    "keySecondaryMetric": "정확성 = 동작 보존 ∧ 타입 검사",
+    "epsilon": 0.05,
+    "ownCodeAllowanceBytes": 200,
+    "hiddenInputsPerFunction": 3000,
+    "submissionRule": "out/ 파일이 있으면 그것, 없고 원본 파일이 바뀌었으면 그것, 아니면 원본 제출"
+  },
+  "analysis": {
+    "unit": "과제. 과제별 점수는 K회 실행의 통과 비율",
+    "intentionToTreat": "시간·턴 한도에 걸린 실행은 0점. 인프라·하네스 실패는 다시 실행하고 남으면 결측",
+    "primaryComparison": "skill 대 baseline(실행 번호 1~K)",
+    "test": "양측 부호 뒤집기 정확 검정",
+    "alpha": 0.05,
+    "primaryHypotheses": 2,
+    "multipleComparison": "Bonferroni (모델별 α = alpha / 모델 수)",
+    "equivalenceDelta": 0.1,
+    "equivalence": "±δ만큼 옮긴 두 단측 검정이 유의하고, 과제 단위 부트스트랩 구간이 ±δ 안이고, 대조 arm의 평균 통과율이 δ 이상 1−δ 이하이며 0도 1도 아닌 과제가 하한 이상일 때만 동등",
+    "verdicts": ["improved", "worsened", "equivalent", "inconclusive"],
+    "exploratory": "controls 단계의 arm 비교, 정확성 지표, 과제별·함수별 결과는 탐색용이고 보정하지 않는다"
+  },
+  "variant": "v2",
+  "disclosures": [
+    "v1(prereg-migrate-v1)에서 작업 폴더에 원본 lodash가 있어 모델이 원본과 직접 비교해 정답을 찾았고, 틀린 내용의 sabotage Skill도 결과를 낮추지 못했다. v2는 이 결과를 보고 설계한 후속 평가다.",
+    "v2는 작업 폴더에서 lodash와 @types/lodash를 뺀다. 과제 파일, 함수 목록, 채점 기준, 판정 규칙, 임계값은 v1과 같다. 비공개 입력의 시드만 새로 정했다.",
+    "v1의 비공개 자료(후보 코드, 시드)는 v2 실행 전에 공개됐다. v2의 비공개 입력은 새 시드로 만들었고 새 솔트로 해시했다. 후보 코드는 v1과 같으므로 기준 해답은 공개된 것과 같다. 기준 해답은 에이전트에게 주어지지 않고 채점에만 쓰인다.",
+    "v2는 Haiku와 Sonnet을 각각 1차 판정한다. 1차 가설이 두 개이므로 Bonferroni 보정으로 모델별 α를 0.025로 둔다. Sonnet은 이 등록 전에 본 과제로 실행한 적이 없다.",
+    "반분 재표집과 검출력 곡선은 v1 결과를 낼 때 구현했고 v2 리포트에도 같은 방식으로 낸다. 사람 감사는 하지 않는다.",
+    "이 등록 전에 채택한 과제 16개를 Haiku로 과제당 대조 2회, Skill 1회 실행해 결과를 봤다(실행 이름 probe16). 그 뒤로 과제, 채점 기준, 판정 규칙은 바꾸지 않았다. 바꾼 것은 인프라 실패 재시도의 대기 시간뿐이다.",
+    "시험 과제(pilot-01, pilot-02)로 네 차례 시험 실행을 하면서 프롬프트, 입력 범위 정의 방식, 자기 코드 바이트 조건, 대조 arm의 Bash 권한을 고쳤다.",
+    "과제 작성자가 SKILL.md를 읽은 뒤에 함수 목록을 만들었다.",
+    "평가 대상 Skill은 migrate 하나다. recommend와 guide는 이 등록에 들어 있지 않다."
+  ],
+  "sealed": {
+    "method": "SHA-256(솔트 + 파일 바이트). 솔트와 원본은 본 실행 뒤에 공개한다",
+    "files": {
+      "task-01.json": "12fae44f6a2767a6546a04a5c2ab9751378efeff10f593aba9dcb8607ca52e39",
+      "task-03.json": "a55514b8a54192144f7d863e71668aec0b7dbcf3c29ea93bc875cd6c21d0df6e",
+      "task-04.json": "694fd5b79d8256ef6387810523fc1fe2cb544b82de075456684543e119dcf869",
+      "task-05.json": "faa9b3e0c10d6334af8e9b1c3b0062e09846d1fb385e14bf1e66a99c5bfacbaf",
+      "task-06.json": "94339bb8fa1c8da4d8e66c4e7c7f66e1d0eecf23615a99c92f4a85710483aaaa",
+      "task-07.json": "1baab44767c6b8a6a641d9ede45e8afa2f87492e077039d2cd4afc65f7f55f1f",
+      "task-08.json": "3cda758910f8c73c1595f599aa898e9614997c1347b2e199e4f037893ee9ecd9",
+      "task-09.json": "f94570f95fe35caa8df6ddb97ca2c36cae15172a4092d4a57f0d838a93606d84",
+      "task-11.json": "3aaffeaf15977ea02eeabcbb20bc78682711d3ccebdf55e1620d9afc9f20e006",
+      "task-12.json": "22f68e85b92c3b2b2676c9804f1069b500708c1bfd312b0bc589c659e3150292",
+      "task-13.json": "1c6e56e814b3fb9e542466571dccff3984f2e198c05bc568d8bb9798ff05a7e2",
+      "task-14.json": "6bc10631bba72b35d1131763ab1fbf0153dc3ba039e2a8cfa59e8a4dda34bf1d",
+      "task-15.json": "8d7ad04669785cbde4c5fac1feee45fabd5a7c920590f8741030c564eae348f0",
+      "task-16.json": "37f1e90903725eab08ee4d26bf550d65bd80d1783e292b82c860f08df48dc9cc",
+      "task-17.json": "57dc2001dc3c69868f137cd3f351f78bba4694cb32d9b05407d460da17a06ae2",
+      "task-19.json": "2cae2f6403d28a0cac94affe64a8b2baa67934bf83b910885453c111fb57d7c9",
+      "task-20.json": "17de3c85075d85e8c967b1834568abbd484ea6912b1b8d9104525e8a9b555f8a",
+      "task-21.json": "583a90d42125fb271558ff89bcb320ac2870d2a735a1b15f1c5b0f7bbbb0c85c",
+      "task-22.json": "31c69777a0996c2db3ad32eea9e00b0f13328c5a5a61cbc9cb418a9cca74aec2",
+      "validation.json": "619e59e6b69f09547d38751a21a2613ed01aaf12739441d72a1c7beffa2a1934"
+    }
+  }
+}

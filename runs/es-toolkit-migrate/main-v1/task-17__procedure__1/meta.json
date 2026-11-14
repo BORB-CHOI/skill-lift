@@ -1,0 +1,23 @@
+{
+  "runId": "task-17__procedure__1",
+  "taskId": "task-17",
+  "arm": "procedure",
+  "repeat": 1,
+  "state": "completed",
+  "attempt": 1,
+  "submissionKind": "out",
+  "model": "claude-haiku-5-5",
+  "loadedSkills": [
+    "es-toolkit:migrate"
+  ],
+  "turns": 15,
+  "durationMs": 157105,
+  "usage": {
+    "input": 30,
+    "output": 27396,
+    "cacheRead": 789342,
+    "cacheCreation": 50439
+  },
+  "deniedTools": 0,
+  "malformedLines": 0
+}

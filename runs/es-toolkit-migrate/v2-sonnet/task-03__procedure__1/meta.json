@@ -1,0 +1,23 @@
+{
+  "runId": "task-03__procedure__1",
+  "taskId": "task-03",
+  "arm": "procedure",
+  "repeat": 1,
+  "state": "completed",
+  "attempt": 1,
+  "submissionKind": "out",
+  "model": "claude-sonnet-5-5",
+  "loadedSkills": [
+    "es-toolkit:migrate"
+  ],
+  "turns": 7,
+  "durationMs": 43531,
+  "usage": {
+    "input": 14,
+    "output": 2769,
+    "cacheRead": 247942,
+    "cacheCreation": 14428
+  },
+  "deniedTools": 0,
+  "malformedLines": 0
+}

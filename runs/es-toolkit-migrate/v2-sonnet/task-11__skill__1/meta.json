@@ -1,0 +1,23 @@
+{
+  "runId": "task-11__skill__1",
+  "taskId": "task-11",
+  "arm": "skill",
+  "repeat": 1,
+  "state": "completed",
+  "attempt": 1,
+  "submissionKind": "out",
+  "model": "claude-sonnet-5-5",
+  "loadedSkills": [
+    "es-toolkit:migrate"
+  ],
+  "turns": 6,
+  "durationMs": 27010,
+  "usage": {
+    "input": 10,
+    "output": 1630,
+    "cacheRead": 179128,
+    "cacheCreation": 13964
+  },
+  "deniedTools": 0,
+  "malformedLines": 0
+}

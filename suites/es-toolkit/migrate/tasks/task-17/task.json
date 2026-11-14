@@ -1,0 +1,54 @@
+{
+  "id": "task-17",
+  "file": "src/module.ts",
+  "functions": ["merge", "startCase", "isEmpty"],
+  "inputRange": "applyPatch(base, patch): base는 깊이 3 이하의 JSON 객체이고 값은 문자열, 숫자, 불리언, null, 배열, 객체다. 배열의 원소는 전부 스칼라이거나 전부 객체다. patch는 base와 같은 자리에 같은 종류의 값만 덮어쓴다(객체 자리에는 객체, 배열 자리에는 배열, 그 외에는 문자열·숫자·불리언·null). base에 없는 키는 어떤 값이든 추가할 수 있다. toTitle(key): 길이 0~40의 문자열이고 ASCII 영문자, 숫자, 공백, 하이픈, 밑줄, 마침표로 이루어진다. 대문자가 연속되거나 숫자가 글자 사이에 올 수 있다. isBlank(value): JSON 값 하나. null, 불리언, -5~99의 정수, 문자열, 깊이 2 이하의 배열이나 객체(빈 것 포함).",
+  "exports": [
+    {
+      "name": "applyPatch",
+      "examples": [
+        [
+          {},
+          {
+            "enabled": 17
+          }
+        ],
+        [
+          {
+            "limits": {},
+            "enabled": ""
+          },
+          {
+            "limits": {
+              "enabled": 63
+            },
+            "enabled": "",
+            "layout": {}
+          }
+        ]
+      ]
+    },
+    {
+      "name": "toTitle",
+      "examples": [["Width.91-ApiWidth."], ["Apiurl api_0-36"]]
+    },
+    {
+      "name": "isBlank",
+      "examples": [
+        ["red"],
+        [
+          [
+            {
+              "enabled": {
+                "theme": "compact",
+                "enabled": "blue"
+              },
+              "items": ""
+            },
+            {}
+          ]
+        ]
+      ]
+    }
+  ]
+}

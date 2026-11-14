@@ -1,0 +1,131 @@
+{
+  "id": "task-19",
+  "file": "src/module.ts",
+  "functions": ["pick", "sumByKey", "fromPairs"],
+  "inputRange": "publicFields(row): { id: 0~9의 정수, name: 다섯 가지 소문자 이름 중 하나, age: 18~60의 정수 }. totalAge(rows): 길이 0~12의 배열이고 각 원소는 { id: 0~9의 정수, name: 다섯 가지 소문자 이름 중 하나, age: 18~60의 정수 }. toLookup(pairs): 길이 0~8의 [문자열, 정수] 쌍 배열. 문자열은 소문자 이름이고 겹칠 수 있다.",
+  "exports": [
+    {
+      "name": "publicFields",
+      "examples": [
+        [
+          {
+            "id": 5,
+            "name": "jung",
+            "age": 42
+          }
+        ],
+        [
+          {
+            "id": 7,
+            "name": "lee",
+            "age": 22
+          }
+        ]
+      ]
+    },
+    {
+      "name": "totalAge",
+      "examples": [
+        [
+          [
+            {
+              "id": 4,
+              "name": "lee",
+              "age": 28
+            },
+            {
+              "id": 2,
+              "name": "kim",
+              "age": 40
+            },
+            {
+              "id": 1,
+              "name": "choi",
+              "age": 30
+            },
+            {
+              "id": 2,
+              "name": "lee",
+              "age": 37
+            },
+            {
+              "id": 9,
+              "name": "jung",
+              "age": 57
+            }
+          ]
+        ],
+        [
+          [
+            {
+              "id": 9,
+              "name": "kim",
+              "age": 24
+            },
+            {
+              "id": 2,
+              "name": "park",
+              "age": 22
+            },
+            {
+              "id": 2,
+              "name": "choi",
+              "age": 21
+            },
+            {
+              "id": 9,
+              "name": "lee",
+              "age": 53
+            },
+            {
+              "id": 4,
+              "name": "lee",
+              "age": 33
+            },
+            {
+              "id": 9,
+              "name": "kim",
+              "age": 37
+            },
+            {
+              "id": 5,
+              "name": "choi",
+              "age": 56
+            },
+            {
+              "id": 3,
+              "name": "jung",
+              "age": 44
+            },
+            {
+              "id": 5,
+              "name": "choi",
+              "age": 46
+            },
+            {
+              "id": 3,
+              "name": "jung",
+              "age": 28
+            }
+          ]
+        ]
+      ]
+    },
+    {
+      "name": "toLookup",
+      "examples": [
+        [[]],
+        [
+          [
+            ["kim", 4],
+            ["kim", 56],
+            ["choi", 75],
+            ["kim", 24],
+            ["lee", 62],
+            ["kim", 34]
+          ]
+        ]
+      ]
+    }
+  ]
+}

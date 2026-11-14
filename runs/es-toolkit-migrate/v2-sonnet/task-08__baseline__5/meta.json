@@ -1,0 +1,21 @@
+{
+  "runId": "task-08__baseline__5",
+  "taskId": "task-08",
+  "arm": "baseline",
+  "repeat": 5,
+  "state": "completed",
+  "attempt": 1,
+  "submissionKind": "out",
+  "model": "claude-sonnet-5-5",
+  "loadedSkills": [],
+  "turns": 8,
+  "durationMs": 58018,
+  "usage": {
+    "input": 14,
+    "output": 3542,
+    "cacheRead": 240757,
+    "cacheCreation": 13272
+  },
+  "deniedTools": 0,
+  "malformedLines": 0
+}

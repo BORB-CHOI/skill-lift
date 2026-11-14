@@ -1,0 +1,94 @@
+{
+  "id": "task-12",
+  "file": "src/module.ts",
+  "functions": ["mapValues", "keyByKey", "isEmpty"],
+  "inputRange": "doubled(scores): 키가 소문자 이름이고 값이 -5~99의 정수인 객체. 키는 0~5개. byNameKey(rows): 길이 0~12의 배열이고 각 원소는 { id: 0~9의 정수, name: 다섯 가지 소문자 이름 중 하나, age: 18~60의 정수 }. isBlank(value): JSON 값 하나. null, 불리언, -5~99의 정수, 문자열, 깊이 2 이하의 배열이나 객체(빈 것 포함).",
+  "exports": [
+    {
+      "name": "doubled",
+      "examples": [
+        [
+          {
+            "choi": 50,
+            "kim": 79
+          }
+        ],
+        [
+          {
+            "choi": 16,
+            "kim": 52,
+            "lee": 48
+          }
+        ]
+      ]
+    },
+    {
+      "name": "byNameKey",
+      "examples": [
+        [
+          [
+            {
+              "id": 4,
+              "name": "choi",
+              "age": 21
+            },
+            {
+              "id": 9,
+              "name": "choi",
+              "age": 55
+            }
+          ]
+        ],
+        [
+          [
+            {
+              "id": 1,
+              "name": "choi",
+              "age": 28
+            },
+            {
+              "id": 8,
+              "name": "kim",
+              "age": 44
+            },
+            {
+              "id": 1,
+              "name": "lee",
+              "age": 52
+            },
+            {
+              "id": 2,
+              "name": "lee",
+              "age": 35
+            },
+            {
+              "id": 9,
+              "name": "lee",
+              "age": 53
+            },
+            {
+              "id": 8,
+              "name": "choi",
+              "age": 56
+            }
+          ]
+        ]
+      ]
+    },
+    {
+      "name": "isBlank",
+      "examples": [
+        [null],
+        [
+          [
+            {
+              "items": 85,
+              "limits": null,
+              "enabled": "red"
+            }
+          ]
+        ]
+      ]
+    }
+  ]
+}

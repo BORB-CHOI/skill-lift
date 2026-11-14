@@ -1,0 +1,20 @@
+{
+  "id": "task-13",
+  "file": "src/module.ts",
+  "functions": ["camelCase", "startCase", "toNumber"],
+  "inputRange": "toKey(label): 길이 0~40의 문자열이고 ASCII 영문자, 숫자, 공백, 하이픈, 밑줄, 마침표로 이루어진다. 대문자가 연속되거나 숫자가 글자 사이에 올 수 있다. toTitle(key): 길이 0~40의 문자열이고 ASCII 영문자, 숫자, 공백, 하이픈, 밑줄, 마침표로 이루어진다. 대문자가 연속되거나 숫자가 글자 사이에 올 수 있다. parseAmount(text): 길이 0~8의 문자열이고 숫자, 소수점, 부호, 공백, 영문자 e와 x로 이루어진다. 숫자로 읽히지 않는 문자열도 포함한다.",
+  "exports": [
+    {
+      "name": "toKey",
+      "examples": [[""], ["98"]]
+    },
+    {
+      "name": "toTitle",
+      "examples": [["Height_SIZE-Width"], [""]]
+    },
+    {
+      "name": "parseAmount",
+      "examples": [["- 73"], [""]]
+    }
+  ]
+}

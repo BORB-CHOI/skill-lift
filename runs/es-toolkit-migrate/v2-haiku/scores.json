@@ -1,0 +1,7592 @@
+{
+  "epsilon": 0.05,
+  "allowance": 200,
+  "delta": 0.1,
+  "hypotheses": 2,
+  "scores": [
+    {
+      "runId": "task-01__baseline__1",
+      "taskId": "task-01",
+      "arm": "baseline",
+      "repeat": 1,
+      "state": "completed",
+      "attempt": 1,
+      "submissionKind": "out",
+      "model": "claude-haiku-5-5",
+      "loadedSkills": [],
+      "turns": 11,
+      "durationMs": 106810,
+      "usage": {
+        "input": 22,
+        "output": 18668,
+        "cacheRead": 502460,
+        "cacheCreation": 40149
+      },
+      "deniedTools": 0,
+      "malformedLines": 0,
+      "requirement": 1,
+      "correct": 1,
+      "size": 2361,
+      "ownBytes": 97
+    },
+    {
+      "runId": "task-01__baseline__2",
+      "taskId": "task-01",
+      "arm": "baseline",
+      "repeat": 2,
+      "state": "completed",
+      "attempt": 1,
+      "submissionKind": "out",
+      "model": "claude-haiku-5-5",
+      "loadedSkills": [],
+      "turns": 17,
+      "durationMs": 216240,
+      "usage": {
+        "input": 28,
+        "output": 16171,
+        "cacheRead": 624562,
+        "cacheCreation": 34976
+      },
+      "deniedTools": 0,
+      "malformedLines": 0,
+      "requirement": 1,
+      "correct": 1,
+      "size": 2364,
+      "ownBytes": 97
+    },
+    {
+      "runId": "task-01__baseline__3",
+      "taskId": "task-01",
+      "arm": "baseline",
+      "repeat": 3,
+      "state": "completed",
+      "attempt": 1,
+      "submissionKind": "out",
+      "model": "claude-haiku-5-5",
+      "loadedSkills": [],
+      "turns": 11,
+      "durationMs": 113434,
+      "usage": {
+        "input": 22,
+        "output": 14351,
+        "cacheRead": 485220,
+        "cacheCreation": 32965
+      },
+      "deniedTools": 0,
+      "malformedLines": 0,
+      "requirement": 0,
+      "correct": 1,
+      "size": 4044,
+      "ownBytes": 97
+    },
+    {
+      "runId": "task-01__baseline__4",
+      "taskId": "task-01",
+      "arm": "baseline",
+      "repeat": 4,
+      "state": "completed",
+      "attempt": 1,
+      "submissionKind": "out",
+      "model": "claude-haiku-5-5",
+      "loadedSkills": [],
+      "turns": 22,
+      "durationMs": 193687,
+      "usage": {
+        "input": 38,
+        "output": 24738,
+        "cacheRead": 991783,
+        "cacheCreation": 45315
+      },
+      "deniedTools": 0,
+      "malformedLines": 0,
+      "requirement": 1,
+      "correct": 1,
+      "size": 1786,
+      "ownBytes": 114
+    },
+    {
+      "runId": "task-01__baseline__5",
+      "taskId": "task-01",
+      "arm": "baseline",
+      "repeat": 5,
+      "state": "completed",
+      "attempt": 1,
+      "submissionKind": "out",
+      "model": "claude-haiku-5-5",
+      "loadedSkills": [],
+      "turns": 26,
+      "durationMs": 217440,
+      "usage": {
+        "input": 38,
+        "output": 28735,
+        "cacheRead": 1106250,
+        "cacheCreation": 60592
+      },
+      "deniedTools": 1,
+      "malformedLines": 0,
+      "requirement": 1,
+      "correct": 1,
+      "size": 1785,
+      "ownBytes": 120
+    },
+    {
+      "runId": "task-01__baseline__6",
+      "taskId": "task-01",
+      "arm": "baseline",
+      "repeat": 6,
+      "state": "completed",
+      "attempt": 1,
+      "submissionKind": "out",
+      "model": "claude-haiku-5-5",
+      "loadedSkills": [],
+      "turns": 17,
+      "durationMs": 231388,
+      "usage": {
+        "input": 28,
+        "output": 15918,
+        "cacheRead": 614936,
+        "cacheCreation": 35151
+      },
+      "deniedTools": 0,
+      "malformedLines": 0,
+      "requirement": 1,
+      "correct": 1,
+      "size": 2359,
+      "ownBytes": 97
+    },
+    {
+      "runId": "task-01__placebo__1",
+      "taskId": "task-01",
+      "arm": "placebo",
+      "repeat": 1,
+      "state": "completed",
+      "attempt": 1,
+      "submissionKind": "out",
+      "model": "claude-haiku-5-5",
+      "loadedSkills": [
+        "es-toolkit:migrate"
+      ],
+      "turns": 21,
+      "durationMs": 207392,
+      "usage": {
+        "input": 42,
+        "output": 27913,
+        "cacheRead": 1177181,
+        "cacheCreation": 52987
+      },
+      "deniedTools": 0,
+      "malformedLines": 0,
+      "requirement": 1,
+      "correct": 1,
+      "size": 2361,
+      "ownBytes": 97
+    },
+    {
+      "runId": "task-01__placebo__2",
+      "taskId": "task-01",
+      "arm": "placebo",
+      "repeat": 2,
+      "state": "completed",
+      "attempt": 1,
+      "submissionKind": "out",
+      "model": "claude-haiku-5-5",
+      "loadedSkills": [
+        "es-toolkit:migrate"
+      ],
+      "turns": 12,
+      "durationMs": 112664,
+      "usage": {
+        "input": 24,
+        "output": 12303,
+        "cacheRead": 578929,
+        "cacheCreation": 38493
+      },
+      "deniedTools": 0,
+      "malformedLines": 0,
+      "requirement": 1,
+      "correct": 1,
+      "size": 2362,
+      "ownBytes": 97
+    },
+    {
+      "runId": "task-01__placebo__3",
+      "taskId": "task-01",
+      "arm": "placebo",
+      "repeat": 3,
+      "state": "completed",
+      "attempt": 1,
+      "submissionKind": "out",
+      "model": "claude-haiku-5-5",
+      "loadedSkills": [
+        "es-toolkit:migrate"
+      ],
+      "turns": 15,
+      "durationMs": 259840,
+      "usage": {
+        "input": 28,
+        "output": 19282,
+        "cacheRead": 705193,
+        "cacheCreation": 42388
+      },
+      "deniedTools": 1,
+      "malformedLines": 0,
+      "requirement": 1,
+      "correct": 1,
+      "size": 995,
+      "ownBytes": 112
+    },
+    {
+      "runId": "task-01__procedure__1",
+      "taskId": "task-01",
+      "arm": "procedure",
+      "repeat": 1,
+      "state": "completed",
+      "attempt": 1,
+      "submissionKind": "out",
+      "model": "claude-haiku-5-5",
+      "loadedSkills": [
+        "es-toolkit:migrate"
+      ],
+      "turns": 14,
+      "durationMs": 203291,
+      "usage": {
+        "input": 24,
+        "output": 11754,
+        "cacheRead": 544131,
+        "cacheCreation": 33180
+      },
+      "deniedTools": 0,
+      "malformedLines": 0,
+      "requirement": 1,
+      "correct": 1,
+      "size": 2362,
+      "ownBytes": 97
+    },
+    {
+      "runId": "task-01__procedure__2",
+      "taskId": "task-01",
+      "arm": "procedure",
+      "repeat": 2,
+      "state": "completed",
+      "attempt": 1,
+      "submissionKind": "out",
+      "model": "claude-haiku-5-5",
+      "loadedSkills": [
+        "es-toolkit:migrate"
+      ],
+      "turns": 29,
+      "durationMs": 363916,
+      "usage": {
+        "input": 48,
+        "output": 27249,
+        "cacheRead": 1348825,
+        "cacheCreation": 51186
+      },
+      "deniedTools": 0,
+      "malformedLines": 0,
+      "requirement": 1,
+      "correct": 1,
+      "size": 2360,
+      "ownBytes": 97
+    },
+    {
+      "runId": "task-01__procedure__3",
+      "taskId": "task-01",
+      "arm": "procedure",
+      "repeat": 3,
+      "state": "completed",
+      "attempt": 1,
+      "submissionKind": "out",
+      "model": "claude-haiku-5-5",
+      "loadedSkills": [
+        "es-toolkit:migrate"
+      ],
+      "turns": 18,
+      "durationMs": 277855,
+      "usage": {
+        "input": 36,
+        "output": 28069,
+        "cacheRead": 1047230,
+        "cacheCreation": 57728
+      },
+      "deniedTools": 0,
+      "malformedLines": 0,
+      "requirement": 1,
+      "correct": 1,
+      "size": 2360,
+      "ownBytes": 97
+    },
+    {
+      "runId": "task-01__sabotage__1",
+      "taskId": "task-01",
+      "arm": "sabotage",
+      "repeat": 1,
+      "state": "completed",
+      "attempt": 1,
+      "submissionKind": "out",
+      "model": "claude-haiku-5-5",
+      "loadedSkills": [
+        "es-toolkit:migrate"
+      ],
+      "turns": 17,
+      "durationMs": 196731,
+      "usage": {
+        "input": 28,
+        "output": 27629,
+        "cacheRead": 789427,
+        "cacheCreation": 51806
+      },
+      "deniedTools": 0,
+      "malformedLines": 0,
+      "requirement": 1,
+      "correct": 1,
+      "size": 2364,
+      "ownBytes": 97
+    },
+    {
+      "runId": "task-01__sabotage__2",
+      "taskId": "task-01",
+      "arm": "sabotage",
+      "repeat": 2,
+      "state": "completed",
+      "attempt": 1,
+      "submissionKind": "out",
+      "model": "claude-haiku-5-5",
+      "loadedSkills": [
+        "es-toolkit:migrate"
+      ],
+      "turns": 12,
+      "durationMs": 229444,
+      "usage": {
+        "input": 20,
+        "output": 14750,
+        "cacheRead": 438182,
+        "cacheCreation": 32746
+      },
+      "deniedTools": 0,
+      "malformedLines": 0,
+      "requirement": 1,
+      "correct": 1,
+      "size": 2361,
+      "ownBytes": 97
+    },
+    {
+      "runId": "task-01__sabotage__3",
+      "taskId": "task-01",
+      "arm": "sabotage",
+      "repeat": 3,
+      "state": "completed",
+      "attempt": 1,
+      "submissionKind": "out",
+      "model": "claude-haiku-5-5",
+      "loadedSkills": [
+        "es-toolkit:migrate"
+      ],
+      "turns": 12,
+      "durationMs": 152261,
+      "usage": {
+        "input": 20,
+        "output": 23941,
+        "cacheRead": 450155,
+        "cacheCreation": 44218
+      },
+      "deniedTools": 0,
+      "malformedLines": 0,
+      "requirement": 1,
+      "correct": 1,
+      "size": 996,
+      "ownBytes": 111
+    },
+    {
+      "runId": "task-01__skill__1",
+      "taskId": "task-01",
+      "arm": "skill",
+      "repeat": 1,
+      "state": "completed",
+      "attempt": 1,
+      "submissionKind": "out",
+      "model": "claude-haiku-5-5",
+      "loadedSkills": [
+        "es-toolkit:migrate"
+      ],
+      "turns": 26,
+      "durationMs": 344900,
+      "usage": {
+        "input": 42,
+        "output": 35549,
+        "cacheRead": 1445200,
+        "cacheCreation": 76412
+      },
+      "deniedTools": 0,
+      "malformedLines": 0,
+      "requirement": 1,
+      "correct": 1,
+      "size": 2364,
+      "ownBytes": 97
+    },
+    {
+      "runId": "task-01__skill__2",
+      "taskId": "task-01",
+      "arm": "skill",
+      "repeat": 2,
+      "state": "completed",
+      "attempt": 1,
+      "submissionKind": "out",
+      "model": "claude-haiku-5-5",
+      "loadedSkills": [
+        "es-toolkit:migrate"
+      ],
+      "turns": 14,
+      "durationMs": 130275,
+      "usage": {
+        "input": 28,
+        "output": 20294,
+        "cacheRead": 726500,
+        "cacheCreation": 42128
+      },
+      "deniedTools": 0,
+      "malformedLines": 0,
+      "requirement": 1,
+      "correct": 1,
+      "size": 2360,
+      "ownBytes": 97
+    },
+    {
+      "runId": "task-01__skill__3",
+      "taskId": "task-01",
+      "arm": "skill",
+      "repeat": 3,
+      "state": "completed",
+      "attempt": 1,
+      "submissionKind": "out",
+      "model": "claude-haiku-5-5",
+      "loadedSkills": [
+        "es-toolkit:migrate"
+      ],
+      "turns": 16,
+      "durationMs": 159596,
+      "usage": {
+        "input": 32,
+        "output": 19910,
+        "cacheRead": 848390,
+        "cacheCreation": 44410
+      },
+      "deniedTools": 0,
+      "malformedLines": 0,
+      "requirement": 1,
+      "correct": 1,
+      "size": 2359,
+      "ownBytes": 97
+    },
+    {
+      "runId": "task-03__baseline__1",
+      "taskId": "task-03",
+      "arm": "baseline",
+      "repeat": 1,
+      "state": "completed",
+      "attempt": 1,
+      "submissionKind": "out",
+      "model": "claude-haiku-5-5",
+      "loadedSkills": [],
+      "turns": 9,
+      "durationMs": 70015,
+      "usage": {
+        "input": 18,
+        "output": 10493,
+        "cacheRead": 349195,
+        "cacheCreation": 23029
+      },
+      "deniedTools": 0,
+      "malformedLines": 0,
+      "requirement": 1,
+      "correct": 1,
+      "size": 267,
+      "ownBytes": 101
+    },
+    {
+      "runId": "task-03__baseline__2",
+      "taskId": "task-03",
+      "arm": "baseline",
+      "repeat": 2,
+      "state": "completed",
+      "attempt": 1,
+      "submissionKind": "out",
+      "model": "claude-haiku-5-5",
+      "loadedSkills": [],
+      "turns": 13,
+      "durationMs": 73728,
+      "usage": {
+        "input": 26,
+        "output": 10933,
+        "cacheRead": 576642,
+        "cacheCreation": 28817
+      },
+      "deniedTools": 0,
+      "malformedLines": 0,
+      "requirement": 1,
+      "correct": 1,
+      "size": 267,
+      "ownBytes": 101
+    },
+    {
+      "runId": "task-03__baseline__3",
+      "taskId": "task-03",
+      "arm": "baseline",
+      "repeat": 3,
+      "state": "completed",
+      "attempt": 1,
+      "submissionKind": "out",
+      "model": "claude-haiku-5-5",
+      "loadedSkills": [],
+      "turns": 15,
+      "durationMs": 83318,
+      "usage": {
+        "input": 30,
+        "output": 10792,
+        "cacheRead": 625765,
+        "cacheCreation": 25279
+      },
+      "deniedTools": 0,
+      "malformedLines": 0,
+      "requirement": 1,
+      "correct": 1,
+      "size": 267,
+      "ownBytes": 101
+    },
+    {
+      "runId": "task-03__baseline__4",
+      "taskId": "task-03",
+      "arm": "baseline",
+      "repeat": 4,
+      "state": "completed",
+      "attempt": 1,
+      "submissionKind": "out",
+      "model": "claude-haiku-5-5",
+      "loadedSkills": [],
+      "turns": 11,
+      "durationMs": 76544,
+      "usage": {
+        "input": 22,
+        "output": 9717,
+        "cacheRead": 437098,
+        "cacheCreation": 22495
+      },
+      "deniedTools": 0,
+      "malformedLines": 0,
+      "requirement": 1,
+      "correct": 1,
+      "size": 268,
+      "ownBytes": 101
+    },
+    {
+      "runId": "task-03__baseline__5",
+      "taskId": "task-03",
+      "arm": "baseline",
+      "repeat": 5,
+      "state": "completed",
+      "attempt": 1,
+      "submissionKind": "out",
+      "model": "claude-haiku-5-5",
+      "loadedSkills": [],
+      "turns": 14,
+      "durationMs": 76765,
+      "usage": {
+        "input": 24,
+        "output": 12682,
+        "cacheRead": 505706,
+        "cacheCreation": 27878
+      },
+      "deniedTools": 0,
+      "malformedLines": 0,
+      "requirement": 1,
+      "correct": 1,
+      "size": 267,
+      "ownBytes": 101
+    },
+    {
+      "runId": "task-03__baseline__6",
+      "taskId": "task-03",
+      "arm": "baseline",
+      "repeat": 6,
+      "state": "completed",
+      "attempt": 1,
+      "submissionKind": "out",
+      "model": "claude-haiku-5-5",
+      "loadedSkills": [],
+      "turns": 7,
+      "durationMs": 68695,
+      "usage": {
+        "input": 14,
+        "output": 7870,
+        "cacheRead": 258939,
+        "cacheCreation": 19773
+      },
+      "deniedTools": 0,
+      "malformedLines": 0,
+      "requirement": 1,
+      "correct": 1,
+      "size": 267,
+      "ownBytes": 101
+    },
+    {
+      "runId": "task-03__placebo__1",
+      "taskId": "task-03",
+      "arm": "placebo",
+      "repeat": 1,
+      "state": "completed",
+      "attempt": 1,
+      "submissionKind": "out",
+      "model": "claude-haiku-5-5",
+      "loadedSkills": [
+        "es-toolkit:migrate"
+      ],
+      "turns": 11,
+      "durationMs": 91213,
+      "usage": {
+        "input": 20,
+        "output": 12158,
+        "cacheRead": 424282,
+        "cacheCreation": 28435
+      },
+      "deniedTools": 0,
+      "malformedLines": 0,
+      "requirement": 1,
+      "correct": 1,
+      "size": 267,
+      "ownBytes": 101
+    },
+    {
+      "runId": "task-03__placebo__2",
+      "taskId": "task-03",
+      "arm": "placebo",
+      "repeat": 2,
+      "state": "completed",
+      "attempt": 1,
+      "submissionKind": "out",
+      "model": "claude-haiku-5-5",
+      "loadedSkills": [
+        "es-toolkit:migrate"
+      ],
+      "turns": 9,
+      "durationMs": 88391,
+      "usage": {
+        "input": 16,
+        "output": 10481,
+        "cacheRead": 322226,
+        "cacheCreation": 25650
+      },
+      "deniedTools": 0,
+      "malformedLines": 0,
+      "requirement": 1,
+      "correct": 1,
+      "size": 267,
+      "ownBytes": 101
+    },
+    {
+      "runId": "task-03__placebo__3",
+      "taskId": "task-03",
+      "arm": "placebo",
+      "repeat": 3,
+      "state": "completed",
+      "attempt": 1,
+      "submissionKind": "out",
+      "model": "claude-haiku-5-5",
+      "loadedSkills": [
+        "es-toolkit:migrate"
+      ],
+      "turns": 8,
+      "durationMs": 71991,
+      "usage": {
+        "input": 16,
+        "output": 5939,
+        "cacheRead": 318400,
+        "cacheCreation": 21798
+      },
+      "deniedTools": 0,
+      "malformedLines": 0,
+      "requirement": 1,
+      "correct": 1,
+      "size": 267,
+      "ownBytes": 101
+    },
+    {
+      "runId": "task-03__procedure__1",
+      "taskId": "task-03",
+      "arm": "procedure",
+      "repeat": 1,
+      "state": "completed",
+      "attempt": 1,
+      "submissionKind": "out",
+      "model": "claude-haiku-5-5",
+      "loadedSkills": [
+        "es-toolkit:migrate"
+      ],
+      "turns": 11,
+      "durationMs": 119098,
+      "usage": {
+        "input": 20,
+        "output": 17211,
+        "cacheRead": 449716,
+        "cacheCreation": 33305
+      },
+      "deniedTools": 0,
+      "malformedLines": 0,
+      "requirement": 1,
+      "correct": 1,
+      "size": 267,
+      "ownBytes": 101
+    },
+    {
+      "runId": "task-03__procedure__2",
+      "taskId": "task-03",
+      "arm": "procedure",
+      "repeat": 2,
+      "state": "completed",
+      "attempt": 1,
+      "submissionKind": "out",
+      "model": "claude-haiku-5-5",
+      "loadedSkills": [
+        "es-toolkit:migrate"
+      ],
+      "turns": 13,
+      "durationMs": 119014,
+      "usage": {
+        "input": 24,
+        "output": 12966,
+        "cacheRead": 538419,
+        "cacheCreation": 33505
+      },
+      "deniedTools": 0,
+      "malformedLines": 0,
+      "requirement": 1,
+      "correct": 1,
+      "size": 267,
+      "ownBytes": 101
+    },
+    {
+      "runId": "task-03__procedure__3",
+      "taskId": "task-03",
+      "arm": "procedure",
+      "repeat": 3,
+      "state": "completed",
+      "attempt": 1,
+      "submissionKind": "out",
+      "model": "claude-haiku-5-5",
+      "loadedSkills": [
+        "es-toolkit:migrate"
+      ],
+      "turns": 16,
+      "durationMs": 224943,
+      "usage": {
+        "input": 26,
+        "output": 13222,
+        "cacheRead": 600767,
+        "cacheCreation": 32532
+      },
+      "deniedTools": 0,
+      "malformedLines": 0,
+      "requirement": 1,
+      "correct": 1,
+      "size": 268,
+      "ownBytes": 101
+    },
+    {
+      "runId": "task-03__sabotage__1",
+      "taskId": "task-03",
+      "arm": "sabotage",
+      "repeat": 1,
+      "state": "completed",
+      "attempt": 1,
+      "submissionKind": "out",
+      "model": "claude-haiku-5-5",
+      "loadedSkills": [
+        "es-toolkit:migrate"
+      ],
+      "turns": 11,
+      "durationMs": 103113,
+      "usage": {
+        "input": 22,
+        "output": 13688,
+        "cacheRead": 482999,
+        "cacheCreation": 30591
+      },
+      "deniedTools": 0,
+      "malformedLines": 0,
+      "requirement": 1,
+      "correct": 1,
+      "size": 267,
+      "ownBytes": 101
+    },
+    {
+      "runId": "task-03__sabotage__2",
+      "taskId": "task-03",
+      "arm": "sabotage",
+      "repeat": 2,
+      "state": "completed",
+      "attempt": 1,
+      "submissionKind": "out",
+      "model": "claude-haiku-5-5",
+      "loadedSkills": [
+        "es-toolkit:migrate"
+      ],
+      "turns": 10,
+      "durationMs": 89877,
+      "usage": {
+        "input": 18,
+        "output": 9190,
+        "cacheRead": 374024,
+        "cacheCreation": 26118
+      },
+      "deniedTools": 0,
+      "malformedLines": 0,
+      "requirement": 1,
+      "correct": 1,
+      "size": 267,
+      "ownBytes": 101
+    },
+    {
+      "runId": "task-03__sabotage__3",
+      "taskId": "task-03",
+      "arm": "sabotage",
+      "repeat": 3,
+      "state": "completed",
+      "attempt": 1,
+      "submissionKind": "out",
+      "model": "claude-haiku-5-5",
+      "loadedSkills": [
+        "es-toolkit:migrate"
+      ],
+      "turns": 10,
+      "durationMs": 80686,
+      "usage": {
+        "input": 18,
+        "output": 9873,
+        "cacheRead": 375630,
+        "cacheCreation": 26093
+      },
+      "deniedTools": 0,
+      "malformedLines": 0,
+      "requirement": 1,
+      "correct": 1,
+      "size": 267,
+      "ownBytes": 101
+    },
+    {
+      "runId": "task-03__skill__1",
+      "taskId": "task-03",
+      "arm": "skill",
+      "repeat": 1,
+      "state": "completed",
+      "attempt": 1,
+      "submissionKind": "out",
+      "model": "claude-haiku-5-5",
+      "loadedSkills": [
+        "es-toolkit:migrate"
+      ],
+      "turns": 12,
+      "durationMs": 63425,
+      "usage": {
+        "input": 24,
+        "output": 9071,
+        "cacheRead": 526754,
+        "cacheCreation": 28386
+      },
+      "deniedTools": 0,
+      "malformedLines": 0,
+      "requirement": 1,
+      "correct": 1,
+      "size": 267,
+      "ownBytes": 101
+    },
+    {
+      "runId": "task-03__skill__2",
+      "taskId": "task-03",
+      "arm": "skill",
+      "repeat": 2,
+      "state": "completed",
+      "attempt": 1,
+      "submissionKind": "out",
+      "model": "claude-haiku-5-5",
+      "loadedSkills": [
+        "es-toolkit:migrate"
+      ],
+      "turns": 14,
+      "durationMs": 72747,
+      "usage": {
+        "input": 28,
+        "output": 11744,
+        "cacheRead": 607564,
+        "cacheCreation": 28461
+      },
+      "deniedTools": 0,
+      "malformedLines": 0,
+      "requirement": 1,
+      "correct": 1,
+      "size": 267,
+      "ownBytes": 101
+    },
+    {
+      "runId": "task-03__skill__3",
+      "taskId": "task-03",
+      "arm": "skill",
+      "repeat": 3,
+      "state": "completed",
+      "attempt": 1,
+      "submissionKind": "out",
+      "model": "claude-haiku-5-5",
+      "loadedSkills": [
+        "es-toolkit:migrate"
+      ],
+      "turns": 13,
+      "durationMs": 82454,
+      "usage": {
+        "input": 24,
+        "output": 15078,
+        "cacheRead": 571812,
+        "cacheCreation": 35477
+      },
+      "deniedTools": 0,
+      "malformedLines": 0,
+      "requirement": 1,
+      "correct": 1,
+      "size": 267,
+      "ownBytes": 101
+    },
+    {
+      "runId": "task-04__baseline__1",
+      "taskId": "task-04",
+      "arm": "baseline",
+      "repeat": 1,
+      "state": "limit",
+      "attempt": 1,
+      "submissionKind": "out",
+      "model": "claude-haiku-5-5",
+      "loadedSkills": [],
+      "turns": 13,
+      "durationMs": 600257,
+      "usage": {
+        "input": 26,
+        "output": 10642,
+        "cacheRead": 567942,
+        "cacheCreation": 29736
+      },
+      "deniedTools": 0,
+      "malformedLines": 0,
+      "requirement": 0,
+      "correct": 0,
+      "size": null,
+      "ownBytes": null
+    },
+    {
+      "runId": "task-04__baseline__2",
+      "taskId": "task-04",
+      "arm": "baseline",
+      "repeat": 2,
+      "state": "completed",
+      "attempt": 1,
+      "submissionKind": "out",
+      "model": "claude-haiku-5-5",
+      "loadedSkills": [],
+      "turns": 12,
+      "durationMs": 59963,
+      "usage": {
+        "input": 24,
+        "output": 7376,
+        "cacheRead": 510360,
+        "cacheCreation": 26634
+      },
+      "deniedTools": 0,
+      "malformedLines": 0,
+      "requirement": 1,
+      "correct": 1,
+      "size": 313,
+      "ownBytes": 95
+    },
+    {
+      "runId": "task-04__baseline__3",
+      "taskId": "task-04",
+      "arm": "baseline",
+      "repeat": 3,
+      "state": "completed",
+      "attempt": 1,
+      "submissionKind": "out",
+      "model": "claude-haiku-5-5",
+      "loadedSkills": [],
+      "turns": 13,
+      "durationMs": 76388,
+      "usage": {
+        "input": 22,
+        "output": 10540,
+        "cacheRead": 446174,
+        "cacheCreation": 24537
+      },
+      "deniedTools": 0,
+      "malformedLines": 0,
+      "requirement": 1,
+      "correct": 1,
+      "size": 312,
+      "ownBytes": 95
+    },
+    {
+      "runId": "task-04__baseline__4",
+      "taskId": "task-04",
+      "arm": "baseline",
+      "repeat": 4,
+      "state": "completed",
+      "attempt": 1,
+      "submissionKind": "out",
+      "model": "claude-haiku-5-5",
+      "loadedSkills": [],
+      "turns": 7,
+      "durationMs": 57830,
+      "usage": {
+        "input": 14,
+        "output": 7916,
+        "cacheRead": 267052,
+        "cacheCreation": 24938
+      },
+      "deniedTools": 0,
+      "malformedLines": 0,
+      "requirement": 1,
+      "correct": 1,
+      "size": 252,
+      "ownBytes": 126
+    },
+    {
+      "runId": "task-04__baseline__5",
+      "taskId": "task-04",
+      "arm": "baseline",
+      "repeat": 5,
+      "state": "completed",
+      "attempt": 1,
+      "submissionKind": "out",
+      "model": "claude-haiku-5-5",
+      "loadedSkills": [],
+      "turns": 16,
+      "durationMs": 92048,
+      "usage": {
+        "input": 28,
+        "output": 13813,
+        "cacheRead": 611378,
+        "cacheCreation": 32149
+      },
+      "deniedTools": 0,
+      "malformedLines": 0,
+      "requirement": 1,
+      "correct": 1,
+      "size": 313,
+      "ownBytes": 95
+    },
+    {
+      "runId": "task-04__baseline__6",
+      "taskId": "task-04",
+      "arm": "baseline",
+      "repeat": 6,
+      "state": "completed",
+      "attempt": 1,
+      "submissionKind": "out",
+      "model": "claude-haiku-5-5",
+      "loadedSkills": [],
+      "turns": 11,
+      "durationMs": 77062,
+      "usage": {
+        "input": 22,
+        "output": 7862,
+        "cacheRead": 433097,
+        "cacheCreation": 22329
+      },
+      "deniedTools": 0,
+      "malformedLines": 0,
+      "requirement": 1,
+      "correct": 1,
+      "size": 313,
+      "ownBytes": 95
+    },
+    {
+      "runId": "task-04__placebo__1",
+      "taskId": "task-04",
+      "arm": "placebo",
+      "repeat": 1,
+      "state": "completed",
+      "attempt": 1,
+      "submissionKind": "out",
+      "model": "claude-haiku-5-5",
+      "loadedSkills": [
+        "es-toolkit:migrate"
+      ],
+      "turns": 9,
+      "durationMs": 127215,
+      "usage": {
+        "input": 18,
+        "output": 10139,
+        "cacheRead": 367645,
+        "cacheCreation": 25289
+      },
+      "deniedTools": 0,
+      "malformedLines": 0,
+      "requirement": 1,
+      "correct": 1,
+      "size": 313,
+      "ownBytes": 95
+    },
+    {
+      "runId": "task-04__placebo__2",
+      "taskId": "task-04",
+      "arm": "placebo",
+      "repeat": 2,
+      "state": "completed",
+      "attempt": 1,
+      "submissionKind": "out",
+      "model": "claude-haiku-5-5",
+      "loadedSkills": [
+        "es-toolkit:migrate"
+      ],
+      "turns": 10,
+      "durationMs": 75892,
+      "usage": {
+        "input": 20,
+        "output": 6734,
+        "cacheRead": 412702,
+        "cacheCreation": 24358
+      },
+      "deniedTools": 0,
+      "malformedLines": 0,
+      "requirement": 1,
+      "correct": 1,
+      "size": 236,
+      "ownBytes": 112
+    },
+    {
+      "runId": "task-04__placebo__3",
+      "taskId": "task-04",
+      "arm": "placebo",
+      "repeat": 3,
+      "state": "completed",
+      "attempt": 1,
+      "submissionKind": "out",
+      "model": "claude-haiku-5-5",
+      "loadedSkills": [
+        "es-toolkit:migrate"
+      ],
+      "turns": 10,
+      "durationMs": 83042,
+      "usage": {
+        "input": 20,
+        "output": 7423,
+        "cacheRead": 418109,
+        "cacheCreation": 25785
+      },
+      "deniedTools": 0,
+      "malformedLines": 0,
+      "requirement": 1,
+      "correct": 1,
+      "size": 313,
+      "ownBytes": 95
+    },
+    {
+      "runId": "task-04__procedure__1",
+      "taskId": "task-04",
+      "arm": "procedure",
+      "repeat": 1,
+      "state": "completed",
+      "attempt": 1,
+      "submissionKind": "out",
+      "model": "claude-haiku-5-5",
+      "loadedSkills": [
+        "es-toolkit:migrate"
+      ],
+      "turns": 8,
+      "durationMs": 98511,
+      "usage": {
+        "input": 16,
+        "output": 8559,
+        "cacheRead": 329577,
+        "cacheCreation": 27660
+      },
+      "deniedTools": 0,
+      "malformedLines": 0,
+      "requirement": 1,
+      "correct": 1,
+      "size": 313,
+      "ownBytes": 95
+    },
+    {
+      "runId": "task-04__procedure__2",
+      "taskId": "task-04",
+      "arm": "procedure",
+      "repeat": 2,
+      "state": "completed",
+      "attempt": 1,
+      "submissionKind": "out",
+      "model": "claude-haiku-5-5",
+      "loadedSkills": [
+        "es-toolkit:migrate"
+      ],
+      "turns": 16,
+      "durationMs": 91075,
+      "usage": {
+        "input": 28,
+        "output": 9542,
+        "cacheRead": 686375,
+        "cacheCreation": 36431
+      },
+      "deniedTools": 0,
+      "malformedLines": 0,
+      "requirement": 1,
+      "correct": 1,
+      "size": 312,
+      "ownBytes": 95
+    },
+    {
+      "runId": "task-04__procedure__3",
+      "taskId": "task-04",
+      "arm": "procedure",
+      "repeat": 3,
+      "state": "limit",
+      "attempt": 1,
+      "submissionKind": "out",
+      "model": "claude-haiku-5-5",
+      "loadedSkills": [
+        "es-toolkit:migrate"
+      ],
+      "turns": 13,
+      "durationMs": 600529,
+      "usage": {
+        "input": 26,
+        "output": 12505,
+        "cacheRead": 583997,
+        "cacheCreation": 31031
+      },
+      "deniedTools": 0,
+      "malformedLines": 0,
+      "requirement": 0,
+      "correct": 0,
+      "size": null,
+      "ownBytes": null
+    },
+    {
+      "runId": "task-04__sabotage__1",
+      "taskId": "task-04",
+      "arm": "sabotage",
+      "repeat": 1,
+      "state": "completed",
+      "attempt": 1,
+      "submissionKind": "out",
+      "model": "claude-haiku-5-5",
+      "loadedSkills": [
+        "es-toolkit:migrate"
+      ],
+      "turns": 12,
+      "durationMs": 79752,
+      "usage": {
+        "input": 20,
+        "output": 9961,
+        "cacheRead": 416348,
+        "cacheCreation": 25359
+      },
+      "deniedTools": 0,
+      "malformedLines": 0,
+      "requirement": 1,
+      "correct": 1,
+      "size": 313,
+      "ownBytes": 95
+    },
+    {
+      "runId": "task-04__sabotage__2",
+      "taskId": "task-04",
+      "arm": "sabotage",
+      "repeat": 2,
+      "state": "completed",
+      "attempt": 1,
+      "submissionKind": "out",
+      "model": "claude-haiku-5-5",
+      "loadedSkills": [
+        "es-toolkit:migrate"
+      ],
+      "turns": 12,
+      "durationMs": 88472,
+      "usage": {
+        "input": 20,
+        "output": 12358,
+        "cacheRead": 430108,
+        "cacheCreation": 29892
+      },
+      "deniedTools": 0,
+      "malformedLines": 0,
+      "requirement": 1,
+      "correct": 1,
+      "size": 313,
+      "ownBytes": 95
+    },
+    {
+      "runId": "task-04__sabotage__3",
+      "taskId": "task-04",
+      "arm": "sabotage",
+      "repeat": 3,
+      "state": "completed",
+      "attempt": 1,
+      "submissionKind": "out",
+      "model": "claude-haiku-5-5",
+      "loadedSkills": [
+        "es-toolkit:migrate"
+      ],
+      "turns": 9,
+      "durationMs": 104793,
+      "usage": {
+        "input": 18,
+        "output": 8765,
+        "cacheRead": 352178,
+        "cacheCreation": 21431
+      },
+      "deniedTools": 0,
+      "malformedLines": 0,
+      "requirement": 1,
+      "correct": 1,
+      "size": 252,
+      "ownBytes": 126
+    },
+    {
+      "runId": "task-04__skill__1",
+      "taskId": "task-04",
+      "arm": "skill",
+      "repeat": 1,
+      "state": "completed",
+      "attempt": 1,
+      "submissionKind": "out",
+      "model": "claude-haiku-5-5",
+      "loadedSkills": [
+        "es-toolkit:migrate"
+      ],
+      "turns": 13,
+      "durationMs": 69715,
+      "usage": {
+        "input": 24,
+        "output": 11655,
+        "cacheRead": 528659,
+        "cacheCreation": 28979
+      },
+      "deniedTools": 0,
+      "malformedLines": 0,
+      "requirement": 1,
+      "correct": 1,
+      "size": 314,
+      "ownBytes": 95
+    },
+    {
+      "runId": "task-04__skill__2",
+      "taskId": "task-04",
+      "arm": "skill",
+      "repeat": 2,
+      "state": "completed",
+      "attempt": 1,
+      "submissionKind": "out",
+      "model": "claude-haiku-5-5",
+      "loadedSkills": [
+        "es-toolkit:migrate"
+      ],
+      "turns": 8,
+      "durationMs": 52827,
+      "usage": {
+        "input": 16,
+        "output": 7390,
+        "cacheRead": 320578,
+        "cacheCreation": 24217
+      },
+      "deniedTools": 0,
+      "malformedLines": 0,
+      "requirement": 1,
+      "correct": 1,
+      "size": 313,
+      "ownBytes": 95
+    },
+    {
+      "runId": "task-04__skill__3",
+      "taskId": "task-04",
+      "arm": "skill",
+      "repeat": 3,
+      "state": "completed",
+      "attempt": 1,
+      "submissionKind": "out",
+      "model": "claude-haiku-5-5",
+      "loadedSkills": [
+        "es-toolkit:migrate"
+      ],
+      "turns": 18,
+      "durationMs": 93077,
+      "usage": {
+        "input": 36,
+        "output": 11061,
+        "cacheRead": 833366,
+        "cacheCreation": 31875
+      },
+      "deniedTools": 0,
+      "malformedLines": 0,
+      "requirement": 1,
+      "correct": 1,
+      "size": 313,
+      "ownBytes": 95
+    },
+    {
+      "runId": "task-06__baseline__1",
+      "taskId": "task-06",
+      "arm": "baseline",
+      "repeat": 1,
+      "state": "completed",
+      "attempt": 1,
+      "submissionKind": "out",
+      "model": "claude-haiku-5-5",
+      "loadedSkills": [],
+      "turns": 14,
+      "durationMs": 84416,
+      "usage": {
+        "input": 28,
+        "output": 13076,
+        "cacheRead": 620822,
+        "cacheCreation": 32133
+      },
+      "deniedTools": 0,
+      "malformedLines": 0,
+      "requirement": 0,
+      "correct": 1,
+      "size": 1603,
+      "ownBytes": 110
+    },
+    {
+      "runId": "task-06__baseline__2",
+      "taskId": "task-06",
+      "arm": "baseline",
+      "repeat": 2,
+      "state": "limit",
+      "attempt": 1,
+      "submissionKind": "out",
+      "model": "claude-haiku-5-5",
+      "loadedSkills": [],
+      "turns": 11,
+      "durationMs": 605219,
+      "usage": {
+        "input": 22,
+        "output": 13164,
+        "cacheRead": 467271,
+        "cacheCreation": 29944
+      },
+      "deniedTools": 0,
+      "malformedLines": 0,
+      "requirement": 0,
+      "correct": 0,
+      "size": null,
+      "ownBytes": null
+    },
+    {
+      "runId": "task-06__baseline__3",
+      "taskId": "task-06",
+      "arm": "baseline",
+      "repeat": 3,
+      "state": "completed",
+      "attempt": 1,
+      "submissionKind": "out",
+      "model": "claude-haiku-5-5",
+      "loadedSkills": [],
+      "turns": 14,
+      "durationMs": 201433,
+      "usage": {
+        "input": 22,
+        "output": 11225,
+        "cacheRead": 481112,
+        "cacheCreation": 32382
+      },
+      "deniedTools": 0,
+      "malformedLines": 0,
+      "requirement": 0,
+      "correct": 1,
+      "size": 1604,
+      "ownBytes": 110
+    },
+    {
+      "runId": "task-06__baseline__4",
+      "taskId": "task-06",
+      "arm": "baseline",
+      "repeat": 4,
+      "state": "completed",
+      "attempt": 1,
+      "submissionKind": "out",
+      "model": "claude-haiku-5-5",
+      "loadedSkills": [],
+      "turns": 15,
+      "durationMs": 243054,
+      "usage": {
+        "input": 28,
+        "output": 17636,
+        "cacheRead": 645453,
+        "cacheCreation": 36213
+      },
+      "deniedTools": 0,
+      "malformedLines": 0,
+      "requirement": 0,
+      "correct": 1,
+      "size": 1606,
+      "ownBytes": 107
+    },
+    {
+      "runId": "task-06__baseline__5",
+      "taskId": "task-06",
+      "arm": "baseline",
+      "repeat": 5,
+      "state": "completed",
+      "attempt": 1,
+      "submissionKind": "out",
+      "model": "claude-haiku-5-5",
+      "loadedSkills": [],
+      "turns": 19,
+      "durationMs": 201058,
+      "usage": {
+        "input": 38,
+        "output": 25666,
+        "cacheRead": 1017446,
+        "cacheCreation": 48721
+      },
+      "deniedTools": 0,
+      "malformedLines": 0,
+      "requirement": 0,
+      "correct": 1,
+      "size": 1599,
+      "ownBytes": 102
+    },
+    {
+      "runId": "task-06__baseline__6",
+      "taskId": "task-06",
+      "arm": "baseline",
+      "repeat": 6,
+      "state": "completed",
+      "attempt": 1,
+      "submissionKind": "out",
+      "model": "claude-haiku-5-5",
+      "loadedSkills": [],
+      "turns": 23,
+      "durationMs": 211503,
+      "usage": {
+        "input": 42,
+        "output": 24023,
+        "cacheRead": 1086985,
+        "cacheCreation": 44254
+      },
+      "deniedTools": 0,
+      "malformedLines": 0,
+      "requirement": 0,
+      "correct": 1,
+      "size": 1600,
+      "ownBytes": 102
+    },
+    {
+      "runId": "task-06__placebo__1",
+      "taskId": "task-06",
+      "arm": "placebo",
+      "repeat": 1,
+      "state": "completed",
+      "attempt": 1,
+      "submissionKind": "out",
+      "model": "claude-haiku-5-5",
+      "loadedSkills": [
+        "es-toolkit:migrate"
+      ],
+      "turns": 15,
+      "durationMs": 150424,
+      "usage": {
+        "input": 26,
+        "output": 18426,
+        "cacheRead": 619669,
+        "cacheCreation": 37213
+      },
+      "deniedTools": 0,
+      "malformedLines": 0,
+      "requirement": 0,
+      "correct": 1,
+      "size": 1602,
+      "ownBytes": 110
+    },
+    {
+      "runId": "task-06__placebo__2",
+      "taskId": "task-06",
+      "arm": "placebo",
+      "repeat": 2,
+      "state": "completed",
+      "attempt": 1,
+      "submissionKind": "out",
+      "model": "claude-haiku-5-5",
+      "loadedSkills": [
+        "es-toolkit:migrate"
+      ],
+      "turns": 15,
+      "durationMs": 245454,
+      "usage": {
+        "input": 28,
+        "output": 16816,
+        "cacheRead": 678747,
+        "cacheCreation": 40391
+      },
+      "deniedTools": 0,
+      "malformedLines": 0,
+      "requirement": 0,
+      "correct": 1,
+      "size": 1603,
+      "ownBytes": 110
+    },
+    {
+      "runId": "task-06__placebo__3",
+      "taskId": "task-06",
+      "arm": "placebo",
+      "repeat": 3,
+      "state": "completed",
+      "attempt": 1,
+      "submissionKind": "out",
+      "model": "claude-haiku-5-5",
+      "loadedSkills": [
+        "es-toolkit:migrate"
+      ],
+      "turns": 13,
+      "durationMs": 234869,
+      "usage": {
+        "input": 24,
+        "output": 12564,
+        "cacheRead": 535769,
+        "cacheCreation": 33482
+      },
+      "deniedTools": 0,
+      "malformedLines": 0,
+      "requirement": 1,
+      "correct": 1,
+      "size": 813,
+      "ownBytes": 107
+    },
+    {
+      "runId": "task-06__procedure__1",
+      "taskId": "task-06",
+      "arm": "procedure",
+      "repeat": 1,
+      "state": "completed",
+      "attempt": 1,
+      "submissionKind": "out",
+      "model": "claude-haiku-5-5",
+      "loadedSkills": [
+        "es-toolkit:migrate"
+      ],
+      "turns": 13,
+      "durationMs": 99540,
+      "usage": {
+        "input": 26,
+        "output": 14212,
+        "cacheRead": 595355,
+        "cacheCreation": 36540
+      },
+      "deniedTools": 0,
+      "malformedLines": 0,
+      "requirement": 0,
+      "correct": 1,
+      "size": 1603,
+      "ownBytes": 110
+    },
+    {
+      "runId": "task-06__procedure__2",
+      "taskId": "task-06",
+      "arm": "procedure",
+      "repeat": 2,
+      "state": "completed",
+      "attempt": 1,
+      "submissionKind": "out",
+      "model": "claude-haiku-5-5",
+      "loadedSkills": [
+        "es-toolkit:migrate"
+      ],
+      "turns": 13,
+      "durationMs": 132012,
+      "usage": {
+        "input": 24,
+        "output": 12954,
+        "cacheRead": 547223,
+        "cacheCreation": 33337
+      },
+      "deniedTools": 0,
+      "malformedLines": 0,
+      "requirement": 1,
+      "correct": 1,
+      "size": 812,
+      "ownBytes": 107
+    },
+    {
+      "runId": "task-06__procedure__3",
+      "taskId": "task-06",
+      "arm": "procedure",
+      "repeat": 3,
+      "state": "completed",
+      "attempt": 1,
+      "submissionKind": "out",
+      "model": "claude-haiku-5-5",
+      "loadedSkills": [
+        "es-toolkit:migrate"
+      ],
+      "turns": 21,
+      "durationMs": 211730,
+      "usage": {
+        "input": 42,
+        "output": 20420,
+        "cacheRead": 1089695,
+        "cacheCreation": 40703
+      },
+      "deniedTools": 0,
+      "malformedLines": 0,
+      "requirement": 0,
+      "correct": 1,
+      "size": 1600,
+      "ownBytes": 102
+    },
+    {
+      "runId": "task-06__sabotage__1",
+      "taskId": "task-06",
+      "arm": "sabotage",
+      "repeat": 1,
+      "state": "completed",
+      "attempt": 1,
+      "submissionKind": "out",
+      "model": "claude-haiku-5-5",
+      "loadedSkills": [
+        "es-toolkit:migrate"
+      ],
+      "turns": 16,
+      "durationMs": 174799,
+      "usage": {
+        "input": 32,
+        "output": 21995,
+        "cacheRead": 761468,
+        "cacheCreation": 36698
+      },
+      "deniedTools": 0,
+      "malformedLines": 0,
+      "requirement": 1,
+      "correct": 1,
+      "size": 807,
+      "ownBytes": 99
+    },
+    {
+      "runId": "task-06__sabotage__2",
+      "taskId": "task-06",
+      "arm": "sabotage",
+      "repeat": 2,
+      "state": "completed",
+      "attempt": 1,
+      "submissionKind": "out",
+      "model": "claude-haiku-5-5",
+      "loadedSkills": [
+        "es-toolkit:migrate"
+      ],
+      "turns": 24,
+      "durationMs": 208318,
+      "usage": {
+        "input": 38,
+        "output": 25312,
+        "cacheRead": 1032852,
+        "cacheCreation": 45646
+      },
+      "deniedTools": 0,
+      "malformedLines": 0,
+      "requirement": 0,
+      "correct": 1,
+      "size": 1604,
+      "ownBytes": 102
+    },
+    {
+      "runId": "task-06__sabotage__3",
+      "taskId": "task-06",
+      "arm": "sabotage",
+      "repeat": 3,
+      "state": "completed",
+      "attempt": 1,
+      "submissionKind": "out",
+      "model": "claude-haiku-5-5",
+      "loadedSkills": [
+        "es-toolkit:migrate"
+      ],
+      "turns": 13,
+      "durationMs": 210405,
+      "usage": {
+        "input": 24,
+        "output": 22214,
+        "cacheRead": 568191,
+        "cacheCreation": 38546
+      },
+      "deniedTools": 0,
+      "malformedLines": 0,
+      "requirement": 0,
+      "correct": 1,
+      "size": 1602,
+      "ownBytes": 110
+    },
+    {
+      "runId": "task-06__skill__1",
+      "taskId": "task-06",
+      "arm": "skill",
+      "repeat": 1,
+      "state": "completed",
+      "attempt": 1,
+      "submissionKind": "out",
+      "model": "claude-haiku-5-5",
+      "loadedSkills": [
+        "es-toolkit:migrate"
+      ],
+      "turns": 17,
+      "durationMs": 249398,
+      "usage": {
+        "input": 28,
+        "output": 24187,
+        "cacheRead": 738087,
+        "cacheCreation": 47312
+      },
+      "deniedTools": 0,
+      "malformedLines": 0,
+      "requirement": 0,
+      "correct": 1,
+      "size": 1600,
+      "ownBytes": 110
+    },
+    {
+      "runId": "task-06__skill__2",
+      "taskId": "task-06",
+      "arm": "skill",
+      "repeat": 2,
+      "state": "completed",
+      "attempt": 1,
+      "submissionKind": "out",
+      "model": "claude-haiku-5-5",
+      "loadedSkills": [
+        "es-toolkit:migrate"
+      ],
+      "turns": 12,
+      "durationMs": 109342,
+      "usage": {
+        "input": 24,
+        "output": 17568,
+        "cacheRead": 608051,
+        "cacheCreation": 39889
+      },
+      "deniedTools": 0,
+      "malformedLines": 0,
+      "requirement": 0,
+      "correct": 1,
+      "size": 1597,
+      "ownBytes": 102
+    },
+    {
+      "runId": "task-06__skill__3",
+      "taskId": "task-06",
+      "arm": "skill",
+      "repeat": 3,
+      "state": "completed",
+      "attempt": 1,
+      "submissionKind": "out",
+      "model": "claude-haiku-5-5",
+      "loadedSkills": [
+        "es-toolkit:migrate"
+      ],
+      "turns": 13,
+      "durationMs": 91151,
+      "usage": {
+        "input": 26,
+        "output": 15499,
+        "cacheRead": 641060,
+        "cacheCreation": 35214
+      },
+      "deniedTools": 0,
+      "malformedLines": 0,
+      "requirement": 0,
+      "correct": 1,
+      "size": 1606,
+      "ownBytes": 110
+    },
+    {
+      "runId": "task-07__baseline__1",
+      "taskId": "task-07",
+      "arm": "baseline",
+      "repeat": 1,
+      "state": "completed",
+      "attempt": 1,
+      "submissionKind": "out",
+      "model": "claude-haiku-5-5",
+      "loadedSkills": [],
+      "turns": 11,
+      "durationMs": 75950,
+      "usage": {
+        "input": 22,
+        "output": 11637,
+        "cacheRead": 458856,
+        "cacheCreation": 28170
+      },
+      "deniedTools": 0,
+      "malformedLines": 0,
+      "requirement": 1,
+      "correct": 1,
+      "size": 601,
+      "ownBytes": 95
+    },
+    {
+      "runId": "task-07__baseline__2",
+      "taskId": "task-07",
+      "arm": "baseline",
+      "repeat": 2,
+      "state": "completed",
+      "attempt": 1,
+      "submissionKind": "out",
+      "model": "claude-haiku-5-5",
+      "loadedSkills": [],
+      "turns": 13,
+      "durationMs": 59020,
+      "usage": {
+        "input": 22,
+        "output": 9026,
+        "cacheRead": 452734,
+        "cacheCreation": 26292
+      },
+      "deniedTools": 0,
+      "malformedLines": 0,
+      "requirement": 1,
+      "correct": 1,
+      "size": 608,
+      "ownBytes": 95
+    },
+    {
+      "runId": "task-07__baseline__3",
+      "taskId": "task-07",
+      "arm": "baseline",
+      "repeat": 3,
+      "state": "completed",
+      "attempt": 1,
+      "submissionKind": "out",
+      "model": "claude-haiku-5-5",
+      "loadedSkills": [],
+      "turns": 11,
+      "durationMs": 75804,
+      "usage": {
+        "input": 22,
+        "output": 12269,
+        "cacheRead": 443236,
+        "cacheCreation": 26682
+      },
+      "deniedTools": 0,
+      "malformedLines": 0,
+      "requirement": 1,
+      "correct": 1,
+      "size": 611,
+      "ownBytes": 103
+    },
+    {
+      "runId": "task-07__baseline__4",
+      "taskId": "task-07",
+      "arm": "baseline",
+      "repeat": 4,
+      "state": "completed",
+      "attempt": 1,
+      "submissionKind": "out",
+      "model": "claude-haiku-5-5",
+      "loadedSkills": [],
+      "turns": 12,
+      "durationMs": 70492,
+      "usage": {
+        "input": 24,
+        "output": 8561,
+        "cacheRead": 486469,
+        "cacheCreation": 25841
+      },
+      "deniedTools": 0,
+      "malformedLines": 0,
+      "requirement": 1,
+      "correct": 1,
+      "size": 601,
+      "ownBytes": 95
+    },
+    {
+      "runId": "task-07__baseline__5",
+      "taskId": "task-07",
+      "arm": "baseline",
+      "repeat": 5,
+      "state": "completed",
+      "attempt": 1,
+      "submissionKind": "out",
+      "model": "claude-haiku-5-5",
+      "loadedSkills": [],
+      "turns": 10,
+      "durationMs": 84665,
+      "usage": {
+        "input": 18,
+        "output": 10713,
+        "cacheRead": 352396,
+        "cacheCreation": 25103
+      },
+      "deniedTools": 0,
+      "malformedLines": 0,
+      "requirement": 1,
+      "correct": 1,
+      "size": 601,
+      "ownBytes": 95
+    },
+    {
+      "runId": "task-07__baseline__6",
+      "taskId": "task-07",
+      "arm": "baseline",
+      "repeat": 6,
+      "state": "completed",
+      "attempt": 1,
+      "submissionKind": "out",
+      "model": "claude-haiku-5-5",
+      "loadedSkills": [],
+      "turns": 15,
+      "durationMs": 112156,
+      "usage": {
+        "input": 30,
+        "output": 11523,
+        "cacheRead": 633339,
+        "cacheCreation": 28822
+      },
+      "deniedTools": 0,
+      "malformedLines": 0,
+      "requirement": 1,
+      "correct": 1,
+      "size": 606,
+      "ownBytes": 95
+    },
+    {
+      "runId": "task-07__placebo__1",
+      "taskId": "task-07",
+      "arm": "placebo",
+      "repeat": 1,
+      "state": "completed",
+      "attempt": 1,
+      "submissionKind": "out",
+      "model": "claude-haiku-5-5",
+      "loadedSkills": [
+        "es-toolkit:migrate"
+      ],
+      "turns": 9,
+      "durationMs": 82159,
+      "usage": {
+        "input": 14,
+        "output": 9611,
+        "cacheRead": 295337,
+        "cacheCreation": 28829
+      },
+      "deniedTools": 0,
+      "malformedLines": 0,
+      "requirement": 1,
+      "correct": 1,
+      "size": 611,
+      "ownBytes": 103
+    },
+    {
+      "runId": "task-07__placebo__2",
+      "taskId": "task-07",
+      "arm": "placebo",
+      "repeat": 2,
+      "state": "completed",
+      "attempt": 1,
+      "submissionKind": "out",
+      "model": "claude-haiku-5-5",
+      "loadedSkills": [
+        "es-toolkit:migrate"
+      ],
+      "turns": 11,
+      "durationMs": 102152,
+      "usage": {
+        "input": 20,
+        "output": 9080,
+        "cacheRead": 410842,
+        "cacheCreation": 26569
+      },
+      "deniedTools": 0,
+      "malformedLines": 0,
+      "requirement": 1,
+      "correct": 1,
+      "size": 606,
+      "ownBytes": 95
+    },
+    {
+      "runId": "task-07__placebo__3",
+      "taskId": "task-07",
+      "arm": "placebo",
+      "repeat": 3,
+      "state": "completed",
+      "attempt": 1,
+      "submissionKind": "out",
+      "model": "claude-haiku-5-5",
+      "loadedSkills": [
+        "es-toolkit:migrate"
+      ],
+      "turns": 16,
+      "durationMs": 138321,
+      "usage": {
+        "input": 30,
+        "output": 16102,
+        "cacheRead": 666826,
+        "cacheCreation": 33806
+      },
+      "deniedTools": 0,
+      "malformedLines": 0,
+      "requirement": 1,
+      "correct": 1,
+      "size": 613,
+      "ownBytes": 103
+    },
+    {
+      "runId": "task-07__procedure__1",
+      "taskId": "task-07",
+      "arm": "procedure",
+      "repeat": 1,
+      "state": "completed",
+      "attempt": 1,
+      "submissionKind": "out",
+      "model": "claude-haiku-5-5",
+      "loadedSkills": [
+        "es-toolkit:migrate"
+      ],
+      "turns": 16,
+      "durationMs": 110177,
+      "usage": {
+        "input": 32,
+        "output": 10827,
+        "cacheRead": 711662,
+        "cacheCreation": 30332
+      },
+      "deniedTools": 0,
+      "malformedLines": 0,
+      "requirement": 1,
+      "correct": 1,
+      "size": 601,
+      "ownBytes": 95
+    },
+    {
+      "runId": "task-07__procedure__2",
+      "taskId": "task-07",
+      "arm": "procedure",
+      "repeat": 2,
+      "state": "completed",
+      "attempt": 1,
+      "submissionKind": "out",
+      "model": "claude-haiku-5-5",
+      "loadedSkills": [
+        "es-toolkit:migrate"
+      ],
+      "turns": 9,
+      "durationMs": 83378,
+      "usage": {
+        "input": 16,
+        "output": 9224,
+        "cacheRead": 323713,
+        "cacheCreation": 24713
+      },
+      "deniedTools": 0,
+      "malformedLines": 0,
+      "requirement": 1,
+      "correct": 1,
+      "size": 611,
+      "ownBytes": 103
+    },
+    {
+      "runId": "task-07__procedure__3",
+      "taskId": "task-07",
+      "arm": "procedure",
+      "repeat": 3,
+      "state": "completed",
+      "attempt": 1,
+      "submissionKind": "out",
+      "model": "claude-haiku-5-5",
+      "loadedSkills": [
+        "es-toolkit:migrate"
+      ],
+      "turns": 17,
+      "durationMs": 128351,
+      "usage": {
+        "input": 24,
+        "output": 15950,
+        "cacheRead": 565964,
+        "cacheCreation": 36117
+      },
+      "deniedTools": 0,
+      "malformedLines": 0,
+      "requirement": 1,
+      "correct": 1,
+      "size": 606,
+      "ownBytes": 103
+    },
+    {
+      "runId": "task-07__sabotage__1",
+      "taskId": "task-07",
+      "arm": "sabotage",
+      "repeat": 1,
+      "state": "completed",
+      "attempt": 1,
+      "submissionKind": "out",
+      "model": "claude-haiku-5-5",
+      "loadedSkills": [
+        "es-toolkit:migrate"
+      ],
+      "turns": 11,
+      "durationMs": 90100,
+      "usage": {
+        "input": 22,
+        "output": 9703,
+        "cacheRead": 442116,
+        "cacheCreation": 24898
+      },
+      "deniedTools": 0,
+      "malformedLines": 0,
+      "requirement": 1,
+      "correct": 1,
+      "size": 611,
+      "ownBytes": 103
+    },
+    {
+      "runId": "task-07__sabotage__2",
+      "taskId": "task-07",
+      "arm": "sabotage",
+      "repeat": 2,
+      "state": "completed",
+      "attempt": 1,
+      "submissionKind": "out",
+      "model": "claude-haiku-5-5",
+      "loadedSkills": [
+        "es-toolkit:migrate"
+      ],
+      "turns": 12,
+      "durationMs": 93594,
+      "usage": {
+        "input": 24,
+        "output": 11670,
+        "cacheRead": 517303,
+        "cacheCreation": 26645
+      },
+      "deniedTools": 0,
+      "malformedLines": 0,
+      "requirement": 1,
+      "correct": 1,
+      "size": 608,
+      "ownBytes": 95
+    },
+    {
+      "runId": "task-07__sabotage__3",
+      "taskId": "task-07",
+      "arm": "sabotage",
+      "repeat": 3,
+      "state": "completed",
+      "attempt": 1,
+      "submissionKind": "out",
+      "model": "claude-haiku-5-5",
+      "loadedSkills": [
+        "es-toolkit:migrate"
+      ],
+      "turns": 13,
+      "durationMs": 117874,
+      "usage": {
+        "input": 26,
+        "output": 15824,
+        "cacheRead": 598462,
+        "cacheCreation": 33390
+      },
+      "deniedTools": 0,
+      "malformedLines": 0,
+      "requirement": 1,
+      "correct": 1,
+      "size": 606,
+      "ownBytes": 95
+    },
+    {
+      "runId": "task-07__skill__1",
+      "taskId": "task-07",
+      "arm": "skill",
+      "repeat": 1,
+      "state": "completed",
+      "attempt": 1,
+      "submissionKind": "out",
+      "model": "claude-haiku-5-5",
+      "loadedSkills": [
+        "es-toolkit:migrate"
+      ],
+      "turns": 15,
+      "durationMs": 83133,
+      "usage": {
+        "input": 30,
+        "output": 12955,
+        "cacheRead": 695877,
+        "cacheCreation": 33032
+      },
+      "deniedTools": 0,
+      "malformedLines": 0,
+      "requirement": 1,
+      "correct": 1,
+      "size": 606,
+      "ownBytes": 95
+    },
+    {
+      "runId": "task-07__skill__2",
+      "taskId": "task-07",
+      "arm": "skill",
+      "repeat": 2,
+      "state": "completed",
+      "attempt": 1,
+      "submissionKind": "out",
+      "model": "claude-haiku-5-5",
+      "loadedSkills": [
+        "es-toolkit:migrate"
+      ],
+      "turns": 15,
+      "durationMs": 92458,
+      "usage": {
+        "input": 28,
+        "output": 14449,
+        "cacheRead": 712078,
+        "cacheCreation": 37904
+      },
+      "deniedTools": 1,
+      "malformedLines": 0,
+      "requirement": 1,
+      "correct": 1,
+      "size": 601,
+      "ownBytes": 95
+    },
+    {
+      "runId": "task-07__skill__3",
+      "taskId": "task-07",
+      "arm": "skill",
+      "repeat": 3,
+      "state": "completed",
+      "attempt": 1,
+      "submissionKind": "out",
+      "model": "claude-haiku-5-5",
+      "loadedSkills": [
+        "es-toolkit:migrate"
+      ],
+      "turns": 14,
+      "durationMs": 63816,
+      "usage": {
+        "input": 28,
+        "output": 8866,
+        "cacheRead": 628437,
+        "cacheCreation": 29313
+      },
+      "deniedTools": 0,
+      "malformedLines": 0,
+      "requirement": 1,
+      "correct": 1,
+      "size": 601,
+      "ownBytes": 95
+    },
+    {
+      "runId": "task-08__baseline__1",
+      "taskId": "task-08",
+      "arm": "baseline",
+      "repeat": 1,
+      "state": "completed",
+      "attempt": 1,
+      "submissionKind": "out",
+      "model": "claude-haiku-5-5",
+      "loadedSkills": [],
+      "turns": 12,
+      "durationMs": 213471,
+      "usage": {
+        "input": 22,
+        "output": 15404,
+        "cacheRead": 469491,
+        "cacheCreation": 31988
+      },
+      "deniedTools": 0,
+      "malformedLines": 0,
+      "requirement": 0,
+      "correct": 1,
+      "size": 1732,
+      "ownBytes": 91
+    },
+    {
+      "runId": "task-08__baseline__2",
+      "taskId": "task-08",
+      "arm": "baseline",
+      "repeat": 2,
+      "state": "completed",
+      "attempt": 1,
+      "submissionKind": "out",
+      "model": "claude-haiku-5-5",
+      "loadedSkills": [],
+      "turns": 18,
+      "durationMs": 266769,
+      "usage": {
+        "input": 36,
+        "output": 25861,
+        "cacheRead": 936688,
+        "cacheCreation": 47068
+      },
+      "deniedTools": 0,
+      "malformedLines": 0,
+      "requirement": 0,
+      "correct": 1,
+      "size": 1158,
+      "ownBytes": 125
+    },
+    {
+      "runId": "task-08__baseline__3",
+      "taskId": "task-08",
+      "arm": "baseline",
+      "repeat": 3,
+      "state": "completed",
+      "attempt": 1,
+      "submissionKind": "out",
+      "model": "claude-haiku-5-5",
+      "loadedSkills": [],
+      "turns": 8,
+      "durationMs": 74270,
+      "usage": {
+        "input": 16,
+        "output": 10358,
+        "cacheRead": 324577,
+        "cacheCreation": 26752
+      },
+      "deniedTools": 0,
+      "malformedLines": 0,
+      "requirement": 1,
+      "correct": 1,
+      "size": 346,
+      "ownBytes": 88
+    },
+    {
+      "runId": "task-08__baseline__4",
+      "taskId": "task-08",
+      "arm": "baseline",
+      "repeat": 4,
+      "state": "completed",
+      "attempt": 1,
+      "submissionKind": "out",
+      "model": "claude-haiku-5-5",
+      "loadedSkills": [],
+      "turns": 13,
+      "durationMs": 98928,
+      "usage": {
+        "input": 22,
+        "output": 15381,
+        "cacheRead": 498318,
+        "cacheCreation": 33772
+      },
+      "deniedTools": 0,
+      "malformedLines": 0,
+      "requirement": 1,
+      "correct": 1,
+      "size": 345,
+      "ownBytes": 88
+    },
+    {
+      "runId": "task-08__baseline__5",
+      "taskId": "task-08",
+      "arm": "baseline",
+      "repeat": 5,
+      "state": "completed",
+      "attempt": 1,
+      "submissionKind": "out",
+      "model": "claude-haiku-5-5",
+      "loadedSkills": [],
+      "turns": 14,
+      "durationMs": 261977,
+      "usage": {
+        "input": 26,
+        "output": 24556,
+        "cacheRead": 637298,
+        "cacheCreation": 46297
+      },
+      "deniedTools": 0,
+      "malformedLines": 0,
+      "requirement": 0,
+      "correct": 1,
+      "size": 1734,
+      "ownBytes": 91
+    },
+    {
+      "runId": "task-08__baseline__6",
+      "taskId": "task-08",
+      "arm": "baseline",
+      "repeat": 6,
+      "state": "completed",
+      "attempt": 1,
+      "submissionKind": "out",
+      "model": "claude-haiku-5-5",
+      "loadedSkills": [],
+      "turns": 11,
+      "durationMs": 110473,
+      "usage": {
+        "input": 22,
+        "output": 15021,
+        "cacheRead": 467714,
+        "cacheCreation": 32352
+      },
+      "deniedTools": 0,
+      "malformedLines": 0,
+      "requirement": 1,
+      "correct": 1,
+      "size": 346,
+      "ownBytes": 88
+    },
+    {
+      "runId": "task-08__placebo__1",
+      "taskId": "task-08",
+      "arm": "placebo",
+      "repeat": 1,
+      "state": "completed",
+      "attempt": 1,
+      "submissionKind": "out",
+      "model": "claude-haiku-5-5",
+      "loadedSkills": [
+        "es-toolkit:migrate"
+      ],
+      "turns": 18,
+      "durationMs": 271898,
+      "usage": {
+        "input": 32,
+        "output": 21929,
+        "cacheRead": 852433,
+        "cacheCreation": 43725
+      },
+      "deniedTools": 0,
+      "malformedLines": 0,
+      "requirement": 0,
+      "correct": 1,
+      "size": 1733,
+      "ownBytes": 91
+    },
+    {
+      "runId": "task-08__placebo__2",
+      "taskId": "task-08",
+      "arm": "placebo",
+      "repeat": 2,
+      "state": "completed",
+      "attempt": 1,
+      "submissionKind": "out",
+      "model": "claude-haiku-5-5",
+      "loadedSkills": [
+        "es-toolkit:migrate"
+      ],
+      "turns": 12,
+      "durationMs": 132539,
+      "usage": {
+        "input": 24,
+        "output": 17174,
+        "cacheRead": 548130,
+        "cacheCreation": 32714
+      },
+      "deniedTools": 0,
+      "malformedLines": 0,
+      "requirement": 1,
+      "correct": 1,
+      "size": 346,
+      "ownBytes": 88
+    },
+    {
+      "runId": "task-08__placebo__3",
+      "taskId": "task-08",
+      "arm": "placebo",
+      "repeat": 3,
+      "state": "completed",
+      "attempt": 1,
+      "submissionKind": "out",
+      "model": "claude-haiku-5-5",
+      "loadedSkills": [
+        "es-toolkit:migrate"
+      ],
+      "turns": 16,
+      "durationMs": 127542,
+      "usage": {
+        "input": 32,
+        "output": 15133,
+        "cacheRead": 736787,
+        "cacheCreation": 33528
+      },
+      "deniedTools": 0,
+      "malformedLines": 0,
+      "requirement": 1,
+      "correct": 1,
+      "size": 342,
+      "ownBytes": 88
+    },
+    {
+      "runId": "task-08__procedure__1",
+      "taskId": "task-08",
+      "arm": "procedure",
+      "repeat": 1,
+      "state": "completed",
+      "attempt": 1,
+      "submissionKind": "out",
+      "model": "claude-haiku-5-5",
+      "loadedSkills": [
+        "es-toolkit:migrate"
+      ],
+      "turns": 15,
+      "durationMs": 188476,
+      "usage": {
+        "input": 28,
+        "output": 20011,
+        "cacheRead": 693815,
+        "cacheCreation": 39557
+      },
+      "deniedTools": 0,
+      "malformedLines": 0,
+      "requirement": 0,
+      "correct": 1,
+      "size": 1741,
+      "ownBytes": 91
+    },
+    {
+      "runId": "task-08__procedure__2",
+      "taskId": "task-08",
+      "arm": "procedure",
+      "repeat": 2,
+      "state": "completed",
+      "attempt": 1,
+      "submissionKind": "out",
+      "model": "claude-haiku-5-5",
+      "loadedSkills": [
+        "es-toolkit:migrate"
+      ],
+      "turns": 13,
+      "durationMs": 149851,
+      "usage": {
+        "input": 26,
+        "output": 18073,
+        "cacheRead": 613970,
+        "cacheCreation": 38150
+      },
+      "deniedTools": 0,
+      "malformedLines": 0,
+      "requirement": 0,
+      "correct": 1,
+      "size": 1157,
+      "ownBytes": 125
+    },
+    {
+      "runId": "task-08__procedure__3",
+      "taskId": "task-08",
+      "arm": "procedure",
+      "repeat": 3,
+      "state": "completed",
+      "attempt": 1,
+      "submissionKind": "out",
+      "model": "claude-haiku-5-5",
+      "loadedSkills": [
+        "es-toolkit:migrate"
+      ],
+      "turns": 13,
+      "durationMs": 234465,
+      "usage": {
+        "input": 22,
+        "output": 17589,
+        "cacheRead": 513639,
+        "cacheCreation": 39616
+      },
+      "deniedTools": 0,
+      "malformedLines": 0,
+      "requirement": 0,
+      "correct": 1,
+      "size": 1733,
+      "ownBytes": 91
+    },
+    {
+      "runId": "task-08__sabotage__1",
+      "taskId": "task-08",
+      "arm": "sabotage",
+      "repeat": 1,
+      "state": "completed",
+      "attempt": 1,
+      "submissionKind": "out",
+      "model": "claude-haiku-5-5",
+      "loadedSkills": [
+        "es-toolkit:migrate"
+      ],
+      "turns": 17,
+      "durationMs": 105438,
+      "usage": {
+        "input": 28,
+        "output": 14716,
+        "cacheRead": 671398,
+        "cacheCreation": 33509
+      },
+      "deniedTools": 0,
+      "malformedLines": 0,
+      "requirement": 1,
+      "correct": 1,
+      "size": 347,
+      "ownBytes": 88
+    },
+    {
+      "runId": "task-08__sabotage__2",
+      "taskId": "task-08",
+      "arm": "sabotage",
+      "repeat": 2,
+      "state": "completed",
+      "attempt": 1,
+      "submissionKind": "out",
+      "model": "claude-haiku-5-5",
+      "loadedSkills": [
+        "es-toolkit:migrate"
+      ],
+      "turns": 13,
+      "durationMs": 176943,
+      "usage": {
+        "input": 24,
+        "output": 18553,
+        "cacheRead": 530455,
+        "cacheCreation": 31697
+      },
+      "deniedTools": 0,
+      "malformedLines": 0,
+      "requirement": 0,
+      "correct": 1,
+      "size": 1745,
+      "ownBytes": 91
+    },
+    {
+      "runId": "task-08__sabotage__3",
+      "taskId": "task-08",
+      "arm": "sabotage",
+      "repeat": 3,
+      "state": "completed",
+      "attempt": 1,
+      "submissionKind": "out",
+      "model": "claude-haiku-5-5",
+      "loadedSkills": [
+        "es-toolkit:migrate"
+      ],
+      "turns": 21,
+      "durationMs": 272345,
+      "usage": {
+        "input": 34,
+        "output": 18066,
+        "cacheRead": 816529,
+        "cacheCreation": 37571
+      },
+      "deniedTools": 0,
+      "malformedLines": 0,
+      "requirement": 1,
+      "correct": 1,
+      "size": 346,
+      "ownBytes": 88
+    },
+    {
+      "runId": "task-08__skill__1",
+      "taskId": "task-08",
+      "arm": "skill",
+      "repeat": 1,
+      "state": "completed",
+      "attempt": 1,
+      "submissionKind": "out",
+      "model": "claude-haiku-5-5",
+      "loadedSkills": [
+        "es-toolkit:migrate"
+      ],
+      "turns": 12,
+      "durationMs": 112589,
+      "usage": {
+        "input": 24,
+        "output": 15814,
+        "cacheRead": 579648,
+        "cacheCreation": 35718
+      },
+      "deniedTools": 0,
+      "malformedLines": 0,
+      "requirement": 0,
+      "correct": 1,
+      "size": 1738,
+      "ownBytes": 91
+    },
+    {
+      "runId": "task-08__skill__2",
+      "taskId": "task-08",
+      "arm": "skill",
+      "repeat": 2,
+      "state": "completed",
+      "attempt": 1,
+      "submissionKind": "out",
+      "model": "claude-haiku-5-5",
+      "loadedSkills": [
+        "es-toolkit:migrate"
+      ],
+      "turns": 14,
+      "durationMs": 136407,
+      "usage": {
+        "input": 28,
+        "output": 14635,
+        "cacheRead": 647599,
+        "cacheCreation": 33834
+      },
+      "deniedTools": 0,
+      "malformedLines": 0,
+      "requirement": 0,
+      "correct": 1,
+      "size": 1735,
+      "ownBytes": 91
+    },
+    {
+      "runId": "task-08__skill__3",
+      "taskId": "task-08",
+      "arm": "skill",
+      "repeat": 3,
+      "state": "completed",
+      "attempt": 1,
+      "submissionKind": "out",
+      "model": "claude-haiku-5-5",
+      "loadedSkills": [
+        "es-toolkit:migrate"
+      ],
+      "turns": 16,
+      "durationMs": 269938,
+      "usage": {
+        "input": 28,
+        "output": 28324,
+        "cacheRead": 760231,
+        "cacheCreation": 50539
+      },
+      "deniedTools": 0,
+      "malformedLines": 0,
+      "requirement": 0,
+      "correct": 1,
+      "size": 1735,
+      "ownBytes": 91
+    },
+    {
+      "runId": "task-09__baseline__1",
+      "taskId": "task-09",
+      "arm": "baseline",
+      "repeat": 1,
+      "state": "completed",
+      "attempt": 1,
+      "submissionKind": "out",
+      "model": "claude-haiku-5-5",
+      "loadedSkills": [],
+      "turns": 16,
+      "durationMs": 165683,
+      "usage": {
+        "input": 32,
+        "output": 27504,
+        "cacheRead": 909237,
+        "cacheCreation": 60267
+      },
+      "deniedTools": 1,
+      "malformedLines": 0,
+      "requirement": 1,
+      "correct": 1,
+      "size": 2009,
+      "ownBytes": 85
+    },
+    {
+      "runId": "task-09__baseline__2",
+      "taskId": "task-09",
+      "arm": "baseline",
+      "repeat": 2,
+      "state": "completed",
+      "attempt": 1,
+      "submissionKind": "out",
+      "model": "claude-haiku-5-5",
+      "loadedSkills": [],
+      "turns": 14,
+      "durationMs": 211785,
+      "usage": {
+        "input": 24,
+        "output": 17143,
+        "cacheRead": 546639,
+        "cacheCreation": 37465
+      },
+      "deniedTools": 0,
+      "malformedLines": 0,
+      "requirement": 1,
+      "correct": 1,
+      "size": 2006,
+      "ownBytes": 85
+    },
+    {
+      "runId": "task-09__baseline__3",
+      "taskId": "task-09",
+      "arm": "baseline",
+      "repeat": 3,
+      "state": "completed",
+      "attempt": 1,
+      "submissionKind": "out",
+      "model": "claude-haiku-5-5",
+      "loadedSkills": [],
+      "turns": 17,
+      "durationMs": 171230,
+      "usage": {
+        "input": 34,
+        "output": 24442,
+        "cacheRead": 872387,
+        "cacheCreation": 45824
+      },
+      "deniedTools": 0,
+      "malformedLines": 0,
+      "requirement": 1,
+      "correct": 1,
+      "size": 2009,
+      "ownBytes": 85
+    },
+    {
+      "runId": "task-09__baseline__4",
+      "taskId": "task-09",
+      "arm": "baseline",
+      "repeat": 4,
+      "state": "limit",
+      "attempt": 1,
+      "submissionKind": "out",
+      "model": "claude-haiku-5-5",
+      "loadedSkills": [],
+      "turns": 26,
+      "durationMs": 600477,
+      "usage": {
+        "input": 52,
+        "output": 35572,
+        "cacheRead": 1509930,
+        "cacheCreation": 57108
+      },
+      "deniedTools": 0,
+      "malformedLines": 0,
+      "requirement": 0,
+      "correct": 0,
+      "size": null,
+      "ownBytes": null
+    },
+    {
+      "runId": "task-09__baseline__5",
+      "taskId": "task-09",
+      "arm": "baseline",
+      "repeat": 5,
+      "state": "completed",
+      "attempt": 1,
+      "submissionKind": "out",
+      "model": "claude-haiku-5-5",
+      "loadedSkills": [],
+      "turns": 14,
+      "durationMs": 98780,
+      "usage": {
+        "input": 28,
+        "output": 10691,
+        "cacheRead": 610572,
+        "cacheCreation": 29714
+      },
+      "deniedTools": 0,
+      "malformedLines": 0,
+      "requirement": 1,
+      "correct": 1,
+      "size": 2007,
+      "ownBytes": 85
+    },
+    {
+      "runId": "task-09__baseline__6",
+      "taskId": "task-09",
+      "arm": "baseline",
+      "repeat": 6,
+      "state": "completed",
+      "attempt": 1,
+      "submissionKind": "out",
+      "model": "claude-haiku-5-5",
+      "loadedSkills": [],
+      "turns": 13,
+      "durationMs": 144255,
+      "usage": {
+        "input": 26,
+        "output": 19910,
+        "cacheRead": 603170,
+        "cacheCreation": 38455
+      },
+      "deniedTools": 0,
+      "malformedLines": 0,
+      "requirement": 1,
+      "correct": 1,
+      "size": 2006,
+      "ownBytes": 85
+    },
+    {
+      "runId": "task-09__placebo__1",
+      "taskId": "task-09",
+      "arm": "placebo",
+      "repeat": 1,
+      "state": "completed",
+      "attempt": 1,
+      "submissionKind": "out",
+      "model": "claude-haiku-5-5",
+      "loadedSkills": [
+        "es-toolkit:migrate"
+      ],
+      "turns": 21,
+      "durationMs": 187957,
+      "usage": {
+        "input": 38,
+        "output": 26907,
+        "cacheRead": 1018914,
+        "cacheCreation": 46582
+      },
+      "deniedTools": 0,
+      "malformedLines": 0,
+      "requirement": 1,
+      "correct": 1,
+      "size": 2006,
+      "ownBytes": 85
+    },
+    {
+      "runId": "task-09__placebo__2",
+      "taskId": "task-09",
+      "arm": "placebo",
+      "repeat": 2,
+      "state": "completed",
+      "attempt": 1,
+      "submissionKind": "out",
+      "model": "claude-haiku-5-5",
+      "loadedSkills": [
+        "es-toolkit:migrate"
+      ],
+      "turns": 12,
+      "durationMs": 213806,
+      "usage": {
+        "input": 20,
+        "output": 8890,
+        "cacheRead": 423594,
+        "cacheCreation": 28276
+      },
+      "deniedTools": 0,
+      "malformedLines": 0,
+      "requirement": 0,
+      "correct": 1,
+      "size": 3663,
+      "ownBytes": 85
+    },
+    {
+      "runId": "task-09__placebo__3",
+      "taskId": "task-09",
+      "arm": "placebo",
+      "repeat": 3,
+      "state": "completed",
+      "attempt": 1,
+      "submissionKind": "out",
+      "model": "claude-haiku-5-5",
+      "loadedSkills": [
+        "es-toolkit:migrate"
+      ],
+      "turns": 14,
+      "durationMs": 234216,
+      "usage": {
+        "input": 28,
+        "output": 20933,
+        "cacheRead": 678680,
+        "cacheCreation": 40270
+      },
+      "deniedTools": 0,
+      "malformedLines": 0,
+      "requirement": 1,
+      "correct": 1,
+      "size": 2006,
+      "ownBytes": 85
+    },
+    {
+      "runId": "task-09__procedure__1",
+      "taskId": "task-09",
+      "arm": "procedure",
+      "repeat": 1,
+      "state": "completed",
+      "attempt": 1,
+      "submissionKind": "out",
+      "model": "claude-haiku-5-5",
+      "loadedSkills": [
+        "es-toolkit:migrate"
+      ],
+      "turns": 21,
+      "durationMs": 182294,
+      "usage": {
+        "input": 40,
+        "output": 26340,
+        "cacheRead": 1102318,
+        "cacheCreation": 49602
+      },
+      "deniedTools": 0,
+      "malformedLines": 0,
+      "requirement": 1,
+      "correct": 1,
+      "size": 2006,
+      "ownBytes": 85
+    },
+    {
+      "runId": "task-09__procedure__2",
+      "taskId": "task-09",
+      "arm": "procedure",
+      "repeat": 2,
+      "state": "completed",
+      "attempt": 1,
+      "submissionKind": "out",
+      "model": "claude-haiku-5-5",
+      "loadedSkills": [
+        "es-toolkit:migrate"
+      ],
+      "turns": 20,
+      "durationMs": 188407,
+      "usage": {
+        "input": 36,
+        "output": 22850,
+        "cacheRead": 931422,
+        "cacheCreation": 44200
+      },
+      "deniedTools": 0,
+      "malformedLines": 0,
+      "requirement": 1,
+      "correct": 1,
+      "size": 2006,
+      "ownBytes": 85
+    },
+    {
+      "runId": "task-09__procedure__3",
+      "taskId": "task-09",
+      "arm": "procedure",
+      "repeat": 3,
+      "state": "completed",
+      "attempt": 1,
+      "submissionKind": "out",
+      "model": "claude-haiku-5-5",
+      "loadedSkills": [
+        "es-toolkit:migrate"
+      ],
+      "turns": 21,
+      "durationMs": 200308,
+      "usage": {
+        "input": 40,
+        "output": 25641,
+        "cacheRead": 1099877,
+        "cacheCreation": 49752
+      },
+      "deniedTools": 0,
+      "malformedLines": 0,
+      "requirement": 1,
+      "correct": 1,
+      "size": 2006,
+      "ownBytes": 85
+    },
+    {
+      "runId": "task-09__sabotage__1",
+      "taskId": "task-09",
+      "arm": "sabotage",
+      "repeat": 1,
+      "state": "completed",
+      "attempt": 1,
+      "submissionKind": "out",
+      "model": "claude-haiku-5-5",
+      "loadedSkills": [
+        "es-toolkit:migrate"
+      ],
+      "turns": 15,
+      "durationMs": 162255,
+      "usage": {
+        "input": 28,
+        "output": 19771,
+        "cacheRead": 651110,
+        "cacheCreation": 35581
+      },
+      "deniedTools": 0,
+      "malformedLines": 0,
+      "requirement": 1,
+      "correct": 1,
+      "size": 2009,
+      "ownBytes": 85
+    },
+    {
+      "runId": "task-09__sabotage__2",
+      "taskId": "task-09",
+      "arm": "sabotage",
+      "repeat": 2,
+      "state": "completed",
+      "attempt": 1,
+      "submissionKind": "out",
+      "model": "claude-haiku-5-5",
+      "loadedSkills": [
+        "es-toolkit:migrate"
+      ],
+      "turns": 13,
+      "durationMs": 184997,
+      "usage": {
+        "input": 24,
+        "output": 25899,
+        "cacheRead": 583973,
+        "cacheCreation": 41154
+      },
+      "deniedTools": 0,
+      "malformedLines": 0,
+      "requirement": 1,
+      "correct": 1,
+      "size": 584,
+      "ownBytes": 99
+    },
+    {
+      "runId": "task-09__sabotage__3",
+      "taskId": "task-09",
+      "arm": "sabotage",
+      "repeat": 3,
+      "state": "completed",
+      "attempt": 1,
+      "submissionKind": "out",
+      "model": "claude-haiku-5-5",
+      "loadedSkills": [
+        "es-toolkit:migrate"
+      ],
+      "turns": 12,
+      "durationMs": 100786,
+      "usage": {
+        "input": 24,
+        "output": 11490,
+        "cacheRead": 497991,
+        "cacheCreation": 23915
+      },
+      "deniedTools": 0,
+      "malformedLines": 0,
+      "requirement": 1,
+      "correct": 1,
+      "size": 502,
+      "ownBytes": 116
+    },
+    {
+      "runId": "task-09__skill__1",
+      "taskId": "task-09",
+      "arm": "skill",
+      "repeat": 1,
+      "state": "completed",
+      "attempt": 1,
+      "submissionKind": "out",
+      "model": "claude-haiku-5-5",
+      "loadedSkills": [
+        "es-toolkit:migrate"
+      ],
+      "turns": 13,
+      "durationMs": 93861,
+      "usage": {
+        "input": 26,
+        "output": 13663,
+        "cacheRead": 623527,
+        "cacheCreation": 38502
+      },
+      "deniedTools": 0,
+      "malformedLines": 0,
+      "requirement": 1,
+      "correct": 1,
+      "size": 2006,
+      "ownBytes": 85
+    },
+    {
+      "runId": "task-09__skill__2",
+      "taskId": "task-09",
+      "arm": "skill",
+      "repeat": 2,
+      "state": "completed",
+      "attempt": 1,
+      "submissionKind": "out",
+      "model": "claude-haiku-5-5",
+      "loadedSkills": [
+        "es-toolkit:migrate"
+      ],
+      "turns": 24,
+      "durationMs": 206388,
+      "usage": {
+        "input": 48,
+        "output": 37011,
+        "cacheRead": 1690286,
+        "cacheCreation": 71574
+      },
+      "deniedTools": 0,
+      "malformedLines": 0,
+      "requirement": 1,
+      "correct": 1,
+      "size": 2007,
+      "ownBytes": 85
+    },
+    {
+      "runId": "task-09__skill__3",
+      "taskId": "task-09",
+      "arm": "skill",
+      "repeat": 3,
+      "state": "completed",
+      "attempt": 1,
+      "submissionKind": "out",
+      "model": "claude-haiku-5-5",
+      "loadedSkills": [
+        "es-toolkit:migrate"
+      ],
+      "turns": 20,
+      "durationMs": 142088,
+      "usage": {
+        "input": 40,
+        "output": 25371,
+        "cacheRead": 1085292,
+        "cacheCreation": 46561
+      },
+      "deniedTools": 1,
+      "malformedLines": 0,
+      "requirement": 1,
+      "correct": 1,
+      "size": 2006,
+      "ownBytes": 85
+    },
+    {
+      "runId": "task-11__baseline__1",
+      "taskId": "task-11",
+      "arm": "baseline",
+      "repeat": 1,
+      "state": "completed",
+      "attempt": 1,
+      "submissionKind": "out",
+      "model": "claude-haiku-5-5",
+      "loadedSkills": [],
+      "turns": 12,
+      "durationMs": 73363,
+      "usage": {
+        "input": 24,
+        "output": 7824,
+        "cacheRead": 493116,
+        "cacheCreation": 23670
+      },
+      "deniedTools": 0,
+      "malformedLines": 0,
+      "requirement": 1,
+      "correct": 1,
+      "size": 740,
+      "ownBytes": 113
+    },
+    {
+      "runId": "task-11__baseline__2",
+      "taskId": "task-11",
+      "arm": "baseline",
+      "repeat": 2,
+      "state": "completed",
+      "attempt": 1,
+      "submissionKind": "out",
+      "model": "claude-haiku-5-5",
+      "loadedSkills": [],
+      "turns": 10,
+      "durationMs": 53363,
+      "usage": {
+        "input": 20,
+        "output": 8049,
+        "cacheRead": 396969,
+        "cacheCreation": 24712
+      },
+      "deniedTools": 0,
+      "malformedLines": 0,
+      "requirement": 1,
+      "correct": 1,
+      "size": 739,
+      "ownBytes": 113
+    },
+    {
+      "runId": "task-11__baseline__3",
+      "taskId": "task-11",
+      "arm": "baseline",
+      "repeat": 3,
+      "state": "completed",
+      "attempt": 1,
+      "submissionKind": "out",
+      "model": "claude-haiku-5-5",
+      "loadedSkills": [],
+      "turns": 10,
+      "durationMs": 51459,
+      "usage": {
+        "input": 20,
+        "output": 6478,
+        "cacheRead": 394853,
+        "cacheCreation": 22303
+      },
+      "deniedTools": 0,
+      "malformedLines": 0,
+      "requirement": 1,
+      "correct": 1,
+      "size": 739,
+      "ownBytes": 113
+    },
+    {
+      "runId": "task-11__baseline__4",
+      "taskId": "task-11",
+      "arm": "baseline",
+      "repeat": 4,
+      "state": "completed",
+      "attempt": 1,
+      "submissionKind": "out",
+      "model": "claude-haiku-5-5",
+      "loadedSkills": [],
+      "turns": 13,
+      "durationMs": 118718,
+      "usage": {
+        "input": 26,
+        "output": 12384,
+        "cacheRead": 553138,
+        "cacheCreation": 29924
+      },
+      "deniedTools": 0,
+      "malformedLines": 0,
+      "requirement": 1,
+      "correct": 1,
+      "size": 738,
+      "ownBytes": 113
+    },
+    {
+      "runId": "task-11__baseline__5",
+      "taskId": "task-11",
+      "arm": "baseline",
+      "repeat": 5,
+      "state": "completed",
+      "attempt": 1,
+      "submissionKind": "out",
+      "model": "claude-haiku-5-5",
+      "loadedSkills": [],
+      "turns": 13,
+      "durationMs": 96034,
+      "usage": {
+        "input": 26,
+        "output": 8288,
+        "cacheRead": 537886,
+        "cacheCreation": 25409
+      },
+      "deniedTools": 0,
+      "malformedLines": 0,
+      "requirement": 1,
+      "correct": 1,
+      "size": 739,
+      "ownBytes": 113
+    },
+    {
+      "runId": "task-11__baseline__6",
+      "taskId": "task-11",
+      "arm": "baseline",
+      "repeat": 6,
+      "state": "completed",
+      "attempt": 1,
+      "submissionKind": "out",
+      "model": "claude-haiku-5-5",
+      "loadedSkills": [],
+      "turns": 11,
+      "durationMs": 71707,
+      "usage": {
+        "input": 22,
+        "output": 7028,
+        "cacheRead": 438955,
+        "cacheCreation": 23526
+      },
+      "deniedTools": 0,
+      "malformedLines": 0,
+      "requirement": 1,
+      "correct": 1,
+      "size": 741,
+      "ownBytes": 113
+    },
+    {
+      "runId": "task-11__placebo__1",
+      "taskId": "task-11",
+      "arm": "placebo",
+      "repeat": 1,
+      "state": "completed",
+      "attempt": 1,
+      "submissionKind": "out",
+      "model": "claude-haiku-5-5",
+      "loadedSkills": [
+        "es-toolkit:migrate"
+      ],
+      "turns": 11,
+      "durationMs": 71208,
+      "usage": {
+        "input": 20,
+        "output": 9002,
+        "cacheRead": 407288,
+        "cacheCreation": 24700
+      },
+      "deniedTools": 0,
+      "malformedLines": 0,
+      "requirement": 1,
+      "correct": 1,
+      "size": 741,
+      "ownBytes": 113
+    },
+    {
+      "runId": "task-11__placebo__2",
+      "taskId": "task-11",
+      "arm": "placebo",
+      "repeat": 2,
+      "state": "completed",
+      "attempt": 1,
+      "submissionKind": "out",
+      "model": "claude-haiku-5-5",
+      "loadedSkills": [
+        "es-toolkit:migrate"
+      ],
+      "turns": 13,
+      "durationMs": 101850,
+      "usage": {
+        "input": 26,
+        "output": 7934,
+        "cacheRead": 548508,
+        "cacheCreation": 27580
+      },
+      "deniedTools": 0,
+      "malformedLines": 0,
+      "requirement": 1,
+      "correct": 1,
+      "size": 738,
+      "ownBytes": 113
+    },
+    {
+      "runId": "task-11__placebo__3",
+      "taskId": "task-11",
+      "arm": "placebo",
+      "repeat": 3,
+      "state": "completed",
+      "attempt": 1,
+      "submissionKind": "out",
+      "model": "claude-haiku-5-5",
+      "loadedSkills": [
+        "es-toolkit:migrate"
+      ],
+      "turns": 15,
+      "durationMs": 201329,
+      "usage": {
+        "input": 30,
+        "output": 11574,
+        "cacheRead": 666042,
+        "cacheCreation": 30507
+      },
+      "deniedTools": 0,
+      "malformedLines": 0,
+      "requirement": 1,
+      "correct": 1,
+      "size": 739,
+      "ownBytes": 113
+    },
+    {
+      "runId": "task-11__procedure__1",
+      "taskId": "task-11",
+      "arm": "procedure",
+      "repeat": 1,
+      "state": "completed",
+      "attempt": 1,
+      "submissionKind": "out",
+      "model": "claude-haiku-5-5",
+      "loadedSkills": [
+        "es-toolkit:migrate"
+      ],
+      "turns": 16,
+      "durationMs": 112097,
+      "usage": {
+        "input": 32,
+        "output": 13797,
+        "cacheRead": 761697,
+        "cacheCreation": 35103
+      },
+      "deniedTools": 0,
+      "malformedLines": 0,
+      "requirement": 1,
+      "correct": 1,
+      "size": 739,
+      "ownBytes": 113
+    },
+    {
+      "runId": "task-11__procedure__2",
+      "taskId": "task-11",
+      "arm": "procedure",
+      "repeat": 2,
+      "state": "completed",
+      "attempt": 1,
+      "submissionKind": "out",
+      "model": "claude-haiku-5-5",
+      "loadedSkills": [
+        "es-toolkit:migrate"
+      ],
+      "turns": 14,
+      "durationMs": 112959,
+      "usage": {
+        "input": 28,
+        "output": 11328,
+        "cacheRead": 651510,
+        "cacheCreation": 34096
+      },
+      "deniedTools": 0,
+      "malformedLines": 0,
+      "requirement": 1,
+      "correct": 1,
+      "size": 739,
+      "ownBytes": 113
+    },
+    {
+      "runId": "task-11__procedure__3",
+      "taskId": "task-11",
+      "arm": "procedure",
+      "repeat": 3,
+      "state": "completed",
+      "attempt": 1,
+      "submissionKind": "out",
+      "model": "claude-haiku-5-5",
+      "loadedSkills": [
+        "es-toolkit:migrate"
+      ],
+      "turns": 9,
+      "durationMs": 78550,
+      "usage": {
+        "input": 18,
+        "output": 9506,
+        "cacheRead": 364459,
+        "cacheCreation": 25140
+      },
+      "deniedTools": 0,
+      "malformedLines": 0,
+      "requirement": 1,
+      "correct": 1,
+      "size": 739,
+      "ownBytes": 113
+    },
+    {
+      "runId": "task-11__sabotage__1",
+      "taskId": "task-11",
+      "arm": "sabotage",
+      "repeat": 1,
+      "state": "completed",
+      "attempt": 1,
+      "submissionKind": "out",
+      "model": "claude-haiku-5-5",
+      "loadedSkills": [
+        "es-toolkit:migrate"
+      ],
+      "turns": 12,
+      "durationMs": 88243,
+      "usage": {
+        "input": 20,
+        "output": 11011,
+        "cacheRead": 425173,
+        "cacheCreation": 28056
+      },
+      "deniedTools": 0,
+      "malformedLines": 0,
+      "requirement": 1,
+      "correct": 1,
+      "size": 741,
+      "ownBytes": 113
+    },
+    {
+      "runId": "task-11__sabotage__2",
+      "taskId": "task-11",
+      "arm": "sabotage",
+      "repeat": 2,
+      "state": "completed",
+      "attempt": 1,
+      "submissionKind": "out",
+      "model": "claude-haiku-5-5",
+      "loadedSkills": [
+        "es-toolkit:migrate"
+      ],
+      "turns": 11,
+      "durationMs": 124041,
+      "usage": {
+        "input": 22,
+        "output": 9708,
+        "cacheRead": 459132,
+        "cacheCreation": 29122
+      },
+      "deniedTools": 0,
+      "malformedLines": 0,
+      "requirement": 1,
+      "correct": 1,
+      "size": 741,
+      "ownBytes": 113
+    },
+    {
+      "runId": "task-11__sabotage__3",
+      "taskId": "task-11",
+      "arm": "sabotage",
+      "repeat": 3,
+      "state": "completed",
+      "attempt": 1,
+      "submissionKind": "out",
+      "model": "claude-haiku-5-5",
+      "loadedSkills": [
+        "es-toolkit:migrate"
+      ],
+      "turns": 18,
+      "durationMs": 112631,
+      "usage": {
+        "input": 32,
+        "output": 12609,
+        "cacheRead": 734871,
+        "cacheCreation": 31587
+      },
+      "deniedTools": 0,
+      "malformedLines": 0,
+      "requirement": 1,
+      "correct": 1,
+      "size": 737,
+      "ownBytes": 113
+    },
+    {
+      "runId": "task-11__skill__1",
+      "taskId": "task-11",
+      "arm": "skill",
+      "repeat": 1,
+      "state": "completed",
+      "attempt": 1,
+      "submissionKind": "out",
+      "model": "claude-haiku-5-5",
+      "loadedSkills": [
+        "es-toolkit:migrate"
+      ],
+      "turns": 21,
+      "durationMs": 199605,
+      "usage": {
+        "input": 36,
+        "output": 11323,
+        "cacheRead": 869534,
+        "cacheCreation": 35589
+      },
+      "deniedTools": 0,
+      "malformedLines": 0,
+      "requirement": 1,
+      "correct": 1,
+      "size": 737,
+      "ownBytes": 113
+    },
+    {
+      "runId": "task-11__skill__2",
+      "taskId": "task-11",
+      "arm": "skill",
+      "repeat": 2,
+      "state": "completed",
+      "attempt": 1,
+      "submissionKind": "out",
+      "model": "claude-haiku-5-5",
+      "loadedSkills": [
+        "es-toolkit:migrate"
+      ],
+      "turns": 11,
+      "durationMs": 80619,
+      "usage": {
+        "input": 22,
+        "output": 12891,
+        "cacheRead": 494947,
+        "cacheCreation": 31500
+      },
+      "deniedTools": 0,
+      "malformedLines": 0,
+      "requirement": 1,
+      "correct": 1,
+      "size": 738,
+      "ownBytes": 113
+    },
+    {
+      "runId": "task-11__skill__3",
+      "taskId": "task-11",
+      "arm": "skill",
+      "repeat": 3,
+      "state": "completed",
+      "attempt": 1,
+      "submissionKind": "out",
+      "model": "claude-haiku-5-5",
+      "loadedSkills": [
+        "es-toolkit:migrate"
+      ],
+      "turns": 9,
+      "durationMs": 52104,
+      "usage": {
+        "input": 18,
+        "output": 7546,
+        "cacheRead": 378114,
+        "cacheCreation": 28466
+      },
+      "deniedTools": 0,
+      "malformedLines": 0,
+      "requirement": 1,
+      "correct": 1,
+      "size": 738,
+      "ownBytes": 113
+    },
+    {
+      "runId": "task-12__baseline__1",
+      "taskId": "task-12",
+      "arm": "baseline",
+      "repeat": 1,
+      "state": "completed",
+      "attempt": 1,
+      "submissionKind": "out",
+      "model": "claude-haiku-5-5",
+      "loadedSkills": [],
+      "turns": 15,
+      "durationMs": 61318,
+      "usage": {
+        "input": 30,
+        "output": 9378,
+        "cacheRead": 652042,
+        "cacheCreation": 28177
+      },
+      "deniedTools": 0,
+      "malformedLines": 0,
+      "requirement": 1,
+      "correct": 1,
+      "size": 639,
+      "ownBytes": 95
+    },
+    {
+      "runId": "task-12__baseline__2",
+      "taskId": "task-12",
+      "arm": "baseline",
+      "repeat": 2,
+      "state": "completed",
+      "attempt": 1,
+      "submissionKind": "out",
+      "model": "claude-haiku-5-5",
+      "loadedSkills": [],
+      "turns": 12,
+      "durationMs": 188630,
+      "usage": {
+        "input": 24,
+        "output": 10054,
+        "cacheRead": 492996,
+        "cacheCreation": 25609
+      },
+      "deniedTools": 0,
+      "malformedLines": 0,
+      "requirement": 1,
+      "correct": 1,
+      "size": 628,
+      "ownBytes": 95
+    },
+    {
+      "runId": "task-12__baseline__3",
+      "taskId": "task-12",
+      "arm": "baseline",
+      "repeat": 3,
+      "state": "completed",
+      "attempt": 1,
+      "submissionKind": "out",
+      "model": "claude-haiku-5-5",
+      "loadedSkills": [],
+      "turns": 12,
+      "durationMs": 55057,
+      "usage": {
+        "input": 20,
+        "output": 8518,
+        "cacheRead": 397289,
+        "cacheCreation": 23212
+      },
+      "deniedTools": 0,
+      "malformedLines": 0,
+      "requirement": 1,
+      "correct": 1,
+      "size": 639,
+      "ownBytes": 95
+    },
+    {
+      "runId": "task-12__baseline__4",
+      "taskId": "task-12",
+      "arm": "baseline",
+      "repeat": 4,
+      "state": "completed",
+      "attempt": 1,
+      "submissionKind": "out",
+      "model": "claude-haiku-5-5",
+      "loadedSkills": [],
+      "turns": 13,
+      "durationMs": 66318,
+      "usage": {
+        "input": 26,
+        "output": 9479,
+        "cacheRead": 547607,
+        "cacheCreation": 25301
+      },
+      "deniedTools": 0,
+      "malformedLines": 0,
+      "requirement": 1,
+      "correct": 1,
+      "size": 628,
+      "ownBytes": 95
+    },
+    {
+      "runId": "task-12__baseline__5",
+      "taskId": "task-12",
+      "arm": "baseline",
+      "repeat": 5,
+      "state": "completed",
+      "attempt": 1,
+      "submissionKind": "out",
+      "model": "claude-haiku-5-5",
+      "loadedSkills": [],
+      "turns": 9,
+      "durationMs": 68837,
+      "usage": {
+        "input": 18,
+        "output": 9137,
+        "cacheRead": 357143,
+        "cacheCreation": 24245
+      },
+      "deniedTools": 0,
+      "malformedLines": 0,
+      "requirement": 1,
+      "correct": 1,
+      "size": 636,
+      "ownBytes": 95
+    },
+    {
+      "runId": "task-12__baseline__6",
+      "taskId": "task-12",
+      "arm": "baseline",
+      "repeat": 6,
+      "state": "completed",
+      "attempt": 1,
+      "submissionKind": "out",
+      "model": "claude-haiku-5-5",
+      "loadedSkills": [],
+      "turns": 10,
+      "durationMs": 80130,
+      "usage": {
+        "input": 20,
+        "output": 9068,
+        "cacheRead": 403087,
+        "cacheCreation": 24184
+      },
+      "deniedTools": 0,
+      "malformedLines": 0,
+      "requirement": 1,
+      "correct": 1,
+      "size": 636,
+      "ownBytes": 95
+    },
+    {
+      "runId": "task-12__placebo__1",
+      "taskId": "task-12",
+      "arm": "placebo",
+      "repeat": 1,
+      "state": "completed",
+      "attempt": 1,
+      "submissionKind": "out",
+      "model": "claude-haiku-5-5",
+      "loadedSkills": [
+        "es-toolkit:migrate"
+      ],
+      "turns": 9,
+      "durationMs": 80849,
+      "usage": {
+        "input": 18,
+        "output": 8191,
+        "cacheRead": 367515,
+        "cacheCreation": 24077
+      },
+      "deniedTools": 0,
+      "malformedLines": 0,
+      "requirement": 1,
+      "correct": 1,
+      "size": 636,
+      "ownBytes": 95
+    },
+    {
+      "runId": "task-12__placebo__2",
+      "taskId": "task-12",
+      "arm": "placebo",
+      "repeat": 2,
+      "state": "completed",
+      "attempt": 1,
+      "submissionKind": "out",
+      "model": "claude-haiku-5-5",
+      "loadedSkills": [
+        "es-toolkit:migrate"
+      ],
+      "turns": 21,
+      "durationMs": 129129,
+      "usage": {
+        "input": 38,
+        "output": 16394,
+        "cacheRead": 942943,
+        "cacheCreation": 38137
+      },
+      "deniedTools": 0,
+      "malformedLines": 0,
+      "requirement": 1,
+      "correct": 1,
+      "size": 628,
+      "ownBytes": 95
+    },
+    {
+      "runId": "task-12__placebo__3",
+      "taskId": "task-12",
+      "arm": "placebo",
+      "repeat": 3,
+      "state": "completed",
+      "attempt": 1,
+      "submissionKind": "out",
+      "model": "claude-haiku-5-5",
+      "loadedSkills": [
+        "es-toolkit:migrate"
+      ],
+      "turns": 14,
+      "durationMs": 89249,
+      "usage": {
+        "input": 26,
+        "output": 10788,
+        "cacheRead": 591285,
+        "cacheCreation": 32724
+      },
+      "deniedTools": 0,
+      "malformedLines": 0,
+      "requirement": 1,
+      "correct": 1,
+      "size": 639,
+      "ownBytes": 95
+    },
+    {
+      "runId": "task-12__procedure__1",
+      "taskId": "task-12",
+      "arm": "procedure",
+      "repeat": 1,
+      "state": "completed",
+      "attempt": 1,
+      "submissionKind": "out",
+      "model": "claude-haiku-5-5",
+      "loadedSkills": [
+        "es-toolkit:migrate"
+      ],
+      "turns": 11,
+      "durationMs": 94553,
+      "usage": {
+        "input": 20,
+        "output": 11054,
+        "cacheRead": 464387,
+        "cacheCreation": 39310
+      },
+      "deniedTools": 0,
+      "malformedLines": 0,
+      "requirement": 1,
+      "correct": 1,
+      "size": 628,
+      "ownBytes": 95
+    },
+    {
+      "runId": "task-12__procedure__2",
+      "taskId": "task-12",
+      "arm": "procedure",
+      "repeat": 2,
+      "state": "completed",
+      "attempt": 1,
+      "submissionKind": "out",
+      "model": "claude-haiku-5-5",
+      "loadedSkills": [
+        "es-toolkit:migrate"
+      ],
+      "turns": 16,
+      "durationMs": 121317,
+      "usage": {
+        "input": 28,
+        "output": 15594,
+        "cacheRead": 643389,
+        "cacheCreation": 38432
+      },
+      "deniedTools": 0,
+      "malformedLines": 0,
+      "requirement": 1,
+      "correct": 1,
+      "size": 628,
+      "ownBytes": 95
+    },
+    {
+      "runId": "task-12__procedure__3",
+      "taskId": "task-12",
+      "arm": "procedure",
+      "repeat": 3,
+      "state": "completed",
+      "attempt": 1,
+      "submissionKind": "out",
+      "model": "claude-haiku-5-5",
+      "loadedSkills": [
+        "es-toolkit:migrate"
+      ],
+      "turns": 17,
+      "durationMs": 101260,
+      "usage": {
+        "input": 30,
+        "output": 11928,
+        "cacheRead": 722484,
+        "cacheCreation": 34814
+      },
+      "deniedTools": 0,
+      "malformedLines": 0,
+      "requirement": 1,
+      "correct": 1,
+      "size": 628,
+      "ownBytes": 95
+    },
+    {
+      "runId": "task-12__sabotage__1",
+      "taskId": "task-12",
+      "arm": "sabotage",
+      "repeat": 1,
+      "state": "completed",
+      "attempt": 1,
+      "submissionKind": "out",
+      "model": "claude-haiku-5-5",
+      "loadedSkills": [
+        "es-toolkit:migrate"
+      ],
+      "turns": 12,
+      "durationMs": 83833,
+      "usage": {
+        "input": 22,
+        "output": 8793,
+        "cacheRead": 451279,
+        "cacheCreation": 24013
+      },
+      "deniedTools": 0,
+      "malformedLines": 0,
+      "requirement": 1,
+      "correct": 1,
+      "size": 636,
+      "ownBytes": 95
+    },
+    {
+      "runId": "task-12__sabotage__2",
+      "taskId": "task-12",
+      "arm": "sabotage",
+      "repeat": 2,
+      "state": "completed",
+      "attempt": 1,
+      "submissionKind": "out",
+      "model": "claude-haiku-5-5",
+      "loadedSkills": [
+        "es-toolkit:migrate"
+      ],
+      "turns": 13,
+      "durationMs": 109522,
+      "usage": {
+        "input": 20,
+        "output": 16208,
+        "cacheRead": 427388,
+        "cacheCreation": 35005
+      },
+      "deniedTools": 0,
+      "malformedLines": 0,
+      "requirement": 1,
+      "correct": 1,
+      "size": 636,
+      "ownBytes": 95
+    },
+    {
+      "runId": "task-12__sabotage__3",
+      "taskId": "task-12",
+      "arm": "sabotage",
+      "repeat": 3,
+      "state": "completed",
+      "attempt": 1,
+      "submissionKind": "out",
+      "model": "claude-haiku-5-5",
+      "loadedSkills": [
+        "es-toolkit:migrate"
+      ],
+      "turns": 12,
+      "durationMs": 98368,
+      "usage": {
+        "input": 22,
+        "output": 8229,
+        "cacheRead": 468955,
+        "cacheCreation": 26710
+      },
+      "deniedTools": 0,
+      "malformedLines": 0,
+      "requirement": 1,
+      "correct": 1,
+      "size": 636,
+      "ownBytes": 95
+    },
+    {
+      "runId": "task-12__skill__1",
+      "taskId": "task-12",
+      "arm": "skill",
+      "repeat": 1,
+      "state": "completed",
+      "attempt": 1,
+      "submissionKind": "out",
+      "model": "claude-haiku-5-5",
+      "loadedSkills": [
+        "es-toolkit:migrate"
+      ],
+      "turns": 13,
+      "durationMs": 80901,
+      "usage": {
+        "input": 22,
+        "output": 15179,
+        "cacheRead": 503606,
+        "cacheCreation": 35356
+      },
+      "deniedTools": 0,
+      "malformedLines": 0,
+      "requirement": 1,
+      "correct": 1,
+      "size": 634,
+      "ownBytes": 95
+    },
+    {
+      "runId": "task-12__skill__2",
+      "taskId": "task-12",
+      "arm": "skill",
+      "repeat": 2,
+      "state": "completed",
+      "attempt": 1,
+      "submissionKind": "out",
+      "model": "claude-haiku-5-5",
+      "loadedSkills": [
+        "es-toolkit:migrate"
+      ],
+      "turns": 8,
+      "durationMs": 55813,
+      "usage": {
+        "input": 16,
+        "output": 8991,
+        "cacheRead": 339914,
+        "cacheCreation": 29569
+      },
+      "deniedTools": 0,
+      "malformedLines": 0,
+      "requirement": 1,
+      "correct": 1,
+      "size": 636,
+      "ownBytes": 95
+    },
+    {
+      "runId": "task-12__skill__3",
+      "taskId": "task-12",
+      "arm": "skill",
+      "repeat": 3,
+      "state": "completed",
+      "attempt": 1,
+      "submissionKind": "out",
+      "model": "claude-haiku-5-5",
+      "loadedSkills": [
+        "es-toolkit:migrate"
+      ],
+      "turns": 10,
+      "durationMs": 80198,
+      "usage": {
+        "input": 20,
+        "output": 10500,
+        "cacheRead": 432965,
+        "cacheCreation": 29021
+      },
+      "deniedTools": 0,
+      "malformedLines": 0,
+      "requirement": 1,
+      "correct": 1,
+      "size": 636,
+      "ownBytes": 95
+    },
+    {
+      "runId": "task-14__baseline__1",
+      "taskId": "task-14",
+      "arm": "baseline",
+      "repeat": 1,
+      "state": "completed",
+      "attempt": 1,
+      "submissionKind": "out",
+      "model": "claude-haiku-5-5",
+      "loadedSkills": [],
+      "turns": 10,
+      "durationMs": 108359,
+      "usage": {
+        "input": 20,
+        "output": 19214,
+        "cacheRead": 461560,
+        "cacheCreation": 38897
+      },
+      "deniedTools": 0,
+      "malformedLines": 0,
+      "requirement": 0,
+      "correct": 1,
+      "size": 1228,
+      "ownBytes": 98
+    },
+    {
+      "runId": "task-14__baseline__2",
+      "taskId": "task-14",
+      "arm": "baseline",
+      "repeat": 2,
+      "state": "completed",
+      "attempt": 1,
+      "submissionKind": "out",
+      "model": "claude-haiku-5-5",
+      "loadedSkills": [],
+      "turns": 8,
+      "durationMs": 73581,
+      "usage": {
+        "input": 16,
+        "output": 12283,
+        "cacheRead": 321803,
+        "cacheCreation": 26151
+      },
+      "deniedTools": 0,
+      "malformedLines": 0,
+      "requirement": 1,
+      "correct": 1,
+      "size": 390,
+      "ownBytes": 95
+    },
+    {
+      "runId": "task-14__baseline__3",
+      "taskId": "task-14",
+      "arm": "baseline",
+      "repeat": 3,
+      "state": "completed",
+      "attempt": 1,
+      "submissionKind": "out",
+      "model": "claude-haiku-5-5",
+      "loadedSkills": [],
+      "turns": 10,
+      "durationMs": 157045,
+      "usage": {
+        "input": 20,
+        "output": 28742,
+        "cacheRead": 436775,
+        "cacheCreation": 43886
+      },
+      "deniedTools": 0,
+      "malformedLines": 0,
+      "requirement": 0,
+      "correct": 1,
+      "size": 2133,
+      "ownBytes": 128
+    },
+    {
+      "runId": "task-14__baseline__4",
+      "taskId": "task-14",
+      "arm": "baseline",
+      "repeat": 4,
+      "state": "completed",
+      "attempt": 1,
+      "submissionKind": "out",
+      "model": "claude-haiku-5-5",
+      "loadedSkills": [],
+      "turns": 13,
+      "durationMs": 141772,
+      "usage": {
+        "input": 26,
+        "output": 17214,
+        "cacheRead": 571364,
+        "cacheCreation": 33166
+      },
+      "deniedTools": 0,
+      "malformedLines": 0,
+      "requirement": 0,
+      "correct": 1,
+      "size": 1226,
+      "ownBytes": 90
+    },
+    {
+      "runId": "task-14__baseline__5",
+      "taskId": "task-14",
+      "arm": "baseline",
+      "repeat": 5,
+      "state": "completed",
+      "attempt": 1,
+      "submissionKind": "out",
+      "model": "claude-haiku-5-5",
+      "loadedSkills": [],
+      "turns": 10,
+      "durationMs": 91904,
+      "usage": {
+        "input": 20,
+        "output": 9156,
+        "cacheRead": 388448,
+        "cacheCreation": 22891
+      },
+      "deniedTools": 0,
+      "malformedLines": 0,
+      "requirement": 1,
+      "correct": 1,
+      "size": 388,
+      "ownBytes": 87
+    },
+    {
+      "runId": "task-14__baseline__6",
+      "taskId": "task-14",
+      "arm": "baseline",
+      "repeat": 6,
+      "state": "completed",
+      "attempt": 1,
+      "submissionKind": "out",
+      "model": "claude-haiku-5-5",
+      "loadedSkills": [],
+      "turns": 9,
+      "durationMs": 114782,
+      "usage": {
+        "input": 18,
+        "output": 12496,
+        "cacheRead": 369603,
+        "cacheCreation": 27720
+      },
+      "deniedTools": 0,
+      "malformedLines": 0,
+      "requirement": 1,
+      "correct": 1,
+      "size": 385,
+      "ownBytes": 87
+    },
+    {
+      "runId": "task-14__placebo__1",
+      "taskId": "task-14",
+      "arm": "placebo",
+      "repeat": 1,
+      "state": "completed",
+      "attempt": 1,
+      "submissionKind": "out",
+      "model": "claude-haiku-5-5",
+      "loadedSkills": [
+        "es-toolkit:migrate"
+      ],
+      "turns": 20,
+      "durationMs": 193570,
+      "usage": {
+        "input": 40,
+        "output": 20939,
+        "cacheRead": 1077977,
+        "cacheCreation": 45689
+      },
+      "deniedTools": 0,
+      "malformedLines": 0,
+      "requirement": 1,
+      "correct": 1,
+      "size": 390,
+      "ownBytes": 95
+    },
+    {
+      "runId": "task-14__placebo__2",
+      "taskId": "task-14",
+      "arm": "placebo",
+      "repeat": 2,
+      "state": "completed",
+      "attempt": 1,
+      "submissionKind": "out",
+      "model": "claude-haiku-5-5",
+      "loadedSkills": [
+        "es-toolkit:migrate"
+      ],
+      "turns": 14,
+      "durationMs": 139128,
+      "usage": {
+        "input": 28,
+        "output": 17205,
+        "cacheRead": 683150,
+        "cacheCreation": 36912
+      },
+      "deniedTools": 0,
+      "malformedLines": 0,
+      "requirement": 1,
+      "correct": 1,
+      "size": 385,
+      "ownBytes": 87
+    },
+    {
+      "runId": "task-14__placebo__3",
+      "taskId": "task-14",
+      "arm": "placebo",
+      "repeat": 3,
+      "state": "completed",
+      "attempt": 1,
+      "submissionKind": "out",
+      "model": "claude-haiku-5-5",
+      "loadedSkills": [
+        "es-toolkit:migrate"
+      ],
+      "turns": 16,
+      "durationMs": 270669,
+      "usage": {
+        "input": 32,
+        "output": 27772,
+        "cacheRead": 834343,
+        "cacheCreation": 46934
+      },
+      "deniedTools": 0,
+      "malformedLines": 0,
+      "requirement": 0,
+      "correct": 1,
+      "size": 1231,
+      "ownBytes": 90
+    },
+    {
+      "runId": "task-14__procedure__1",
+      "taskId": "task-14",
+      "arm": "procedure",
+      "repeat": 1,
+      "state": "completed",
+      "attempt": 1,
+      "submissionKind": "out",
+      "model": "claude-haiku-5-5",
+      "loadedSkills": [
+        "es-toolkit:migrate"
+      ],
+      "turns": 14,
+      "durationMs": 193074,
+      "usage": {
+        "input": 26,
+        "output": 22830,
+        "cacheRead": 664768,
+        "cacheCreation": 45117
+      },
+      "deniedTools": 0,
+      "malformedLines": 0,
+      "requirement": 0,
+      "correct": 1,
+      "size": 1233,
+      "ownBytes": 98
+    },
+    {
+      "runId": "task-14__procedure__2",
+      "taskId": "task-14",
+      "arm": "procedure",
+      "repeat": 2,
+      "state": "completed",
+      "attempt": 1,
+      "submissionKind": "out",
+      "model": "claude-haiku-5-5",
+      "loadedSkills": [
+        "es-toolkit:migrate"
+      ],
+      "turns": 16,
+      "durationMs": 282452,
+      "usage": {
+        "input": 28,
+        "output": 20616,
+        "cacheRead": 725360,
+        "cacheCreation": 45212
+      },
+      "deniedTools": 0,
+      "malformedLines": 0,
+      "requirement": 0,
+      "correct": 1,
+      "size": 1230,
+      "ownBytes": 98
+    },
+    {
+      "runId": "task-14__procedure__3",
+      "taskId": "task-14",
+      "arm": "procedure",
+      "repeat": 3,
+      "state": "completed",
+      "attempt": 1,
+      "submissionKind": "out",
+      "model": "claude-haiku-5-5",
+      "loadedSkills": [
+        "es-toolkit:migrate"
+      ],
+      "turns": 11,
+      "durationMs": 217809,
+      "usage": {
+        "input": 20,
+        "output": 8943,
+        "cacheRead": 406139,
+        "cacheCreation": 23980
+      },
+      "deniedTools": 0,
+      "malformedLines": 0,
+      "requirement": 1,
+      "correct": 1,
+      "size": 385,
+      "ownBytes": 87
+    },
+    {
+      "runId": "task-14__sabotage__1",
+      "taskId": "task-14",
+      "arm": "sabotage",
+      "repeat": 1,
+      "state": "completed",
+      "attempt": 1,
+      "submissionKind": "out",
+      "model": "claude-haiku-5-5",
+      "loadedSkills": [
+        "es-toolkit:migrate"
+      ],
+      "turns": 11,
+      "durationMs": 149712,
+      "usage": {
+        "input": 22,
+        "output": 17083,
+        "cacheRead": 487689,
+        "cacheCreation": 31788
+      },
+      "deniedTools": 0,
+      "malformedLines": 0,
+      "requirement": 1,
+      "correct": 1,
+      "size": 388,
+      "ownBytes": 87
+    },
+    {
+      "runId": "task-14__sabotage__2",
+      "taskId": "task-14",
+      "arm": "sabotage",
+      "repeat": 2,
+      "state": "completed",
+      "attempt": 1,
+      "submissionKind": "out",
+      "model": "claude-haiku-5-5",
+      "loadedSkills": [
+        "es-toolkit:migrate"
+      ],
+      "turns": 20,
+      "durationMs": 216292,
+      "usage": {
+        "input": 38,
+        "output": 20442,
+        "cacheRead": 938245,
+        "cacheCreation": 39343
+      },
+      "deniedTools": 0,
+      "malformedLines": 0,
+      "requirement": 0,
+      "correct": 1,
+      "size": 1149,
+      "ownBytes": 107
+    },
+    {
+      "runId": "task-14__sabotage__3",
+      "taskId": "task-14",
+      "arm": "sabotage",
+      "repeat": 3,
+      "state": "completed",
+      "attempt": 1,
+      "submissionKind": "out",
+      "model": "claude-haiku-5-5",
+      "loadedSkills": [
+        "es-toolkit:migrate"
+      ],
+      "turns": 14,
+      "durationMs": 188086,
+      "usage": {
+        "input": 24,
+        "output": 19293,
+        "cacheRead": 592019,
+        "cacheCreation": 39612
+      },
+      "deniedTools": 0,
+      "malformedLines": 0,
+      "requirement": 0,
+      "correct": 1,
+      "size": 2133,
+      "ownBytes": 128
+    },
+    {
+      "runId": "task-14__skill__1",
+      "taskId": "task-14",
+      "arm": "skill",
+      "repeat": 1,
+      "state": "completed",
+      "attempt": 1,
+      "submissionKind": "out",
+      "model": "claude-haiku-5-5",
+      "loadedSkills": [
+        "es-toolkit:migrate"
+      ],
+      "turns": 20,
+      "durationMs": 246129,
+      "usage": {
+        "input": 38,
+        "output": 22255,
+        "cacheRead": 1018716,
+        "cacheCreation": 43594
+      },
+      "deniedTools": 0,
+      "malformedLines": 0,
+      "requirement": 0,
+      "correct": 1,
+      "size": 1229,
+      "ownBytes": 90
+    },
+    {
+      "runId": "task-14__skill__2",
+      "taskId": "task-14",
+      "arm": "skill",
+      "repeat": 2,
+      "state": "completed",
+      "attempt": 1,
+      "submissionKind": "out",
+      "model": "claude-haiku-5-5",
+      "loadedSkills": [
+        "es-toolkit:migrate"
+      ],
+      "turns": 15,
+      "durationMs": 93725,
+      "usage": {
+        "input": 30,
+        "output": 14483,
+        "cacheRead": 710348,
+        "cacheCreation": 35103
+      },
+      "deniedTools": 0,
+      "malformedLines": 0,
+      "requirement": 0,
+      "correct": 1,
+      "size": 1234,
+      "ownBytes": 98
+    },
+    {
+      "runId": "task-14__skill__3",
+      "taskId": "task-14",
+      "arm": "skill",
+      "repeat": 3,
+      "state": "limit",
+      "attempt": 1,
+      "submissionKind": "out",
+      "model": "claude-haiku-5-5",
+      "loadedSkills": [
+        "es-toolkit:migrate"
+      ],
+      "turns": 14,
+      "durationMs": 600476,
+      "usage": {
+        "input": 28,
+        "output": 18113,
+        "cacheRead": 711574,
+        "cacheCreation": 41337
+      },
+      "deniedTools": 0,
+      "malformedLines": 0,
+      "requirement": 0,
+      "correct": 0,
+      "size": null,
+      "ownBytes": null
+    },
+    {
+      "runId": "task-15__baseline__1",
+      "taskId": "task-15",
+      "arm": "baseline",
+      "repeat": 1,
+      "state": "completed",
+      "attempt": 1,
+      "submissionKind": "out",
+      "model": "claude-haiku-5-5",
+      "loadedSkills": [],
+      "turns": 8,
+      "durationMs": 41803,
+      "usage": {
+        "input": 16,
+        "output": 5655,
+        "cacheRead": 296317,
+        "cacheCreation": 17549
+      },
+      "deniedTools": 0,
+      "malformedLines": 0,
+      "requirement": 1,
+      "correct": 1,
+      "size": 211,
+      "ownBytes": 100
+    },
+    {
+      "runId": "task-15__baseline__2",
+      "taskId": "task-15",
+      "arm": "baseline",
+      "repeat": 2,
+      "state": "completed",
+      "attempt": 1,
+      "submissionKind": "out",
+      "model": "claude-haiku-5-5",
+      "loadedSkills": [],
+      "turns": 9,
+      "durationMs": 58623,
+      "usage": {
+        "input": 18,
+        "output": 6395,
+        "cacheRead": 341402,
+        "cacheCreation": 19634
+      },
+      "deniedTools": 0,
+      "malformedLines": 0,
+      "requirement": 1,
+      "correct": 1,
+      "size": 206,
+      "ownBytes": 95
+    },
+    {
+      "runId": "task-15__baseline__3",
+      "taskId": "task-15",
+      "arm": "baseline",
+      "repeat": 3,
+      "state": "completed",
+      "attempt": 1,
+      "submissionKind": "out",
+      "model": "claude-haiku-5-5",
+      "loadedSkills": [],
+      "turns": 8,
+      "durationMs": 45932,
+      "usage": {
+        "input": 16,
+        "output": 4874,
+        "cacheRead": 294776,
+        "cacheCreation": 17856
+      },
+      "deniedTools": 0,
+      "malformedLines": 0,
+      "requirement": 1,
+      "correct": 1,
+      "size": 213,
+      "ownBytes": 103
+    },
+    {
+      "runId": "task-15__baseline__4",
+      "taskId": "task-15",
+      "arm": "baseline",
+      "repeat": 4,
+      "state": "completed",
+      "attempt": 1,
+      "submissionKind": "out",
+      "model": "claude-haiku-5-5",
+      "loadedSkills": [],
+      "turns": 7,
+      "durationMs": 55626,
+      "usage": {
+        "input": 14,
+        "output": 6594,
+        "cacheRead": 254355,
+        "cacheCreation": 18441
+      },
+      "deniedTools": 0,
+      "malformedLines": 0,
+      "requirement": 1,
+      "correct": 1,
+      "size": 206,
+      "ownBytes": 95
+    },
+    {
+      "runId": "task-15__baseline__5",
+      "taskId": "task-15",
+      "arm": "baseline",
+      "repeat": 5,
+      "state": "completed",
+      "attempt": 1,
+      "submissionKind": "out",
+      "model": "claude-haiku-5-5",
+      "loadedSkills": [],
+      "turns": 9,
+      "durationMs": 55733,
+      "usage": {
+        "input": 18,
+        "output": 5372,
+        "cacheRead": 336571,
+        "cacheCreation": 16856
+      },
+      "deniedTools": 0,
+      "malformedLines": 0,
+      "requirement": 1,
+      "correct": 1,
+      "size": 206,
+      "ownBytes": 95
+    },
+    {
+      "runId": "task-15__baseline__6",
+      "taskId": "task-15",
+      "arm": "baseline",
+      "repeat": 6,
+      "state": "completed",
+      "attempt": 1,
+      "submissionKind": "out",
+      "model": "claude-haiku-5-5",
+      "loadedSkills": [],
+      "turns": 7,
+      "durationMs": 82241,
+      "usage": {
+        "input": 14,
+        "output": 6010,
+        "cacheRead": 264597,
+        "cacheCreation": 19972
+      },
+      "deniedTools": 0,
+      "malformedLines": 0,
+      "requirement": 1,
+      "correct": 1,
+      "size": 214,
+      "ownBytes": 103
+    },
+    {
+      "runId": "task-15__placebo__1",
+      "taskId": "task-15",
+      "arm": "placebo",
+      "repeat": 1,
+      "state": "completed",
+      "attempt": 1,
+      "submissionKind": "out",
+      "model": "claude-haiku-5-5",
+      "loadedSkills": [
+        "es-toolkit:migrate"
+      ],
+      "turns": 10,
+      "durationMs": 71340,
+      "usage": {
+        "input": 20,
+        "output": 7595,
+        "cacheRead": 415546,
+        "cacheCreation": 24269
+      },
+      "deniedTools": 0,
+      "malformedLines": 0,
+      "requirement": 1,
+      "correct": 1,
+      "size": 206,
+      "ownBytes": 95
+    },
+    {
+      "runId": "task-15__placebo__2",
+      "taskId": "task-15",
+      "arm": "placebo",
+      "repeat": 2,
+      "state": "completed",
+      "attempt": 1,
+      "submissionKind": "out",
+      "model": "claude-haiku-5-5",
+      "loadedSkills": [
+        "es-toolkit:migrate"
+      ],
+      "turns": 9,
+      "durationMs": 77614,
+      "usage": {
+        "input": 16,
+        "output": 7534,
+        "cacheRead": 321281,
+        "cacheCreation": 21875
+      },
+      "deniedTools": 0,
+      "malformedLines": 0,
+      "requirement": 1,
+      "correct": 1,
+      "size": 206,
+      "ownBytes": 95
+    },
+    {
+      "runId": "task-15__placebo__3",
+      "taskId": "task-15",
+      "arm": "placebo",
+      "repeat": 3,
+      "state": "completed",
+      "attempt": 1,
+      "submissionKind": "out",
+      "model": "claude-haiku-5-5",
+      "loadedSkills": [
+        "es-toolkit:migrate"
+      ],
+      "turns": 9,
+      "durationMs": 64818,
+      "usage": {
+        "input": 18,
+        "output": 6524,
+        "cacheRead": 354838,
+        "cacheCreation": 21181
+      },
+      "deniedTools": 0,
+      "malformedLines": 0,
+      "requirement": 1,
+      "correct": 1,
+      "size": 213,
+      "ownBytes": 103
+    },
+    {
+      "runId": "task-15__procedure__1",
+      "taskId": "task-15",
+      "arm": "procedure",
+      "repeat": 1,
+      "state": "completed",
+      "attempt": 1,
+      "submissionKind": "out",
+      "model": "claude-haiku-5-5",
+      "loadedSkills": [
+        "es-toolkit:migrate"
+      ],
+      "turns": 10,
+      "durationMs": 71497,
+      "usage": {
+        "input": 18,
+        "output": 9574,
+        "cacheRead": 379757,
+        "cacheCreation": 28724
+      },
+      "deniedTools": 0,
+      "malformedLines": 0,
+      "requirement": 1,
+      "correct": 1,
+      "size": 206,
+      "ownBytes": 95
+    },
+    {
+      "runId": "task-15__procedure__2",
+      "taskId": "task-15",
+      "arm": "procedure",
+      "repeat": 2,
+      "state": "completed",
+      "attempt": 1,
+      "submissionKind": "out",
+      "model": "claude-haiku-5-5",
+      "loadedSkills": [
+        "es-toolkit:migrate"
+      ],
+      "turns": 10,
+      "durationMs": 106642,
+      "usage": {
+        "input": 20,
+        "output": 8366,
+        "cacheRead": 404639,
+        "cacheCreation": 23545
+      },
+      "deniedTools": 0,
+      "malformedLines": 0,
+      "requirement": 1,
+      "correct": 1,
+      "size": 206,
+      "ownBytes": 95
+    },
+    {
+      "runId": "task-15__procedure__3",
+      "taskId": "task-15",
+      "arm": "procedure",
+      "repeat": 3,
+      "state": "completed",
+      "attempt": 1,
+      "submissionKind": "out",
+      "model": "claude-haiku-5-5",
+      "loadedSkills": [
+        "es-toolkit:migrate"
+      ],
+      "turns": 10,
+      "durationMs": 86085,
+      "usage": {
+        "input": 20,
+        "output": 9337,
+        "cacheRead": 413674,
+        "cacheCreation": 25346
+      },
+      "deniedTools": 0,
+      "malformedLines": 0,
+      "requirement": 1,
+      "correct": 1,
+      "size": 209,
+      "ownBytes": 103
+    },
+    {
+      "runId": "task-15__sabotage__1",
+      "taskId": "task-15",
+      "arm": "sabotage",
+      "repeat": 1,
+      "state": "completed",
+      "attempt": 1,
+      "submissionKind": "out",
+      "model": "claude-haiku-5-5",
+      "loadedSkills": [
+        "es-toolkit:migrate"
+      ],
+      "turns": 6,
+      "durationMs": 77772,
+      "usage": {
+        "input": 12,
+        "output": 7537,
+        "cacheRead": 226180,
+        "cacheCreation": 21014
+      },
+      "deniedTools": 0,
+      "malformedLines": 0,
+      "requirement": 1,
+      "correct": 1,
+      "size": 206,
+      "ownBytes": 95
+    },
+    {
+      "runId": "task-15__sabotage__2",
+      "taskId": "task-15",
+      "arm": "sabotage",
+      "repeat": 2,
+      "state": "completed",
+      "attempt": 1,
+      "submissionKind": "out",
+      "model": "claude-haiku-5-5",
+      "loadedSkills": [
+        "es-toolkit:migrate"
+      ],
+      "turns": 10,
+      "durationMs": 123358,
+      "usage": {
+        "input": 18,
+        "output": 10812,
+        "cacheRead": 366136,
+        "cacheCreation": 25149
+      },
+      "deniedTools": 0,
+      "malformedLines": 0,
+      "requirement": 1,
+      "correct": 1,
+      "size": 213,
+      "ownBytes": 103
+    },
+    {
+      "runId": "task-15__sabotage__3",
+      "taskId": "task-15",
+      "arm": "sabotage",
+      "repeat": 3,
+      "state": "completed",
+      "attempt": 1,
+      "submissionKind": "out",
+      "model": "claude-haiku-5-5",
+      "loadedSkills": [
+        "es-toolkit:migrate"
+      ],
+      "turns": 8,
+      "durationMs": 72314,
+      "usage": {
+        "input": 14,
+        "output": 6961,
+        "cacheRead": 273183,
+        "cacheCreation": 21462
+      },
+      "deniedTools": 0,
+      "malformedLines": 0,
+      "requirement": 1,
+      "correct": 1,
+      "size": 206,
+      "ownBytes": 95
+    },
+    {
+      "runId": "task-15__skill__1",
+      "taskId": "task-15",
+      "arm": "skill",
+      "repeat": 1,
+      "state": "completed",
+      "attempt": 1,
+      "submissionKind": "out",
+      "model": "claude-haiku-5-5",
+      "loadedSkills": [
+        "es-toolkit:migrate"
+      ],
+      "turns": 11,
+      "durationMs": 58183,
+      "usage": {
+        "input": 22,
+        "output": 8627,
+        "cacheRead": 473041,
+        "cacheCreation": 25446
+      },
+      "deniedTools": 0,
+      "malformedLines": 0,
+      "requirement": 1,
+      "correct": 1,
+      "size": 206,
+      "ownBytes": 95
+    },
+    {
+      "runId": "task-15__skill__2",
+      "taskId": "task-15",
+      "arm": "skill",
+      "repeat": 2,
+      "state": "completed",
+      "attempt": 1,
+      "submissionKind": "out",
+      "model": "claude-haiku-5-5",
+      "loadedSkills": [
+        "es-toolkit:migrate"
+      ],
+      "turns": 12,
+      "durationMs": 62588,
+      "usage": {
+        "input": 24,
+        "output": 9342,
+        "cacheRead": 520809,
+        "cacheCreation": 27307
+      },
+      "deniedTools": 0,
+      "malformedLines": 0,
+      "requirement": 1,
+      "correct": 1,
+      "size": 214,
+      "ownBytes": 103
+    },
+    {
+      "runId": "task-15__skill__3",
+      "taskId": "task-15",
+      "arm": "skill",
+      "repeat": 3,
+      "state": "completed",
+      "attempt": 1,
+      "submissionKind": "out",
+      "model": "claude-haiku-5-5",
+      "loadedSkills": [
+        "es-toolkit:migrate"
+      ],
+      "turns": 16,
+      "durationMs": 87216,
+      "usage": {
+        "input": 32,
+        "output": 10484,
+        "cacheRead": 738202,
+        "cacheCreation": 30492
+      },
+      "deniedTools": 0,
+      "malformedLines": 0,
+      "requirement": 1,
+      "correct": 1,
+      "size": 214,
+      "ownBytes": 103
+    },
+    {
+      "runId": "task-16__baseline__1",
+      "taskId": "task-16",
+      "arm": "baseline",
+      "repeat": 1,
+      "state": "completed",
+      "attempt": 1,
+      "submissionKind": "out",
+      "model": "claude-haiku-5-5",
+      "loadedSkills": [],
+      "turns": 9,
+      "durationMs": 64163,
+      "usage": {
+        "input": 18,
+        "output": 10002,
+        "cacheRead": 375001,
+        "cacheCreation": 27336
+      },
+      "deniedTools": 0,
+      "malformedLines": 0,
+      "requirement": 1,
+      "correct": 1,
+      "size": 818,
+      "ownBytes": 100
+    },
+    {
+      "runId": "task-16__baseline__2",
+      "taskId": "task-16",
+      "arm": "baseline",
+      "repeat": 2,
+      "state": "completed",
+      "attempt": 1,
+      "submissionKind": "out",
+      "model": "claude-haiku-5-5",
+      "loadedSkills": [],
+      "turns": 23,
+      "durationMs": 152312,
+      "usage": {
+        "input": 46,
+        "output": 19696,
+        "cacheRead": 1121501,
+        "cacheCreation": 37035
+      },
+      "deniedTools": 0,
+      "malformedLines": 0,
+      "requirement": 0,
+      "correct": 1,
+      "size": 1603,
+      "ownBytes": 137
+    },
+    {
+      "runId": "task-16__baseline__3",
+      "taskId": "task-16",
+      "arm": "baseline",
+      "repeat": 3,
+      "state": "completed",
+      "attempt": 1,
+      "submissionKind": "out",
+      "model": "claude-haiku-5-5",
+      "loadedSkills": [],
+      "turns": 13,
+      "durationMs": 71811,
+      "usage": {
+        "input": 24,
+        "output": 11463,
+        "cacheRead": 533265,
+        "cacheCreation": 30406
+      },
+      "deniedTools": 0,
+      "malformedLines": 0,
+      "requirement": 1,
+      "correct": 1,
+      "size": 813,
+      "ownBytes": 100
+    },
+    {
+      "runId": "task-16__baseline__4",
+      "taskId": "task-16",
+      "arm": "baseline",
+      "repeat": 4,
+      "state": "completed",
+      "attempt": 1,
+      "submissionKind": "out",
+      "model": "claude-haiku-5-5",
+      "loadedSkills": [],
+      "turns": 8,
+      "durationMs": 73365,
+      "usage": {
+        "input": 16,
+        "output": 9329,
+        "cacheRead": 311454,
+        "cacheCreation": 24729
+      },
+      "deniedTools": 0,
+      "malformedLines": 0,
+      "requirement": 1,
+      "correct": 1,
+      "size": 817,
+      "ownBytes": 100
+    },
+    {
+      "runId": "task-16__baseline__5",
+      "taskId": "task-16",
+      "arm": "baseline",
+      "repeat": 5,
+      "state": "completed",
+      "attempt": 1,
+      "submissionKind": "out",
+      "model": "claude-haiku-5-5",
+      "loadedSkills": [],
+      "turns": 18,
+      "durationMs": 131118,
+      "usage": {
+        "input": 36,
+        "output": 15146,
+        "cacheRead": 813486,
+        "cacheCreation": 32600
+      },
+      "deniedTools": 0,
+      "malformedLines": 0,
+      "requirement": 1,
+      "correct": 1,
+      "size": 816,
+      "ownBytes": 100
+    },
+    {
+      "runId": "task-16__baseline__6",
+      "taskId": "task-16",
+      "arm": "baseline",
+      "repeat": 6,
+      "state": "completed",
+      "attempt": 1,
+      "submissionKind": "out",
+      "model": "claude-haiku-5-5",
+      "loadedSkills": [],
+      "turns": 18,
+      "durationMs": 250651,
+      "usage": {
+        "input": 34,
+        "output": 17371,
+        "cacheRead": 786344,
+        "cacheCreation": 35714
+      },
+      "deniedTools": 0,
+      "malformedLines": 0,
+      "requirement": 0,
+      "correct": 1,
+      "size": 2160,
+      "ownBytes": 103
+    },
+    {
+      "runId": "task-16__placebo__1",
+      "taskId": "task-16",
+      "arm": "placebo",
+      "repeat": 1,
+      "state": "completed",
+      "attempt": 1,
+      "submissionKind": "out",
+      "model": "claude-haiku-5-5",
+      "loadedSkills": [
+        "es-toolkit:migrate"
+      ],
+      "turns": 19,
+      "durationMs": 119827,
+      "usage": {
+        "input": 32,
+        "output": 13067,
+        "cacheRead": 779167,
+        "cacheCreation": 36121
+      },
+      "deniedTools": 0,
+      "malformedLines": 0,
+      "requirement": 1,
+      "correct": 1,
+      "size": 815,
+      "ownBytes": 100
+    },
+    {
+      "runId": "task-16__placebo__2",
+      "taskId": "task-16",
+      "arm": "placebo",
+      "repeat": 2,
+      "state": "completed",
+      "attempt": 1,
+      "submissionKind": "out",
+      "model": "claude-haiku-5-5",
+      "loadedSkills": [
+        "es-toolkit:migrate"
+      ],
+      "turns": 14,
+      "durationMs": 148394,
+      "usage": {
+        "input": 24,
+        "output": 16996,
+        "cacheRead": 576855,
+        "cacheCreation": 37631
+      },
+      "deniedTools": 0,
+      "malformedLines": 0,
+      "requirement": 1,
+      "correct": 1,
+      "size": 816,
+      "ownBytes": 100
+    },
+    {
+      "runId": "task-16__placebo__3",
+      "taskId": "task-16",
+      "arm": "placebo",
+      "repeat": 3,
+      "state": "completed",
+      "attempt": 1,
+      "submissionKind": "out",
+      "model": "claude-haiku-5-5",
+      "loadedSkills": [
+        "es-toolkit:migrate"
+      ],
+      "turns": 14,
+      "durationMs": 109256,
+      "usage": {
+        "input": 22,
+        "output": 13888,
+        "cacheRead": 498409,
+        "cacheCreation": 31755
+      },
+      "deniedTools": 0,
+      "malformedLines": 0,
+      "requirement": 1,
+      "correct": 1,
+      "size": 818,
+      "ownBytes": 100
+    },
+    {
+      "runId": "task-16__procedure__1",
+      "taskId": "task-16",
+      "arm": "procedure",
+      "repeat": 1,
+      "state": "completed",
+      "attempt": 1,
+      "submissionKind": "out",
+      "model": "claude-haiku-5-5",
+      "loadedSkills": [
+        "es-toolkit:migrate"
+      ],
+      "turns": 11,
+      "durationMs": 87108,
+      "usage": {
+        "input": 22,
+        "output": 10969,
+        "cacheRead": 475796,
+        "cacheCreation": 29200
+      },
+      "deniedTools": 0,
+      "malformedLines": 0,
+      "requirement": 1,
+      "correct": 1,
+      "size": 816,
+      "ownBytes": 100
+    },
+    {
+      "runId": "task-16__procedure__2",
+      "taskId": "task-16",
+      "arm": "procedure",
+      "repeat": 2,
+      "state": "completed",
+      "attempt": 1,
+      "submissionKind": "out",
+      "model": "claude-haiku-5-5",
+      "loadedSkills": [
+        "es-toolkit:migrate"
+      ],
+      "turns": 19,
+      "durationMs": 151263,
+      "usage": {
+        "input": 34,
+        "output": 21177,
+        "cacheRead": 867310,
+        "cacheCreation": 43615
+      },
+      "deniedTools": 0,
+      "malformedLines": 0,
+      "requirement": 0,
+      "correct": 1,
+      "size": 2163,
+      "ownBytes": 103
+    },
+    {
+      "runId": "task-16__procedure__3",
+      "taskId": "task-16",
+      "arm": "procedure",
+      "repeat": 3,
+      "state": "completed",
+      "attempt": 1,
+      "submissionKind": "out",
+      "model": "claude-haiku-5-5",
+      "loadedSkills": [
+        "es-toolkit:migrate"
+      ],
+      "turns": 18,
+      "durationMs": 204450,
+      "usage": {
+        "input": 30,
+        "output": 18505,
+        "cacheRead": 736918,
+        "cacheCreation": 40205
+      },
+      "deniedTools": 0,
+      "malformedLines": 0,
+      "requirement": 0,
+      "correct": 1,
+      "size": 2164,
+      "ownBytes": 103
+    },
+    {
+      "runId": "task-16__sabotage__1",
+      "taskId": "task-16",
+      "arm": "sabotage",
+      "repeat": 1,
+      "state": "completed",
+      "attempt": 1,
+      "submissionKind": "out",
+      "model": "claude-haiku-5-5",
+      "loadedSkills": [
+        "es-toolkit:migrate"
+      ],
+      "turns": 17,
+      "durationMs": 130847,
+      "usage": {
+        "input": 28,
+        "output": 17128,
+        "cacheRead": 669417,
+        "cacheCreation": 37361
+      },
+      "deniedTools": 0,
+      "malformedLines": 0,
+      "requirement": 0,
+      "correct": 1,
+      "size": 2164,
+      "ownBytes": 103
+    },
+    {
+      "runId": "task-16__sabotage__2",
+      "taskId": "task-16",
+      "arm": "sabotage",
+      "repeat": 2,
+      "state": "completed",
+      "attempt": 1,
+      "submissionKind": "out",
+      "model": "claude-haiku-5-5",
+      "loadedSkills": [
+        "es-toolkit:migrate"
+      ],
+      "turns": 17,
+      "durationMs": 135895,
+      "usage": {
+        "input": 26,
+        "output": 13774,
+        "cacheRead": 600721,
+        "cacheCreation": 32270
+      },
+      "deniedTools": 0,
+      "malformedLines": 0,
+      "requirement": 1,
+      "correct": 1,
+      "size": 816,
+      "ownBytes": 100
+    },
+    {
+      "runId": "task-16__sabotage__3",
+      "taskId": "task-16",
+      "arm": "sabotage",
+      "repeat": 3,
+      "state": "completed",
+      "attempt": 1,
+      "submissionKind": "out",
+      "model": "claude-haiku-5-5",
+      "loadedSkills": [
+        "es-toolkit:migrate"
+      ],
+      "turns": 10,
+      "durationMs": 92385,
+      "usage": {
+        "input": 20,
+        "output": 13454,
+        "cacheRead": 434881,
+        "cacheCreation": 31513
+      },
+      "deniedTools": 0,
+      "malformedLines": 0,
+      "requirement": 1,
+      "correct": 1,
+      "size": 818,
+      "ownBytes": 100
+    },
+    {
+      "runId": "task-16__skill__1",
+      "taskId": "task-16",
+      "arm": "skill",
+      "repeat": 1,
+      "state": "completed",
+      "attempt": 1,
+      "submissionKind": "out",
+      "model": "claude-haiku-5-5",
+      "loadedSkills": [
+        "es-toolkit:migrate"
+      ],
+      "turns": 19,
+      "durationMs": 126798,
+      "usage": {
+        "input": 38,
+        "output": 20676,
+        "cacheRead": 956557,
+        "cacheCreation": 39673
+      },
+      "deniedTools": 0,
+      "malformedLines": 0,
+      "requirement": 0,
+      "correct": 1,
+      "size": 2164,
+      "ownBytes": 103
+    },
+    {
+      "runId": "task-16__skill__2",
+      "taskId": "task-16",
+      "arm": "skill",
+      "repeat": 2,
+      "state": "completed",
+      "attempt": 1,
+      "submissionKind": "out",
+      "model": "claude-haiku-5-5",
+      "loadedSkills": [
+        "es-toolkit:migrate"
+      ],
+      "turns": 14,
+      "durationMs": 88800,
+      "usage": {
+        "input": 28,
+        "output": 15301,
+        "cacheRead": 679173,
+        "cacheCreation": 39816
+      },
+      "deniedTools": 0,
+      "malformedLines": 0,
+      "requirement": 0,
+      "correct": 1,
+      "size": 2172,
+      "ownBytes": 103
+    },
+    {
+      "runId": "task-16__skill__3",
+      "taskId": "task-16",
+      "arm": "skill",
+      "repeat": 3,
+      "state": "limit",
+      "attempt": 1,
+      "submissionKind": "out",
+      "model": "claude-haiku-5-5",
+      "loadedSkills": [
+        "es-toolkit:migrate"
+      ],
+      "turns": 15,
+      "durationMs": 600318,
+      "usage": {
+        "input": 30,
+        "output": 13941,
+        "cacheRead": 731677,
+        "cacheCreation": 36389
+      },
+      "deniedTools": 0,
+      "malformedLines": 0,
+      "requirement": 0,
+      "correct": 0,
+      "size": null,
+      "ownBytes": null
+    },
+    {
+      "runId": "task-17__baseline__1",
+      "taskId": "task-17",
+      "arm": "baseline",
+      "repeat": 1,
+      "state": "completed",
+      "attempt": 1,
+      "submissionKind": "out",
+      "model": "claude-haiku-5-5",
+      "loadedSkills": [],
+      "turns": 26,
+      "durationMs": 312061,
+      "usage": {
+        "input": 50,
+        "output": 29625,
+        "cacheRead": 1371110,
+        "cacheCreation": 53310
+      },
+      "deniedTools": 1,
+      "malformedLines": 0,
+      "requirement": 0,
+      "correct": 1,
+      "size": 3745,
+      "ownBytes": 85
+    },
+    {
+      "runId": "task-17__baseline__2",
+      "taskId": "task-17",
+      "arm": "baseline",
+      "repeat": 2,
+      "state": "completed",
+      "attempt": 1,
+      "submissionKind": "out",
+      "model": "claude-haiku-5-5",
+      "loadedSkills": [],
+      "turns": 18,
+      "durationMs": 219392,
+      "usage": {
+        "input": 36,
+        "output": 36220,
+        "cacheRead": 971469,
+        "cacheCreation": 68564
+      },
+      "deniedTools": 0,
+      "malformedLines": 0,
+      "requirement": 1,
+      "correct": 1,
+      "size": 2287,
+      "ownBytes": 85
+    },
+    {
+      "runId": "task-17__baseline__3",
+      "taskId": "task-17",
+      "arm": "baseline",
+      "repeat": 3,
+      "state": "completed",
+      "attempt": 1,
+      "submissionKind": "out",
+      "model": "claude-haiku-5-5",
+      "loadedSkills": [],
+      "turns": 20,
+      "durationMs": 283166,
+      "usage": {
+        "input": 36,
+        "output": 29773,
+        "cacheRead": 875606,
+        "cacheCreation": 47955
+      },
+      "deniedTools": 0,
+      "malformedLines": 0,
+      "requirement": 1,
+      "correct": 1,
+      "size": 1683,
+      "ownBytes": 102
+    },
+    {
+      "runId": "task-17__baseline__4",
+      "taskId": "task-17",
+      "arm": "baseline",
+      "repeat": 4,
+      "state": "completed",
+      "attempt": 1,
+      "submissionKind": "out",
+      "model": "claude-haiku-5-5",
+      "loadedSkills": [],
+      "turns": 13,
+      "durationMs": 72132,
+      "usage": {
+        "input": 22,
+        "output": 10971,
+        "cacheRead": 452910,
+        "cacheCreation": 26840
+      },
+      "deniedTools": 0,
+      "malformedLines": 0,
+      "requirement": 1,
+      "correct": 1,
+      "size": 2282,
+      "ownBytes": 85
+    },
+    {
+      "runId": "task-17__baseline__5",
+      "taskId": "task-17",
+      "arm": "baseline",
+      "repeat": 5,
+      "state": "limit",
+      "attempt": 1,
+      "submissionKind": "out",
+      "model": "claude-haiku-5-5",
+      "loadedSkills": [],
+      "turns": 23,
+      "durationMs": 600548,
+      "usage": {
+        "input": 46,
+        "output": 31989,
+        "cacheRead": 1284253,
+        "cacheCreation": 56643
+      },
+      "deniedTools": 0,
+      "malformedLines": 0,
+      "requirement": 0,
+      "correct": 0,
+      "size": null,
+      "ownBytes": null
+    },
+    {
+      "runId": "task-17__baseline__6",
+      "taskId": "task-17",
+      "arm": "baseline",
+      "repeat": 6,
+      "state": "completed",
+      "attempt": 1,
+      "submissionKind": "out",
+      "model": "claude-haiku-5-5",
+      "loadedSkills": [],
+      "turns": 9,
+      "durationMs": 108206,
+      "usage": {
+        "input": 18,
+        "output": 14101,
+        "cacheRead": 376483,
+        "cacheCreation": 30940
+      },
+      "deniedTools": 0,
+      "malformedLines": 0,
+      "requirement": 1,
+      "correct": 1,
+      "size": 853,
+      "ownBytes": 102
+    },
+    {
+      "runId": "task-17__placebo__1",
+      "taskId": "task-17",
+      "arm": "placebo",
+      "repeat": 1,
+      "state": "completed",
+      "attempt": 1,
+      "submissionKind": "out",
+      "model": "claude-haiku-5-5",
+      "loadedSkills": [
+        "es-toolkit:migrate"
+      ],
+      "turns": 17,
+      "durationMs": 300018,
+      "usage": {
+        "input": 32,
+        "output": 26694,
+        "cacheRead": 848582,
+        "cacheCreation": 47970
+      },
+      "deniedTools": 0,
+      "malformedLines": 0,
+      "requirement": 1,
+      "correct": 1,
+      "size": 1686,
+      "ownBytes": 102
+    },
+    {
+      "runId": "task-17__placebo__2",
+      "taskId": "task-17",
+      "arm": "placebo",
+      "repeat": 2,
+      "state": "completed",
+      "attempt": 1,
+      "submissionKind": "out",
+      "model": "claude-haiku-5-5",
+      "loadedSkills": [
+        "es-toolkit:migrate"
+      ],
+      "turns": 24,
+      "durationMs": 179047,
+      "usage": {
+        "input": 46,
+        "output": 22666,
+        "cacheRead": 1234851,
+        "cacheCreation": 47796
+      },
+      "deniedTools": 0,
+      "malformedLines": 0,
+      "requirement": 1,
+      "correct": 1,
+      "size": 2282,
+      "ownBytes": 85
+    },
+    {
+      "runId": "task-17__placebo__3",
+      "taskId": "task-17",
+      "arm": "placebo",
+      "repeat": 3,
+      "state": "completed",
+      "attempt": 1,
+      "submissionKind": "out",
+      "model": "claude-haiku-5-5",
+      "loadedSkills": [
+        "es-toolkit:migrate"
+      ],
+      "turns": 13,
+      "durationMs": 252628,
+      "usage": {
+        "input": 24,
+        "output": 16766,
+        "cacheRead": 538210,
+        "cacheCreation": 34362
+      },
+      "deniedTools": 0,
+      "malformedLines": 0,
+      "requirement": 1,
+      "correct": 1,
+      "size": 853,
+      "ownBytes": 102
+    },
+    {
+      "runId": "task-17__procedure__1",
+      "taskId": "task-17",
+      "arm": "procedure",
+      "repeat": 1,
+      "state": "completed",
+      "attempt": 1,
+      "submissionKind": "out",
+      "model": "claude-haiku-5-5",
+      "loadedSkills": [
+        "es-toolkit:migrate"
+      ],
+      "turns": 22,
+      "durationMs": 191144,
+      "usage": {
+        "input": 44,
+        "output": 26825,
+        "cacheRead": 1167506,
+        "cacheCreation": 47335
+      },
+      "deniedTools": 0,
+      "malformedLines": 0,
+      "requirement": 1,
+      "correct": 1,
+      "size": 851,
+      "ownBytes": 102
+    },
+    {
+      "runId": "task-17__procedure__2",
+      "taskId": "task-17",
+      "arm": "procedure",
+      "repeat": 2,
+      "state": "completed",
+      "attempt": 1,
+      "submissionKind": "out",
+      "model": "claude-haiku-5-5",
+      "loadedSkills": [
+        "es-toolkit:migrate"
+      ],
+      "turns": 29,
+      "durationMs": 292920,
+      "usage": {
+        "input": 58,
+        "output": 46098,
+        "cacheRead": 1975632,
+        "cacheCreation": 72863
+      },
+      "deniedTools": 0,
+      "malformedLines": 0,
+      "requirement": 1,
+      "correct": 1,
+      "size": 2282,
+      "ownBytes": 85
+    },
+    {
+      "runId": "task-17__procedure__3",
+      "taskId": "task-17",
+      "arm": "procedure",
+      "repeat": 3,
+      "state": "completed",
+      "attempt": 1,
+      "submissionKind": "out",
+      "model": "claude-haiku-5-5",
+      "loadedSkills": [
+        "es-toolkit:migrate"
+      ],
+      "turns": 15,
+      "durationMs": 226626,
+      "usage": {
+        "input": 28,
+        "output": 32402,
+        "cacheRead": 790834,
+        "cacheCreation": 58692
+      },
+      "deniedTools": 0,
+      "malformedLines": 0,
+      "requirement": 1,
+      "correct": 1,
+      "size": 1677,
+      "ownBytes": 102
+    },
+    {
+      "runId": "task-17__sabotage__1",
+      "taskId": "task-17",
+      "arm": "sabotage",
+      "repeat": 1,
+      "state": "completed",
+      "attempt": 1,
+      "submissionKind": "out",
+      "model": "claude-haiku-5-5",
+      "loadedSkills": [
+        "es-toolkit:migrate"
+      ],
+      "turns": 19,
+      "durationMs": 156391,
+      "usage": {
+        "input": 32,
+        "output": 21666,
+        "cacheRead": 830571,
+        "cacheCreation": 43375
+      },
+      "deniedTools": 0,
+      "malformedLines": 0,
+      "requirement": 1,
+      "correct": 1,
+      "size": 2289,
+      "ownBytes": 85
+    },
+    {
+      "runId": "task-17__sabotage__2",
+      "taskId": "task-17",
+      "arm": "sabotage",
+      "repeat": 2,
+      "state": "completed",
+      "attempt": 1,
+      "submissionKind": "out",
+      "model": "claude-haiku-5-5",
+      "loadedSkills": [
+        "es-toolkit:migrate"
+      ],
+      "turns": 18,
+      "durationMs": 187972,
+      "usage": {
+        "input": 36,
+        "output": 22864,
+        "cacheRead": 941956,
+        "cacheCreation": 44544
+      },
+      "deniedTools": 0,
+      "malformedLines": 0,
+      "requirement": 1,
+      "correct": 1,
+      "size": 2287,
+      "ownBytes": 85
+    },
+    {
+      "runId": "task-17__sabotage__3",
+      "taskId": "task-17",
+      "arm": "sabotage",
+      "repeat": 3,
+      "state": "completed",
+      "attempt": 1,
+      "submissionKind": "out",
+      "model": "claude-haiku-5-5",
+      "loadedSkills": [
+        "es-toolkit:migrate"
+      ],
+      "turns": 15,
+      "durationMs": 172619,
+      "usage": {
+        "input": 28,
+        "output": 26885,
+        "cacheRead": 735501,
+        "cacheCreation": 48694
+      },
+      "deniedTools": 0,
+      "malformedLines": 0,
+      "requirement": 1,
+      "correct": 1,
+      "size": 857,
+      "ownBytes": 108
+    },
+    {
+      "runId": "task-17__skill__1",
+      "taskId": "task-17",
+      "arm": "skill",
+      "repeat": 1,
+      "state": "completed",
+      "attempt": 1,
+      "submissionKind": "out",
+      "model": "claude-haiku-5-5",
+      "loadedSkills": [
+        "es-toolkit:migrate"
+      ],
+      "turns": 14,
+      "durationMs": 92681,
+      "usage": {
+        "input": 28,
+        "output": 17149,
+        "cacheRead": 703457,
+        "cacheCreation": 37804
+      },
+      "deniedTools": 0,
+      "malformedLines": 0,
+      "requirement": 1,
+      "correct": 1,
+      "size": 2282,
+      "ownBytes": 85
+    },
+    {
+      "runId": "task-17__skill__2",
+      "taskId": "task-17",
+      "arm": "skill",
+      "repeat": 2,
+      "state": "completed",
+      "attempt": 1,
+      "submissionKind": "out",
+      "model": "claude-haiku-5-5",
+      "loadedSkills": [
+        "es-toolkit:migrate"
+      ],
+      "turns": 14,
+      "durationMs": 94306,
+      "usage": {
+        "input": 26,
+        "output": 17069,
+        "cacheRead": 630037,
+        "cacheCreation": 39264
+      },
+      "deniedTools": 0,
+      "malformedLines": 0,
+      "requirement": 1,
+      "correct": 1,
+      "size": 2287,
+      "ownBytes": 85
+    },
+    {
+      "runId": "task-17__skill__3",
+      "taskId": "task-17",
+      "arm": "skill",
+      "repeat": 3,
+      "state": "completed",
+      "attempt": 1,
+      "submissionKind": "out",
+      "model": "claude-haiku-5-5",
+      "loadedSkills": [
+        "es-toolkit:migrate"
+      ],
+      "turns": 16,
+      "durationMs": 191463,
+      "usage": {
+        "input": 32,
+        "output": 22973,
+        "cacheRead": 837505,
+        "cacheCreation": 48267
+      },
+      "deniedTools": 0,
+      "malformedLines": 0,
+      "requirement": 1,
+      "correct": 1,
+      "size": 2290,
+      "ownBytes": 85
+    },
+    {
+      "runId": "task-19__baseline__1",
+      "taskId": "task-19",
+      "arm": "baseline",
+      "repeat": 1,
+      "state": "completed",
+      "attempt": 1,
+      "submissionKind": "out",
+      "model": "claude-haiku-5-5",
+      "loadedSkills": [],
+      "turns": 16,
+      "durationMs": 79079,
+      "usage": {
+        "input": 28,
+        "output": 12033,
+        "cacheRead": 610379,
+        "cacheCreation": 30607
+      },
+      "deniedTools": 0,
+      "malformedLines": 0,
+      "requirement": 1,
+      "correct": 1,
+      "size": 308,
+      "ownBytes": 101
+    },
+    {
+      "runId": "task-19__baseline__2",
+      "taskId": "task-19",
+      "arm": "baseline",
+      "repeat": 2,
+      "state": "completed",
+      "attempt": 1,
+      "submissionKind": "out",
+      "model": "claude-haiku-5-5",
+      "loadedSkills": [],
+      "turns": 7,
+      "durationMs": 40174,
+      "usage": {
+        "input": 14,
+        "output": 4936,
+        "cacheRead": 255776,
+        "cacheCreation": 17579
+      },
+      "deniedTools": 0,
+      "malformedLines": 0,
+      "requirement": 1,
+      "correct": 1,
+      "size": 308,
+      "ownBytes": 101
+    },
+    {
+      "runId": "task-19__baseline__3",
+      "taskId": "task-19",
+      "arm": "baseline",
+      "repeat": 3,
+      "state": "completed",
+      "attempt": 1,
+      "submissionKind": "out",
+      "model": "claude-haiku-5-5",
+      "loadedSkills": [],
+      "turns": 17,
+      "durationMs": 102568,
+      "usage": {
+        "input": 28,
+        "output": 16658,
+        "cacheRead": 625124,
+        "cacheCreation": 34900
+      },
+      "deniedTools": 0,
+      "malformedLines": 0,
+      "requirement": 1,
+      "correct": 1,
+      "size": 244,
+      "ownBytes": 129
+    },
+    {
+      "runId": "task-19__baseline__4",
+      "taskId": "task-19",
+      "arm": "baseline",
+      "repeat": 4,
+      "state": "completed",
+      "attempt": 1,
+      "submissionKind": "out",
+      "model": "claude-haiku-5-5",
+      "loadedSkills": [],
+      "turns": 9,
+      "durationMs": 65326,
+      "usage": {
+        "input": 16,
+        "output": 7415,
+        "cacheRead": 298630,
+        "cacheCreation": 19640
+      },
+      "deniedTools": 0,
+      "malformedLines": 0,
+      "requirement": 1,
+      "correct": 1,
+      "size": 311,
+      "ownBytes": 101
+    },
+    {
+      "runId": "task-19__baseline__5",
+      "taskId": "task-19",
+      "arm": "baseline",
+      "repeat": 5,
+      "state": "limit",
+      "attempt": 1,
+      "submissionKind": "out",
+      "model": "claude-haiku-5-5",
+      "loadedSkills": [],
+      "turns": 12,
+      "durationMs": 600424,
+      "usage": {
+        "input": 24,
+        "output": 8601,
+        "cacheRead": 482637,
+        "cacheCreation": 24655
+      },
+      "deniedTools": 0,
+      "malformedLines": 0,
+      "requirement": 0,
+      "correct": 0,
+      "size": null,
+      "ownBytes": null
+    },
+    {
+      "runId": "task-19__baseline__6",
+      "taskId": "task-19",
+      "arm": "baseline",
+      "repeat": 6,
+      "state": "completed",
+      "attempt": 1,
+      "submissionKind": "out",
+      "model": "claude-haiku-5-5",
+      "loadedSkills": [],
+      "turns": 14,
+      "durationMs": 131958,
+      "usage": {
+        "input": 26,
+        "output": 17066,
+        "cacheRead": 547356,
+        "cacheCreation": 33550
+      },
+      "deniedTools": 0,
+      "malformedLines": 0,
+      "requirement": 1,
+      "correct": 1,
+      "size": 249,
+      "ownBytes": 129
+    },
+    {
+      "runId": "task-19__placebo__1",
+      "taskId": "task-19",
+      "arm": "placebo",
+      "repeat": 1,
+      "state": "completed",
+      "attempt": 1,
+      "submissionKind": "out",
+      "model": "claude-haiku-5-5",
+      "loadedSkills": [
+        "es-toolkit:migrate"
+      ],
+      "turns": 12,
+      "durationMs": 85489,
+      "usage": {
+        "input": 24,
+        "output": 10171,
+        "cacheRead": 497012,
+        "cacheCreation": 25591
+      },
+      "deniedTools": 0,
+      "malformedLines": 0,
+      "requirement": 1,
+      "correct": 1,
+      "size": 308,
+      "ownBytes": 101
+    },
+    {
+      "runId": "task-19__placebo__2",
+      "taskId": "task-19",
+      "arm": "placebo",
+      "repeat": 2,
+      "state": "completed",
+      "attempt": 1,
+      "submissionKind": "out",
+      "model": "claude-haiku-5-5",
+      "loadedSkills": [
+        "es-toolkit:migrate"
+      ],
+      "turns": 10,
+      "durationMs": 89284,
+      "usage": {
+        "input": 20,
+        "output": 9330,
+        "cacheRead": 409434,
+        "cacheCreation": 25672
+      },
+      "deniedTools": 0,
+      "malformedLines": 0,
+      "requirement": 1,
+      "correct": 1,
+      "size": 308,
+      "ownBytes": 101
+    },
+    {
+      "runId": "task-19__placebo__3",
+      "taskId": "task-19",
+      "arm": "placebo",
+      "repeat": 3,
+      "state": "completed",
+      "attempt": 1,
+      "submissionKind": "out",
+      "model": "claude-haiku-5-5",
+      "loadedSkills": [
+        "es-toolkit:migrate"
+      ],
+      "turns": 21,
+      "durationMs": 110491,
+      "usage": {
+        "input": 36,
+        "output": 10711,
+        "cacheRead": 800193,
+        "cacheCreation": 29961
+      },
+      "deniedTools": 0,
+      "malformedLines": 0,
+      "requirement": 1,
+      "correct": 1,
+      "size": 308,
+      "ownBytes": 101
+    },
+    {
+      "runId": "task-19__procedure__1",
+      "taskId": "task-19",
+      "arm": "procedure",
+      "repeat": 1,
+      "state": "completed",
+      "attempt": 1,
+      "submissionKind": "out",
+      "model": "claude-haiku-5-5",
+      "loadedSkills": [
+        "es-toolkit:migrate"
+      ],
+      "turns": 13,
+      "durationMs": 89208,
+      "usage": {
+        "input": 26,
+        "output": 8880,
+        "cacheRead": 561998,
+        "cacheCreation": 26654
+      },
+      "deniedTools": 0,
+      "malformedLines": 0,
+      "requirement": 1,
+      "correct": 1,
+      "size": 308,
+      "ownBytes": 101
+    },
+    {
+      "runId": "task-19__procedure__2",
+      "taskId": "task-19",
+      "arm": "procedure",
+      "repeat": 2,
+      "state": "completed",
+      "attempt": 1,
+      "submissionKind": "out",
+      "model": "claude-haiku-5-5",
+      "loadedSkills": [
+        "es-toolkit:migrate"
+      ],
+      "turns": 12,
+      "durationMs": 73236,
+      "usage": {
+        "input": 18,
+        "output": 9264,
+        "cacheRead": 379395,
+        "cacheCreation": 27858
+      },
+      "deniedTools": 0,
+      "malformedLines": 0,
+      "requirement": 1,
+      "correct": 1,
+      "size": 308,
+      "ownBytes": 101
+    },
+    {
+      "runId": "task-19__procedure__3",
+      "taskId": "task-19",
+      "arm": "procedure",
+      "repeat": 3,
+      "state": "completed",
+      "attempt": 1,
+      "submissionKind": "out",
+      "model": "claude-haiku-5-5",
+      "loadedSkills": [
+        "es-toolkit:migrate"
+      ],
+      "turns": 12,
+      "durationMs": 85086,
+      "usage": {
+        "input": 22,
+        "output": 9350,
+        "cacheRead": 486479,
+        "cacheCreation": 29129
+      },
+      "deniedTools": 0,
+      "malformedLines": 0,
+      "requirement": 1,
+      "correct": 1,
+      "size": 308,
+      "ownBytes": 101
+    },
+    {
+      "runId": "task-19__sabotage__1",
+      "taskId": "task-19",
+      "arm": "sabotage",
+      "repeat": 1,
+      "state": "completed",
+      "attempt": 1,
+      "submissionKind": "out",
+      "model": "claude-haiku-5-5",
+      "loadedSkills": [
+        "es-toolkit:migrate"
+      ],
+      "turns": 11,
+      "durationMs": 71151,
+      "usage": {
+        "input": 18,
+        "output": 7206,
+        "cacheRead": 362951,
+        "cacheCreation": 22784
+      },
+      "deniedTools": 0,
+      "malformedLines": 0,
+      "requirement": 1,
+      "correct": 1,
+      "size": 311,
+      "ownBytes": 101
+    },
+    {
+      "runId": "task-19__sabotage__2",
+      "taskId": "task-19",
+      "arm": "sabotage",
+      "repeat": 2,
+      "state": "completed",
+      "attempt": 1,
+      "submissionKind": "out",
+      "model": "claude-haiku-5-5",
+      "loadedSkills": [
+        "es-toolkit:migrate"
+      ],
+      "turns": 8,
+      "durationMs": 101975,
+      "usage": {
+        "input": 16,
+        "output": 10324,
+        "cacheRead": 313979,
+        "cacheCreation": 23216
+      },
+      "deniedTools": 0,
+      "malformedLines": 0,
+      "requirement": 1,
+      "correct": 1,
+      "size": 311,
+      "ownBytes": 101
+    },
+    {
+      "runId": "task-19__sabotage__3",
+      "taskId": "task-19",
+      "arm": "sabotage",
+      "repeat": 3,
+      "state": "completed",
+      "attempt": 1,
+      "submissionKind": "out",
+      "model": "claude-haiku-5-5",
+      "loadedSkills": [
+        "es-toolkit:migrate"
+      ],
+      "turns": 12,
+      "durationMs": 86625,
+      "usage": {
+        "input": 24,
+        "output": 10888,
+        "cacheRead": 529958,
+        "cacheCreation": 28556
+      },
+      "deniedTools": 0,
+      "malformedLines": 0,
+      "requirement": 1,
+      "correct": 1,
+      "size": 244,
+      "ownBytes": 129
+    },
+    {
+      "runId": "task-19__skill__1",
+      "taskId": "task-19",
+      "arm": "skill",
+      "repeat": 1,
+      "state": "completed",
+      "attempt": 1,
+      "submissionKind": "out",
+      "model": "claude-haiku-5-5",
+      "loadedSkills": [
+        "es-toolkit:migrate"
+      ],
+      "turns": 9,
+      "durationMs": 50632,
+      "usage": {
+        "input": 18,
+        "output": 6427,
+        "cacheRead": 367478,
+        "cacheCreation": 21934
+      },
+      "deniedTools": 0,
+      "malformedLines": 0,
+      "requirement": 1,
+      "correct": 1,
+      "size": 311,
+      "ownBytes": 101
+    },
+    {
+      "runId": "task-19__skill__2",
+      "taskId": "task-19",
+      "arm": "skill",
+      "repeat": 2,
+      "state": "completed",
+      "attempt": 1,
+      "submissionKind": "out",
+      "model": "claude-haiku-5-5",
+      "loadedSkills": [
+        "es-toolkit:migrate"
+      ],
+      "turns": 10,
+      "durationMs": 52081,
+      "usage": {
+        "input": 20,
+        "output": 7059,
+        "cacheRead": 408470,
+        "cacheCreation": 22560
+      },
+      "deniedTools": 0,
+      "malformedLines": 0,
+      "requirement": 1,
+      "correct": 1,
+      "size": 308,
+      "ownBytes": 101
+    },
+    {
+      "runId": "task-19__skill__3",
+      "taskId": "task-19",
+      "arm": "skill",
+      "repeat": 3,
+      "state": "completed",
+      "attempt": 1,
+      "submissionKind": "out",
+      "model": "claude-haiku-5-5",
+      "loadedSkills": [
+        "es-toolkit:migrate"
+      ],
+      "turns": 15,
+      "durationMs": 77151,
+      "usage": {
+        "input": 30,
+        "output": 9115,
+        "cacheRead": 655728,
+        "cacheCreation": 26468
+      },
+      "deniedTools": 0,
+      "malformedLines": 0,
+      "requirement": 1,
+      "correct": 1,
+      "size": 308,
+      "ownBytes": 101
+    },
+    {
+      "runId": "task-20__baseline__1",
+      "taskId": "task-20",
+      "arm": "baseline",
+      "repeat": 1,
+      "state": "completed",
+      "attempt": 1,
+      "submissionKind": "out",
+      "model": "claude-haiku-5-5",
+      "loadedSkills": [],
+      "turns": 10,
+      "durationMs": 163991,
+      "usage": {
+        "input": 18,
+        "output": 5649,
+        "cacheRead": 336456,
+        "cacheCreation": 19463
+      },
+      "deniedTools": 0,
+      "malformedLines": 0,
+      "requirement": 1,
+      "correct": 1,
+      "size": 242,
+      "ownBytes": 95
+    },
+    {
+      "runId": "task-20__baseline__2",
+      "taskId": "task-20",
+      "arm": "baseline",
+      "repeat": 2,
+      "state": "completed",
+      "attempt": 1,
+      "submissionKind": "out",
+      "model": "claude-haiku-5-5",
+      "loadedSkills": [],
+      "turns": 8,
+      "durationMs": 42150,
+      "usage": {
+        "input": 16,
+        "output": 6012,
+        "cacheRead": 296773,
+        "cacheCreation": 17853
+      },
+      "deniedTools": 0,
+      "malformedLines": 0,
+      "requirement": 1,
+      "correct": 1,
+      "size": 242,
+      "ownBytes": 95
+    },
+    {
+      "runId": "task-20__baseline__3",
+      "taskId": "task-20",
+      "arm": "baseline",
+      "repeat": 3,
+      "state": "completed",
+      "attempt": 1,
+      "submissionKind": "out",
+      "model": "claude-haiku-5-5",
+      "loadedSkills": [],
+      "turns": 10,
+      "durationMs": 56186,
+      "usage": {
+        "input": 20,
+        "output": 7105,
+        "cacheRead": 384873,
+        "cacheCreation": 21557
+      },
+      "deniedTools": 0,
+      "malformedLines": 0,
+      "requirement": 1,
+      "correct": 1,
+      "size": 242,
+      "ownBytes": 95
+    },
+    {
+      "runId": "task-20__baseline__4",
+      "taskId": "task-20",
+      "arm": "baseline",
+      "repeat": 4,
+      "state": "completed",
+      "attempt": 1,
+      "submissionKind": "out",
+      "model": "claude-haiku-5-5",
+      "loadedSkills": [],
+      "turns": 8,
+      "durationMs": 43983,
+      "usage": {
+        "input": 16,
+        "output": 4544,
+        "cacheRead": 306556,
+        "cacheCreation": 19302
+      },
+      "deniedTools": 0,
+      "malformedLines": 0,
+      "requirement": 1,
+      "correct": 1,
+      "size": 242,
+      "ownBytes": 95
+    },
+    {
+      "runId": "task-20__baseline__5",
+      "taskId": "task-20",
+      "arm": "baseline",
+      "repeat": 5,
+      "state": "completed",
+      "attempt": 1,
+      "submissionKind": "out",
+      "model": "claude-haiku-5-5",
+      "loadedSkills": [],
+      "turns": 8,
+      "durationMs": 63265,
+      "usage": {
+        "input": 16,
+        "output": 6022,
+        "cacheRead": 296049,
+        "cacheCreation": 18364
+      },
+      "deniedTools": 0,
+      "malformedLines": 0,
+      "requirement": 1,
+      "correct": 1,
+      "size": 242,
+      "ownBytes": 95
+    },
+    {
+      "runId": "task-20__baseline__6",
+      "taskId": "task-20",
+      "arm": "baseline",
+      "repeat": 6,
+      "state": "completed",
+      "attempt": 1,
+      "submissionKind": "out",
+      "model": "claude-haiku-5-5",
+      "loadedSkills": [],
+      "turns": 8,
+      "durationMs": 67367,
+      "usage": {
+        "input": 14,
+        "output": 6169,
+        "cacheRead": 257398,
+        "cacheCreation": 18364
+      },
+      "deniedTools": 0,
+      "malformedLines": 0,
+      "requirement": 1,
+      "correct": 1,
+      "size": 242,
+      "ownBytes": 95
+    },
+    {
+      "runId": "task-20__placebo__1",
+      "taskId": "task-20",
+      "arm": "placebo",
+      "repeat": 1,
+      "state": "completed",
+      "attempt": 1,
+      "submissionKind": "out",
+      "model": "claude-haiku-5-5",
+      "loadedSkills": [
+        "es-toolkit:migrate"
+      ],
+      "turns": 11,
+      "durationMs": 70867,
+      "usage": {
+        "input": 20,
+        "output": 9303,
+        "cacheRead": 428316,
+        "cacheCreation": 27887
+      },
+      "deniedTools": 0,
+      "malformedLines": 0,
+      "requirement": 1,
+      "correct": 1,
+      "size": 238,
+      "ownBytes": 95
+    },
+    {
+      "runId": "task-20__placebo__2",
+      "taskId": "task-20",
+      "arm": "placebo",
+      "repeat": 2,
+      "state": "completed",
+      "attempt": 1,
+      "submissionKind": "out",
+      "model": "claude-haiku-5-5",
+      "loadedSkills": [
+        "es-toolkit:migrate"
+      ],
+      "turns": 15,
+      "durationMs": 110180,
+      "usage": {
+        "input": 28,
+        "output": 13539,
+        "cacheRead": 648308,
+        "cacheCreation": 34324
+      },
+      "deniedTools": 0,
+      "malformedLines": 0,
+      "requirement": 1,
+      "correct": 1,
+      "size": 242,
+      "ownBytes": 95
+    },
+    {
+      "runId": "task-20__placebo__3",
+      "taskId": "task-20",
+      "arm": "placebo",
+      "repeat": 3,
+      "state": "completed",
+      "attempt": 1,
+      "submissionKind": "out",
+      "model": "claude-haiku-5-5",
+      "loadedSkills": [
+        "es-toolkit:migrate"
+      ],
+      "turns": 11,
+      "durationMs": 114337,
+      "usage": {
+        "input": 22,
+        "output": 8098,
+        "cacheRead": 447585,
+        "cacheCreation": 24210
+      },
+      "deniedTools": 0,
+      "malformedLines": 0,
+      "requirement": 1,
+      "correct": 1,
+      "size": 242,
+      "ownBytes": 95
+    },
+    {
+      "runId": "task-20__procedure__1",
+      "taskId": "task-20",
+      "arm": "procedure",
+      "repeat": 1,
+      "state": "completed",
+      "attempt": 1,
+      "submissionKind": "out",
+      "model": "claude-haiku-5-5",
+      "loadedSkills": [
+        "es-toolkit:migrate"
+      ],
+      "turns": 12,
+      "durationMs": 75913,
+      "usage": {
+        "input": 20,
+        "output": 10859,
+        "cacheRead": 420726,
+        "cacheCreation": 27957
+      },
+      "deniedTools": 0,
+      "malformedLines": 0,
+      "requirement": 1,
+      "correct": 1,
+      "size": 242,
+      "ownBytes": 95
+    },
+    {
+      "runId": "task-20__procedure__2",
+      "taskId": "task-20",
+      "arm": "procedure",
+      "repeat": 2,
+      "state": "completed",
+      "attempt": 1,
+      "submissionKind": "out",
+      "model": "claude-haiku-5-5",
+      "loadedSkills": [
+        "es-toolkit:migrate"
+      ],
+      "turns": 12,
+      "durationMs": 95481,
+      "usage": {
+        "input": 22,
+        "output": 7328,
+        "cacheRead": 464346,
+        "cacheCreation": 26170
+      },
+      "deniedTools": 0,
+      "malformedLines": 0,
+      "requirement": 1,
+      "correct": 1,
+      "size": 238,
+      "ownBytes": 95
+    },
+    {
+      "runId": "task-20__procedure__3",
+      "taskId": "task-20",
+      "arm": "procedure",
+      "repeat": 3,
+      "state": "completed",
+      "attempt": 1,
+      "submissionKind": "out",
+      "model": "claude-haiku-5-5",
+      "loadedSkills": [
+        "es-toolkit:migrate"
+      ],
+      "turns": 9,
+      "durationMs": 176387,
+      "usage": {
+        "input": 18,
+        "output": 10387,
+        "cacheRead": 371387,
+        "cacheCreation": 25860
+      },
+      "deniedTools": 0,
+      "malformedLines": 0,
+      "requirement": 1,
+      "correct": 1,
+      "size": 242,
+      "ownBytes": 95
+    },
+    {
+      "runId": "task-20__sabotage__1",
+      "taskId": "task-20",
+      "arm": "sabotage",
+      "repeat": 1,
+      "state": "completed",
+      "attempt": 1,
+      "submissionKind": "out",
+      "model": "claude-haiku-5-5",
+      "loadedSkills": [
+        "es-toolkit:migrate"
+      ],
+      "turns": 10,
+      "durationMs": 78673,
+      "usage": {
+        "input": 18,
+        "output": 10225,
+        "cacheRead": 372368,
+        "cacheCreation": 25825
+      },
+      "deniedTools": 0,
+      "malformedLines": 0,
+      "requirement": 1,
+      "correct": 1,
+      "size": 242,
+      "ownBytes": 95
+    },
+    {
+      "runId": "task-20__sabotage__2",
+      "taskId": "task-20",
+      "arm": "sabotage",
+      "repeat": 2,
+      "state": "completed",
+      "attempt": 1,
+      "submissionKind": "out",
+      "model": "claude-haiku-5-5",
+      "loadedSkills": [
+        "es-toolkit:migrate"
+      ],
+      "turns": 7,
+      "durationMs": 73907,
+      "usage": {
+        "input": 14,
+        "output": 6868,
+        "cacheRead": 264939,
+        "cacheCreation": 21025
+      },
+      "deniedTools": 0,
+      "malformedLines": 0,
+      "requirement": 1,
+      "correct": 1,
+      "size": 242,
+      "ownBytes": 95
+    },
+    {
+      "runId": "task-20__sabotage__3",
+      "taskId": "task-20",
+      "arm": "sabotage",
+      "repeat": 3,
+      "state": "completed",
+      "attempt": 1,
+      "submissionKind": "out",
+      "model": "claude-haiku-5-5",
+      "loadedSkills": [
+        "es-toolkit:migrate"
+      ],
+      "turns": 7,
+      "durationMs": 103515,
+      "usage": {
+        "input": 14,
+        "output": 8371,
+        "cacheRead": 270199,
+        "cacheCreation": 21520
+      },
+      "deniedTools": 0,
+      "malformedLines": 0,
+      "requirement": 1,
+      "correct": 1,
+      "size": 242,
+      "ownBytes": 95
+    },
+    {
+      "runId": "task-20__skill__1",
+      "taskId": "task-20",
+      "arm": "skill",
+      "repeat": 1,
+      "state": "completed",
+      "attempt": 1,
+      "submissionKind": "out",
+      "model": "claude-haiku-5-5",
+      "loadedSkills": [
+        "es-toolkit:migrate"
+      ],
+      "turns": 13,
+      "durationMs": 68926,
+      "usage": {
+        "input": 22,
+        "output": 9973,
+        "cacheRead": 472457,
+        "cacheCreation": 26608
+      },
+      "deniedTools": 0,
+      "malformedLines": 0,
+      "requirement": 1,
+      "correct": 1,
+      "size": 242,
+      "ownBytes": 95
+    },
+    {
+      "runId": "task-20__skill__2",
+      "taskId": "task-20",
+      "arm": "skill",
+      "repeat": 2,
+      "state": "completed",
+      "attempt": 1,
+      "submissionKind": "out",
+      "model": "claude-haiku-5-5",
+      "loadedSkills": [
+        "es-toolkit:migrate"
+      ],
+      "turns": 11,
+      "durationMs": 71059,
+      "usage": {
+        "input": 18,
+        "output": 11467,
+        "cacheRead": 399904,
+        "cacheCreation": 31252
+      },
+      "deniedTools": 0,
+      "malformedLines": 0,
+      "requirement": 1,
+      "correct": 1,
+      "size": 238,
+      "ownBytes": 95
+    },
+    {
+      "runId": "task-20__skill__3",
+      "taskId": "task-20",
+      "arm": "skill",
+      "repeat": 3,
+      "state": "completed",
+      "attempt": 1,
+      "submissionKind": "out",
+      "model": "claude-haiku-5-5",
+      "loadedSkills": [
+        "es-toolkit:migrate"
+      ],
+      "turns": 11,
+      "durationMs": 48042,
+      "usage": {
+        "input": 22,
+        "output": 6685,
+        "cacheRead": 464437,
+        "cacheCreation": 23294
+      },
+      "deniedTools": 0,
+      "malformedLines": 0,
+      "requirement": 1,
+      "correct": 1,
+      "size": 242,
+      "ownBytes": 95
+    },
+    {
+      "runId": "task-22__baseline__1",
+      "taskId": "task-22",
+      "arm": "baseline",
+      "repeat": 1,
+      "state": "completed",
+      "attempt": 1,
+      "submissionKind": "out",
+      "model": "claude-haiku-5-5",
+      "loadedSkills": [],
+      "turns": 11,
+      "durationMs": 109522,
+      "usage": {
+        "input": 20,
+        "output": 19055,
+        "cacheRead": 459150,
+        "cacheCreation": 32566
+      },
+      "deniedTools": 0,
+      "malformedLines": 0,
+      "requirement": 1,
+      "correct": 1,
+      "size": 701,
+      "ownBytes": 87
+    },
+    {
+      "runId": "task-22__baseline__2",
+      "taskId": "task-22",
+      "arm": "baseline",
+      "repeat": 2,
+      "state": "completed",
+      "attempt": 1,
+      "submissionKind": "out",
+      "model": "claude-haiku-5-5",
+      "loadedSkills": [],
+      "turns": 13,
+      "durationMs": 147360,
+      "usage": {
+        "input": 26,
+        "output": 26494,
+        "cacheRead": 695447,
+        "cacheCreation": 46477
+      },
+      "deniedTools": 0,
+      "malformedLines": 0,
+      "requirement": 1,
+      "correct": 1,
+      "size": 703,
+      "ownBytes": 95
+    },
+    {
+      "runId": "task-22__baseline__3",
+      "taskId": "task-22",
+      "arm": "baseline",
+      "repeat": 3,
+      "state": "completed",
+      "attempt": 1,
+      "submissionKind": "out",
+      "model": "claude-haiku-5-5",
+      "loadedSkills": [],
+      "turns": 15,
+      "durationMs": 93232,
+      "usage": {
+        "input": 30,
+        "output": 13557,
+        "cacheRead": 675363,
+        "cacheCreation": 31502
+      },
+      "deniedTools": 0,
+      "malformedLines": 0,
+      "requirement": 0,
+      "correct": 1,
+      "size": 1526,
+      "ownBytes": 98
+    },
+    {
+      "runId": "task-22__baseline__4",
+      "taskId": "task-22",
+      "arm": "baseline",
+      "repeat": 4,
+      "state": "completed",
+      "attempt": 1,
+      "submissionKind": "out",
+      "model": "claude-haiku-5-5",
+      "loadedSkills": [],
+      "turns": 13,
+      "durationMs": 119337,
+      "usage": {
+        "input": 24,
+        "output": 19892,
+        "cacheRead": 580387,
+        "cacheCreation": 38475
+      },
+      "deniedTools": 0,
+      "malformedLines": 0,
+      "requirement": 0,
+      "correct": 1,
+      "size": 1519,
+      "ownBytes": 98
+    },
+    {
+      "runId": "task-22__baseline__5",
+      "taskId": "task-22",
+      "arm": "baseline",
+      "repeat": 5,
+      "state": "completed",
+      "attempt": 1,
+      "submissionKind": "out",
+      "model": "claude-haiku-5-5",
+      "loadedSkills": [],
+      "turns": 17,
+      "durationMs": 263843,
+      "usage": {
+        "input": 28,
+        "output": 22625,
+        "cacheRead": 697267,
+        "cacheCreation": 42568
+      },
+      "deniedTools": 0,
+      "malformedLines": 0,
+      "requirement": 0,
+      "correct": 1,
+      "size": 1517,
+      "ownBytes": 98
+    },
+    {
+      "runId": "task-22__baseline__6",
+      "taskId": "task-22",
+      "arm": "baseline",
+      "repeat": 6,
+      "state": "completed",
+      "attempt": 1,
+      "submissionKind": "out",
+      "model": "claude-haiku-5-5",
+      "loadedSkills": [],
+      "turns": 15,
+      "durationMs": 141769,
+      "usage": {
+        "input": 30,
+        "output": 17685,
+        "cacheRead": 727025,
+        "cacheCreation": 36507
+      },
+      "deniedTools": 0,
+      "malformedLines": 0,
+      "requirement": 1,
+      "correct": 1,
+      "size": 701,
+      "ownBytes": 87
+    },
+    {
+      "runId": "task-22__placebo__1",
+      "taskId": "task-22",
+      "arm": "placebo",
+      "repeat": 1,
+      "state": "completed",
+      "attempt": 1,
+      "submissionKind": "out",
+      "model": "claude-haiku-5-5",
+      "loadedSkills": [
+        "es-toolkit:migrate"
+      ],
+      "turns": 19,
+      "durationMs": 154925,
+      "usage": {
+        "input": 34,
+        "output": 25046,
+        "cacheRead": 943065,
+        "cacheCreation": 46907
+      },
+      "deniedTools": 0,
+      "malformedLines": 0,
+      "requirement": 0,
+      "correct": 1,
+      "size": 1518,
+      "ownBytes": 90
+    },
+    {
+      "runId": "task-22__placebo__2",
+      "taskId": "task-22",
+      "arm": "placebo",
+      "repeat": 2,
+      "state": "completed",
+      "attempt": 1,
+      "submissionKind": "out",
+      "model": "claude-haiku-5-5",
+      "loadedSkills": [
+        "es-toolkit:migrate"
+      ],
+      "turns": 8,
+      "durationMs": 91530,
+      "usage": {
+        "input": 16,
+        "output": 10869,
+        "cacheRead": 330611,
+        "cacheCreation": 26915
+      },
+      "deniedTools": 0,
+      "malformedLines": 0,
+      "requirement": 1,
+      "correct": 1,
+      "size": 705,
+      "ownBytes": 95
+    },
+    {
+      "runId": "task-22__placebo__3",
+      "taskId": "task-22",
+      "arm": "placebo",
+      "repeat": 3,
+      "state": "completed",
+      "attempt": 1,
+      "submissionKind": "out",
+      "model": "claude-haiku-5-5",
+      "loadedSkills": [
+        "es-toolkit:migrate"
+      ],
+      "turns": 17,
+      "durationMs": 183843,
+      "usage": {
+        "input": 34,
+        "output": 28562,
+        "cacheRead": 965448,
+        "cacheCreation": 50103
+      },
+      "deniedTools": 0,
+      "malformedLines": 0,
+      "requirement": 0,
+      "correct": 1,
+      "size": 1519,
+      "ownBytes": 98
+    },
+    {
+      "runId": "task-22__procedure__1",
+      "taskId": "task-22",
+      "arm": "procedure",
+      "repeat": 1,
+      "state": "completed",
+      "attempt": 1,
+      "submissionKind": "out",
+      "model": "claude-haiku-5-5",
+      "loadedSkills": [
+        "es-toolkit:migrate"
+      ],
+      "turns": 13,
+      "durationMs": 135397,
+      "usage": {
+        "input": 24,
+        "output": 19739,
+        "cacheRead": 603246,
+        "cacheCreation": 39859
+      },
+      "deniedTools": 0,
+      "malformedLines": 0,
+      "requirement": 1,
+      "correct": 1,
+      "size": 703,
+      "ownBytes": 95
+    },
+    {
+      "runId": "task-22__procedure__2",
+      "taskId": "task-22",
+      "arm": "procedure",
+      "repeat": 2,
+      "state": "completed",
+      "attempt": 1,
+      "submissionKind": "out",
+      "model": "claude-haiku-5-5",
+      "loadedSkills": [
+        "es-toolkit:migrate"
+      ],
+      "turns": 18,
+      "durationMs": 159822,
+      "usage": {
+        "input": 28,
+        "output": 14202,
+        "cacheRead": 644133,
+        "cacheCreation": 33002
+      },
+      "deniedTools": 0,
+      "malformedLines": 0,
+      "requirement": 1,
+      "correct": 1,
+      "size": 699,
+      "ownBytes": 95
+    },
+    {
+      "runId": "task-22__procedure__3",
+      "taskId": "task-22",
+      "arm": "procedure",
+      "repeat": 3,
+      "state": "completed",
+      "attempt": 1,
+      "submissionKind": "out",
+      "model": "claude-haiku-5-5",
+      "loadedSkills": [
+        "es-toolkit:migrate"
+      ],
+      "turns": 15,
+      "durationMs": 133379,
+      "usage": {
+        "input": 24,
+        "output": 15303,
+        "cacheRead": 545206,
+        "cacheCreation": 33758
+      },
+      "deniedTools": 0,
+      "malformedLines": 0,
+      "requirement": 1,
+      "correct": 1,
+      "size": 699,
+      "ownBytes": 87
+    },
+    {
+      "runId": "task-22__sabotage__1",
+      "taskId": "task-22",
+      "arm": "sabotage",
+      "repeat": 1,
+      "state": "completed",
+      "attempt": 1,
+      "submissionKind": "out",
+      "model": "claude-haiku-5-5",
+      "loadedSkills": [
+        "es-toolkit:migrate"
+      ],
+      "turns": 18,
+      "durationMs": 269782,
+      "usage": {
+        "input": 24,
+        "output": 17343,
+        "cacheRead": 550994,
+        "cacheCreation": 34460
+      },
+      "deniedTools": 0,
+      "malformedLines": 0,
+      "requirement": 1,
+      "correct": 1,
+      "size": 701,
+      "ownBytes": 87
+    },
+    {
+      "runId": "task-22__sabotage__2",
+      "taskId": "task-22",
+      "arm": "sabotage",
+      "repeat": 2,
+      "state": "completed",
+      "attempt": 1,
+      "submissionKind": "out",
+      "model": "claude-haiku-5-5",
+      "loadedSkills": [
+        "es-toolkit:migrate"
+      ],
+      "turns": 10,
+      "durationMs": 131685,
+      "usage": {
+        "input": 18,
+        "output": 17216,
+        "cacheRead": 390813,
+        "cacheCreation": 33441
+      },
+      "deniedTools": 0,
+      "malformedLines": 0,
+      "requirement": 1,
+      "correct": 1,
+      "size": 705,
+      "ownBytes": 95
+    },
+    {
+      "runId": "task-22__sabotage__3",
+      "taskId": "task-22",
+      "arm": "sabotage",
+      "repeat": 3,
+      "state": "completed",
+      "attempt": 1,
+      "submissionKind": "out",
+      "model": "claude-haiku-5-5",
+      "loadedSkills": [
+        "es-toolkit:migrate"
+      ],
+      "turns": 12,
+      "durationMs": 259005,
+      "usage": {
+        "input": 22,
+        "output": 18362,
+        "cacheRead": 510604,
+        "cacheCreation": 38210
+      },
+      "deniedTools": 0,
+      "malformedLines": 0,
+      "requirement": 0,
+      "correct": 1,
+      "size": 1521,
+      "ownBytes": 90
+    },
+    {
+      "runId": "task-22__skill__1",
+      "taskId": "task-22",
+      "arm": "skill",
+      "repeat": 1,
+      "state": "completed",
+      "attempt": 1,
+      "submissionKind": "out",
+      "model": "claude-haiku-5-5",
+      "loadedSkills": [
+        "es-toolkit:migrate"
+      ],
+      "turns": 20,
+      "durationMs": 178359,
+      "usage": {
+        "input": 40,
+        "output": 30059,
+        "cacheRead": 1147988,
+        "cacheCreation": 52793
+      },
+      "deniedTools": 0,
+      "malformedLines": 0,
+      "requirement": 0,
+      "correct": 1,
+      "size": 1518,
+      "ownBytes": 90
+    },
+    {
+      "runId": "task-22__skill__2",
+      "taskId": "task-22",
+      "arm": "skill",
+      "repeat": 2,
+      "state": "completed",
+      "attempt": 1,
+      "submissionKind": "out",
+      "model": "claude-haiku-5-5",
+      "loadedSkills": [
+        "es-toolkit:migrate"
+      ],
+      "turns": 20,
+      "durationMs": 188056,
+      "usage": {
+        "input": 36,
+        "output": 36128,
+        "cacheRead": 1081977,
+        "cacheCreation": 59185
+      },
+      "deniedTools": 0,
+      "malformedLines": 0,
+      "requirement": 0,
+      "correct": 1,
+      "size": 1521,
+      "ownBytes": 98
+    },
+    {
+      "runId": "task-22__skill__3",
+      "taskId": "task-22",
+      "arm": "skill",
+      "repeat": 3,
+      "state": "completed",
+      "attempt": 1,
+      "submissionKind": "out",
+      "model": "claude-haiku-5-5",
+      "loadedSkills": [
+        "es-toolkit:migrate"
+      ],
+      "turns": 15,
+      "durationMs": 137458,
+      "usage": {
+        "input": 30,
+        "output": 22421,
+        "cacheRead": 789793,
+        "cacheCreation": 45252
+      },
+      "deniedTools": 0,
+      "malformedLines": 0,
+      "requirement": 0,
+      "correct": 1,
+      "size": 1523,
+      "ownBytes": 90
+    }
+  ]
+}

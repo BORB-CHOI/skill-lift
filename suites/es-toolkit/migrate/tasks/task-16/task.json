@@ -1,0 +1,84 @@
+{
+  "id": "task-16",
+  "file": "src/module.ts",
+  "functions": ["kebabCase", "keyByKey", "truncate"],
+  "inputRange": "toSlug(label): 길이 0~40의 문자열이고 ASCII 영문자, 숫자, 공백, 하이픈, 밑줄, 마침표로 이루어진다. 대문자가 연속되거나 숫자가 글자 사이에 올 수 있다. byNameKey(rows): 길이 0~12의 배열이고 각 원소는 { id: 0~9의 정수, name: 다섯 가지 소문자 이름 중 하나, age: 18~60의 정수 }. preview(text): 길이 0~200의 출력 가능한 ASCII 문자열(코드 0x20~0x7E).",
+  "exports": [
+    {
+      "name": "toSlug",
+      "examples": [["max44_id"], [""]]
+    },
+    {
+      "name": "byNameKey",
+      "examples": [
+        [
+          [
+            {
+              "id": 4,
+              "name": "kim",
+              "age": 41
+            },
+            {
+              "id": 2,
+              "name": "park",
+              "age": 51
+            }
+          ]
+        ],
+        [
+          [
+            {
+              "id": 7,
+              "name": "kim",
+              "age": 46
+            },
+            {
+              "id": 4,
+              "name": "kim",
+              "age": 20
+            },
+            {
+              "id": 6,
+              "name": "park",
+              "age": 25
+            },
+            {
+              "id": 2,
+              "name": "jung",
+              "age": 22
+            },
+            {
+              "id": 2,
+              "name": "kim",
+              "age": 30
+            },
+            {
+              "id": 2,
+              "name": "kim",
+              "age": 31
+            },
+            {
+              "id": 3,
+              "name": "kim",
+              "age": 18
+            },
+            {
+              "id": 4,
+              "name": "kim",
+              "age": 52
+            }
+          ]
+        ]
+      ]
+    },
+    {
+      "name": "preview",
+      "examples": [
+        [
+          "#+R8n2G_KuG2:HdQYs+Ag*$@jMsE+ ZUBE<-n0N-zBUt=cFU6vH~RB_(S#X7NUjOL5 K9YHuZf]~Hk'?OQcb^cKN:GNhc?[Mpdmu=f:[$w*+l?}Y')>+2Si\"RK3W"
+        ],
+        ["HWS"]
+      ]
+    }
+  ]
+}

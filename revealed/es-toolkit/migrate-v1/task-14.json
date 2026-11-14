@@ -1,0 +1,33 @@
+{
+  "slots": [
+    {
+      "name": "words",
+      "original": "import words from 'lodash/words';",
+      "variants": {
+        "strict": "import { words } from 'es-toolkit';",
+        "compat": "import { words } from 'es-toolkit/compat';"
+      }
+    },
+    {
+      "name": "groupBy",
+      "original": "import groupBy from 'lodash/groupBy';",
+      "variants": {
+        "strict": "import { groupBy } from 'es-toolkit';",
+        "compat": "import { groupBy } from 'es-toolkit/compat';",
+        "adapted": "import { groupBy as groupByWith } from 'es-toolkit';\nconst groupBy = <T, K extends keyof T>(items: readonly T[], key: K): Record<string, T[]> =>\n  groupByWith(items, (item) => String(item[key]));"
+      }
+    },
+    {
+      "name": "fromPairs",
+      "original": "import fromPairs from 'lodash/fromPairs';",
+      "variants": {
+        "compat": "import { fromPairs } from 'es-toolkit/compat';"
+      }
+    }
+  ],
+  "hidden": {},
+  "generated": {
+    "seed": 20262413,
+    "count": 3000
+  }
+}

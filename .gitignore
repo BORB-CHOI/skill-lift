@@ -5,3 +5,9 @@ coverage/
 .DS_Store
 # 본 실행 전에는 공개하지 않는 채점 자료 (사전 등록에는 해시만 올린다)
 sealed/
+.size-test-*/
+.grade-tmp/
+.pilot/
+# 본 실행 결과는 감사와 스크럽을 거친 뒤 공개한다
+/results/
+.arms/
