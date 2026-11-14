@@ -1,0 +1,102 @@
+{
+  "openapi": "3.0.3",
+  "info": { "title": "Routes edge cases", "version": "1.0.0" },
+  "externalDocs": { "url": "https://docs.example.com/api" },
+  "tags": [{ "name": "stores", "description": "Store operations" }],
+  "paths": {
+    "/stores/{store_id}/items": {
+      "x-internal": true,
+      "parameters": [
+        { "name": "store_id", "in": "path", "required": true, "schema": { "type": "string" } },
+        { "name": "X-Tenant", "in": "header", "required": true, "schema": { "type": "string" } }
+      ],
+      "get": {
+        "tags": ["stores"],
+        "operationId": "listItems",
+        "parameters": [
+          { "name": "page_size", "in": "query", "schema": { "type": "integer" } },
+          { "name": "sort_by", "in": "query", "schema": { "type": "string", "enum": ["name", "price"] } }
+        ],
+        "responses": {
+          "200": {
+            "description": "Items of the store.\n\nPaginated.",
+            "content": {
+              "application/json": { "schema": { "type": "array", "items": { "$ref": "#/components/schemas/Item" } } },
+              "application/xml": { "schema": { "type": "array", "items": { "$ref": "#/components/schemas/Item" } } }
+            }
+          },
+          "404": { "$ref": "#/components/responses/NotFound" }
+        }
+      },
+      "post": {
+        "tags": ["stores"],
+        "operationId": "createItem",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "multipart/form-data": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "name": { "type": "string" },
+                  "image": { "type": "string", "format": "binary" }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "created",
+            "content": { "application/json": { "schema": { "$ref": "#/components/schemas/Item" } } }
+          },
+          "default": {
+            "description": "error",
+            "content": { "application/json": { "schema": { "$ref": "#/components/schemas/Error" } } }
+          }
+        }
+      },
+      "x-codegen-ignore": { "reason": "vendor extension on path item" }
+    },
+    "/stores/{store_id}/items/{item_id}": {
+      "delete": {
+        "tags": ["stores"],
+        "operationId": "deleteItem",
+        "parameters": [
+          { "name": "store_id", "in": "path", "required": true, "schema": { "type": "string" } },
+          { "name": "item_id", "in": "path", "required": true, "schema": { "type": "integer" } }
+        ],
+        "responses": { "204": { "description": "deleted" } }
+      }
+    },
+    "/health": {
+      "get": {
+        "operationId": "health",
+        "responses": {
+          "200": { "description": "ok", "content": { "text/plain": { "schema": { "type": "string" } } } }
+        }
+      }
+    }
+  },
+  "components": {
+    "responses": {
+      "NotFound": {
+        "description": "Not found",
+        "content": {
+          "application/json": { "schema": { "$ref": "#/components/schemas/Error" } },
+          "text/plain": { "schema": { "type": "string" } }
+        }
+      }
+    },
+    "schemas": {
+      "Item": {
+        "type": "object",
+        "properties": { "id": { "type": "integer" }, "name": { "type": "string" } }
+      },
+      "Error": {
+        "type": "object",
+        "properties": { "message": { "type": "string" } }
+      }
+    }
+  }
+}

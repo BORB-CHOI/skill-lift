@@ -1,91 +1,135 @@
+import { execFileSync } from 'node:child_process';
 import { existsSync, mkdirSync, mkdtempSync, readFileSync, rmSync, writeFileSync } from 'node:fs';
 import { tmpdir } from 'node:os';
 import { join } from 'node:path';
 import { afterAll, beforeAll, describe, expect, it } from 'vitest';
-import { copyArtifact, prepareWorkspace, verifyDeps } from '../../src/runner/workspace.js';
+import {
+  BASE_TAG,
+  nodeModulesFingerprint,
+  prepareProjectWorkspace,
+  removeTree,
+  saveChanges,
+} from '../../src/runner/workspace.js';
 
 let root = '';
-let deps = '';
-let task = '';
+let fixture = '';
 
-function pkg(name: string, version: string): void {
-  mkdirSync(join(deps, name), { recursive: true });
-  writeFileSync(join(deps, name, 'package.json'), JSON.stringify({ name, version }), 'utf8');
+function git(cwd: string, ...args: string[]): string {
+  return execFileSync('git', ['-C', cwd, ...args], { encoding: 'utf8' }).trim();
 }
 
+function write(base: string, rel: string, text: string): void {
+  const file = join(base, rel);
+  mkdirSync(join(file, '..'), { recursive: true });
+  writeFileSync(file, text, 'utf8');
+}
+
+/** prepare-fixtures.ts와 같은 모양의 작은 고정 사본: 기준 커밋, base 태그, node_modules 제외. */
 beforeAll(() => {
   root = mkdtempSync(join(tmpdir(), 'workspace-test-'));
-  deps = join(root, 'deps/node_modules');
-  pkg('lodash', '4.18.1');
-  pkg('@types/lodash', '4.17.27');
-  pkg('es-toolkit', '1.53.2');
-  pkg('typescript', '5.9.3');
-  pkg('esbuild', '0.28.2');
-  mkdirSync(join(deps, '.bin'));
-  writeFileSync(join(deps, '.bin/tsc'), '', 'utf8');
-  writeFileSync(join(deps, '.bin/esbuild'), '', 'utf8');
-  task = join(root, 'task');
-  mkdirSync(join(task, 'src'), { recursive: true });
-  writeFileSync(join(task, 'src/module.ts'), "import chunk from 'lodash/chunk';\n", 'utf8');
-  writeFileSync(join(task, 'task.json'), '{}', 'utf8');
+  fixture = join(root, 'fixture');
+  write(fixture, 'package.json', '{"dependencies":{"lodash":"^4.17.21"}}\n');
+  write(fixture, 'src/a.ts', "import { chunk } from 'lodash';\r\n");
+  write(fixture, 'node_modules/lodash/package.json', '{"version":"4.17.21"}');
+  write(fixture, 'node_modules/es-toolkit/package.json', '{"version":"1.53.2"}');
+  write(fixture, 'node_modules/@types/lodash/package.json', '{}');
+  git(fixture, 'init', '--quiet');
+  git(fixture, 'config', 'core.autocrlf', 'false');
+  git(fixture, 'config', 'user.name', 'eval');
+  git(fixture, 'config', 'user.email', 'eval@localhost');
+  writeFileSync(join(fixture, '.git/info/exclude'), 'node_modules/\n', 'utf8');
+  git(fixture, 'add', '-A');
+  git(fixture, 'commit', '--quiet', '-m', 'base');
+  git(fixture, 'tag', BASE_TAG);
 });
 
 afterAll(() => {
   rmSync(root, { recursive: true, force: true });
 });
 
-describe('verifyDeps', () => {
-  it('정해진 버전을 확인하고 실제 버전을 돌려준다', () => {
-    expect(verifyDeps(deps)).toEqual({
-      lodash: '4.18.1',
-      '@types/lodash': '4.17.27',
-      'es-toolkit': '1.53.2',
-      typescript: '5.9.3',
-    });
+describe('prepareProjectWorkspace', () => {
+  it('node_modules와 .git까지 새 폴더로 복사한다', () => {
+    const ws = prepareProjectWorkspace(fixture, join(root, 'ws'));
+    try {
+      expect(ws.dir.startsWith(join(root, 'ws'))).toBe(true);
+      expect(ws.copyMs).toBeGreaterThanOrEqual(0);
+      for (const rel of ['src/a.ts', '.git/HEAD', 'node_modules/es-toolkit/package.json']) {
+        expect(existsSync(join(ws.dir, rel))).toBe(true);
+      }
+      expect(readFileSync(join(ws.dir, 'src/a.ts'), 'utf8')).toBe(
+        "import { chunk } from 'lodash';\r\n",
+      );
+    } finally {
+      removeTree(ws.dir);
+    }
+    expect(existsSync(ws.dir)).toBe(false);
   });
 
-  it('lodash가 없거나 버전이 다르면 실패한다', () => {
-    const other = join(root, 'other/node_modules');
-    mkdirSync(join(other, 'es-toolkit'), { recursive: true });
-    writeFileSync(join(other, 'es-toolkit/package.json'), '{"version":"1.53.2"}', 'utf8');
-    expect(() => verifyDeps(other)).toThrow(/lodash/);
-    mkdirSync(join(other, 'lodash'));
-    writeFileSync(join(other, 'lodash/package.json'), '{"version":"4.17.21"}', 'utf8');
-    expect(() => verifyDeps(other)).toThrow(/4\.18\.1/);
+  it('node_modules가 없는 폴더는 거부한다', () => {
+    const bare = join(root, 'bare');
+    mkdirSync(join(bare, '.git'), { recursive: true });
+    expect(() => prepareProjectWorkspace(bare, join(root, 'ws'))).toThrow(/node_modules/);
   });
 });
 
-describe('prepareWorkspace', () => {
-  it('src와 네 패키지만 넣고 과제의 다른 파일과 esbuild는 넣지 않는다', () => {
-    const ws = prepareWorkspace(task, deps, verifyDeps(deps));
+describe('saveChanges', () => {
+  it('수정·새 파일·삭제를 base 대비 패치로 저장하고 node_modules는 넣지 않는다', () => {
+    const ws = prepareProjectWorkspace(fixture, join(root, 'ws'));
     try {
-      expect(existsSync(join(ws, 'src/module.ts'))).toBe(true);
-      expect(existsSync(join(ws, 'task.json'))).toBe(false);
-      for (const name of ['lodash', '@types/lodash', 'es-toolkit', 'typescript', '.bin/tsc']) {
-        expect(existsSync(join(ws, 'node_modules', name))).toBe(true);
+      write(ws.dir, 'src/a.ts', "import { chunk } from 'es-toolkit';\r\n");
+      write(ws.dir, 'src/new.ts', 'export {};\n');
+      write(ws.dir, 'node_modules/es-toolkit/extra.js', 'x');
+      rmSync(join(ws.dir, 'package.json'));
+      const patchFile = join(root, 'changes.patch');
+      const saved = saveChanges(ws.dir, patchFile);
+      const patch = readFileSync(patchFile, 'utf8');
+      expect(saved.patchBytes).toBe(Buffer.byteLength(patch));
+      expect(saved.changedFiles).toEqual(['D\tpackage.json', 'M\tsrc/a.ts', 'A\tsrc/new.ts']);
+      expect(patch).toContain("+import { chunk } from 'es-toolkit';\r");
+      expect(patch).not.toContain('node_modules');
+
+      // 패치를 새 사본에 적용하면 같은 상태가 된다(채점기가 하는 일).
+      const fresh = prepareProjectWorkspace(fixture, join(root, 'ws'));
+      try {
+        git(fresh.dir, 'apply', '--binary', patchFile);
+        expect(readFileSync(join(fresh.dir, 'src/a.ts'), 'utf8')).toBe(
+          "import { chunk } from 'es-toolkit';\r\n",
+        );
+        expect(existsSync(join(fresh.dir, 'src/new.ts'))).toBe(true);
+      } finally {
+        removeTree(fresh.dir);
       }
-      expect(existsSync(join(ws, 'node_modules/esbuild'))).toBe(false);
-      expect(existsSync(join(ws, 'node_modules/.bin/esbuild'))).toBe(false);
-      const manifest = JSON.parse(readFileSync(join(ws, 'package.json'), 'utf8')) as {
-        dependencies: Record<string, string>;
-      };
-      expect(manifest.dependencies['lodash']).toBe('4.18.1');
     } finally {
-      rmSync(ws, { recursive: true, force: true });
+      removeTree(ws.dir);
+    }
+  });
+
+  it('변경이 없으면 빈 패치다', () => {
+    const ws = prepareProjectWorkspace(fixture, join(root, 'ws'));
+    try {
+      const saved = saveChanges(ws.dir, join(root, 'empty.patch'));
+      expect(saved).toEqual({ patchBytes: 0, changedFiles: [] });
+    } finally {
+      removeTree(ws.dir);
     }
   });
 });
 
-describe('copyArtifact', () => {
-  it('있으면 복사하고 없으면 false다', () => {
-    const ws = join(root, 'ws');
-    mkdirSync(join(ws, 'out'), { recursive: true });
-    writeFileSync(join(ws, 'out/module.ts'), 'x\r\n', 'utf8');
-    const dest = join(root, 'run/submission.ts');
-    expect(copyArtifact(ws, 'out/module.ts', dest)).toBe(true);
-    expect(readFileSync(dest, 'utf8')).toBe('x\r\n');
-    expect(copyArtifact(ws, 'out/migration-report.json', join(root, 'run/report.json'))).toBe(
-      false,
-    );
+describe('nodeModulesFingerprint', () => {
+  it('패키지를 지우거나 es-toolkit 버전을 바꾸면 달라진다', () => {
+    const ws = prepareProjectWorkspace(fixture, join(root, 'ws'));
+    try {
+      const before = nodeModulesFingerprint(ws.dir);
+      expect(nodeModulesFingerprint(ws.dir)).toBe(before);
+      write(ws.dir, 'src/b.ts', 'x');
+      expect(nodeModulesFingerprint(ws.dir)).toBe(before);
+      rmSync(join(ws.dir, 'node_modules/@types/lodash'), { recursive: true });
+      const afterRemove = nodeModulesFingerprint(ws.dir);
+      expect(afterRemove).not.toBe(before);
+      write(ws.dir, 'node_modules/es-toolkit/package.json', '{"version":"1.0.0"}');
+      expect(nodeModulesFingerprint(ws.dir)).not.toBe(afterRemove);
+    } finally {
+      removeTree(ws.dir);
+    }
   });
 });

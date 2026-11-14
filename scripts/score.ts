@@ -1,95 +1,120 @@
 /**
- * 본 실행 결과를 판정하고 리포트를 쓴다 (설계 2절, 2.1절, 6절, 8절, 8.2절).
- * 에이전트를 다시 실행하지 않고 채점도 하지 않는다. 실행 폴더의 grade.json을 읽기만 한다.
+ * 본 실행 결과를 판정하고 리포트를 쓴다.
+ * 에이전트를 다시 실행하지 않고 채점도 하지 않는다. 실행 폴더의 meta.json과 grade.json을 읽기만 한다.
  *
- * 사용: pnpm tsx scripts/score.ts <실행 이름> <사전 등록 JSON> [검증 반복 수=1000]
+ * 분석 단위는 실행이다. (프로젝트, 모델)마다 skill을 baseline, placebo와 각각 비교한다(가설 8개).
+ * 차이는 두 표본 순열 검정, 동등은 ±δ TOST, 구간은 순열 검정 역산이고, Holm 보정은 차이 p값
+ * 8개와 동등 p값 8개에 따로 적용한다.
+ *
+ * 사용: pnpm tsx scripts/score.ts <실행 이름> <사전 등록 JSON>
  * 출력: results/es-toolkit-migrate/<실행 이름>/report.md
  */
 import { readFileSync, writeFileSync } from 'node:fs';
 import { join } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import {
+  ARMS,
+  armScores,
+  cellRuns,
+  itemPassRates,
   manipulationFlags,
-  p2ByType,
-  pairTasks,
+  RUN_STATES,
   runCost,
   runDurationMs,
-  runTurnCount,
+  runModel,
   runScore,
+  runTurnCount,
+  summarize,
   type Arm,
-  type PairedSet,
+  type ItemPassRate,
   type RunRecord,
-  type RunStateName,
 } from '../src/stats/aggregate.js';
-import { bcaInterval } from '../src/stats/bootstrap.js';
 import {
   conclude,
   conclusionSentence,
   decideHypotheses,
-  HYPOTHESES,
+  hypothesisFamily,
+  modelLabel,
   verdictSentence,
-  type HypothesisId,
-  type Purpose,
+  type HypothesisResult,
 } from '../src/stats/decision.js';
 import type { Interval } from '../src/stats/intervals.js';
-import { signFlipInterval } from '../src/stats/inversion.js';
-import { itemRunsByTask, loadRuns } from '../src/stats/load-runs.js';
+import { loadRuns } from '../src/stats/load-runs.js';
 import { mean } from '../src/stats/paired.js';
+import { EXACT_LIMIT, MC_DRAWS, permutationInterval } from '../src/stats/permutation.js';
 import { parsePreregistration } from '../src/stats/prereg.js';
-import { injectedPowerCurve, splitHalfCheck } from '../src/stats/selfcheck.js';
 
-const [label = '', preregPath = '', iterationsArg = '1000'] = process.argv.slice(2);
+const [label = '', preregPath = ''] = process.argv.slice(2);
 if (label === '' || preregPath === '') {
-  throw new Error('사용: tsx scripts/score.ts <실행 이름> <사전 등록 JSON> [검증 반복 수]');
+  throw new Error('사용: tsx scripts/score.ts <실행 이름> <사전 등록 JSON>');
 }
-const iterations = Number(iterationsArg);
-if (!Number.isInteger(iterations) || iterations <= 0)
-  throw new Error('반복 수는 양의 정수여야 한다');
 
 const repoRoot = fileURLToPath(new URL('../', import.meta.url));
 const outRoot = join(repoRoot, 'results/es-toolkit-migrate', label);
 const prereg = parsePreregistration(JSON.parse(readFileSync(preregPath, 'utf8')));
 const runs = loadRuns(outRoot);
 const { alpha, delta } = prereg;
-const ARMS: readonly Arm[] = ['baseline', 'skill', 'placebo'];
-const STATES: readonly RunStateName[] = ['completed', 'limit', 'infra', 'contaminated', 'harness'];
 
 const lines: string[] = [];
 const out = (line = ''): void => {
   lines.push(line);
 };
 const pct = (x: number | null): string => (x === null ? '-' : `${(x * 100).toFixed(1)}%`);
-const pp = (x: number): string =>
-  Number.isFinite(x) ? `${x >= 0 ? '+' : ''}${(x * 100).toFixed(1)}pp` : x > 0 ? '+∞' : '−∞';
+const pp = (x: number | null): string => {
+  if (x === null) return '-';
+  if (!Number.isFinite(x)) return x > 0 ? '+∞' : '−∞';
+  return `${x >= 0 ? '+' : ''}${(x * 100).toFixed(1)}pp`;
+};
 const interval = (i: Interval | null): string =>
   i === null ? '-' : `[${pp(i.lower)}, ${pp(i.upper)}]`;
 const pv = (p: number): string => (p < 0.0001 ? '<0.0001' : p.toFixed(4));
+const num = (v: number | null, digits: number): string => (v === null ? '-' : v.toFixed(digits));
 const avg = (values: readonly number[]): number | null =>
   values.length === 0 ? null : mean(values);
+const rate = (hits: number, total: number): string =>
+  total === 0 ? '-' : `${hits}/${total} (${pct(hits / total)})`;
 
-// 1. 가설별 과제 차이와 판정
-const pairsById = {} as Record<HypothesisId, PairedSet>;
-for (const spec of HYPOTHESES) {
-  pairsById[spec.id] = pairTasks(runs, prereg.tasks[spec.purpose], spec.control, spec.purpose);
+interface Cell {
+  readonly project: string;
+  readonly model: string;
+  readonly runs: readonly RunRecord[];
+  readonly scores: Readonly<Record<Arm, number[]>>;
 }
-const differences = (id: HypothesisId): number[] => pairsById[id].pairs.map((p) => p.difference);
-const decisions = decideHypotheses(
-  {
-    H1: differences('H1'),
-    H2: differences('H2'),
-    H3: differences('H3'),
-    H4: differences('H4'),
-  },
-  { alpha, delta },
+
+const cells: Cell[] = prereg.projects.flatMap((project) =>
+  prereg.models.map((model) => {
+    const own = cellRuns(runs, project, model);
+    const scores = {
+      baseline: armScores(own, 'baseline'),
+      skill: armScores(own, 'skill'),
+      placebo: armScores(own, 'placebo'),
+    };
+    return { project, model, runs: own, scores };
+  }),
 );
-const intervals = {} as Record<HypothesisId, { inversion: Interval | null; bca: Interval | null }>;
-for (const spec of HYPOTHESES) {
-  const d = differences(spec.id);
-  intervals[spec.id] = {
-    inversion: d.length === 0 ? null : signFlipInterval(d, alpha, { tolerance: 1e-5 }),
-    bca: d.length < 2 ? null : bcaInterval(d, 1 - alpha, 1),
-  };
-}
+const cellOf = (project: string, model: string): Cell | undefined =>
+  cells.find((c) => c.project === project && c.model === model);
+const cellName = (c: { project: string; model: string }): string =>
+  `${c.project} · ${modelLabel(c.model)}`;
+
+// 1. 판정
+const family = hypothesisFamily(prereg.projects, prereg.models);
+const samples = family.map((spec) => {
+  const scores = cellOf(spec.project, spec.model)?.scores;
+  return { spec, treatment: scores?.skill ?? [], control: scores?.[spec.control] ?? [] };
+});
+const results = decideHypotheses(samples, { alpha, delta });
+const intervals = samples.map((s) =>
+  s.treatment.length === 0 || s.control.length === 0
+    ? null
+    : permutationInterval(s.treatment, s.control, alpha, { tolerance: 1e-4 }),
+);
+const resultFor = (project: string, model: string, control: 'baseline' | 'placebo') => {
+  const index = results.findIndex(
+    (r) => r.spec.project === project && r.spec.model === model && r.spec.control === control,
+  );
+  return { result: results[index] as HypothesisResult, interval: intervals[index] ?? null };
+};
 
 const VERDICT_LABEL = {
   higher: '높음',
@@ -97,12 +122,14 @@ const VERDICT_LABEL = {
   equivalent: '동등',
   inconclusive: '판정 불가',
 };
+const inScope = new Set(cells.flatMap((c) => c.runs.map((r) => r.meta.runId)));
+const outOfScope = runs.filter((r) => !inScope.has(r.meta.runId));
 const missingGrades = runs.filter((r) => r.meta.state === 'completed' && r.grade === null);
 
-out(`# es-toolkit migrate 목적 달성 평가 결과: ${label}`);
+out(`# es-toolkit 전환 평가 결과: ${label}`);
 out();
 out(
-  `실행 ${runs.length}개, α = ${alpha}, δ = ±${(delta * 100).toFixed(0)}pp, 사전 등록 K = ${prereg.k}. 목적 1 대상 과제 ${prereg.tasks.p1.length}개, 목적 2 대상 과제 ${prereg.tasks.p2.length}개.`,
+  `실행 ${runs.length}개. 프로젝트 ${prereg.projects.join(', ')} × 모델 ${prereg.models.map(modelLabel).join(', ')}, 가설 ${family.length}개. α = ${alpha}, δ = ±${(delta * 100).toFixed(0)}pp, 사전 등록 K = ${prereg.k}.`,
 );
 if (missingGrades.length > 0) {
   out();
@@ -110,152 +137,156 @@ if (missingGrades.length > 0) {
     `> grade.json이 없는 정상 종료 실행이 ${missingGrades.length}개다. 채점기를 먼저 돌려야 한다. 이 실행들은 결측으로 처리했다: ${missingGrades.map((r) => r.meta.runId).join(', ')}`,
   );
 }
-
-out();
-out('## 1. 가설별 판정');
-out();
-out(
-  '차이는 과제마다 (skill 평균 − 대조 평균)이고, 과제·조건 평균은 실행별 항목 평균의 평균이다. 주 구간은 부호 뒤집기 검정을 뒤집은 구간이고 BCa 구간은 참고용이다. Holm 보정은 차이 검정 4개와 동등 검정 4개에 따로 적용했다.',
-);
-out();
-out(
-  '| 가설 | 목적 | 대조 | 과제 수 | skill 평균 | 대조 평균 | 평균 차이 | 역산 95% 구간 | BCa 95% 구간 | 차이 p | Holm 조정 p | 동등 p | Holm 조정 동등 p | 판정 |',
-);
-out('|---|---|---|---|---|---|---|---|---|---|---|---|---|---|');
-for (const spec of HYPOTHESES) {
-  const r = decisions[spec.id];
-  const pairs = pairsById[spec.id].pairs;
+if (outOfScope.length > 0) {
+  out();
   out(
-    `| ${spec.id} | ${spec.purpose === 'p1' ? '목적 1' : '목적 2'} | ${spec.control} | ${r.n} | ${pct(avg(pairs.map((p) => p.skill)))} | ${pct(avg(pairs.map((p) => p.control)))} | ${r.n === 0 ? '-' : pp(r.meanDifference)} | ${interval(intervals[spec.id].inversion)} | ${interval(intervals[spec.id].bca)} | ${pv(r.pDifference)} | ${pv(r.pDifferenceAdjusted)} | ${pv(r.pEquivalence)} | ${pv(r.pEquivalenceAdjusted)} | **${VERDICT_LABEL[r.verdict]}** |`,
+    `> 사전 등록한 프로젝트·모델에 속하지 않는 실행 ${outOfScope.length}개는 분석에서 뺐다: ${outOfScope.map((r) => `${r.meta.runId}(${r.meta.taskId}, ${runModel(r.meta) ?? '모델 기록 없음'})`).join(', ')}`,
   );
 }
-for (const spec of HYPOTHESES) {
-  const dropped = pairsById[spec.id].dropped;
-  if (dropped.length > 0) {
-    out();
+
+out();
+out('## 1. 조건별 실행 점수');
+out();
+out(
+  '실행 점수는 통과한 채점 항목의 비율이다. 시간·턴 한도로 끝난 실행은 0점으로 넣고, 오염·인프라 실패·하네스 결함·채점 없음 실행은 뺀다.',
+);
+out();
+out('| 프로젝트 | 모델 | 조건 | 분석 실행 | 평균 | 표준편차 |');
+out('|---|---|---|---|---|---|');
+for (const cell of cells) {
+  for (const arm of ARMS) {
+    const s = summarize(cell.scores[arm]);
     out(
-      `- ${spec.id}: 한쪽 조건의 점수가 없어 뺀 과제 ${dropped.length}개 (${dropped.join(', ')})`,
+      `| ${cell.project} | ${modelLabel(cell.model)} | ${arm} | ${s.n} | ${pct(s.mean)} | ${pct(s.sd)} |`,
     );
   }
 }
 
-// 2. 결론
-const armCounts = ARMS.map((arm) => {
-  const all = runs.filter((r) => r.meta.arm === arm);
+out();
+out('## 2. 가설별 판정');
+out();
+out(
+  `차이는 skill 평균 − 대조 평균이다. p값은 두 표본 순열 검정이다. 배치 수 C(n1 + n2, n1)가 ${EXACT_LIMIT.toLocaleString('en-US')} 이하면 모든 배치를 세고, 넘으면 시드를 고정한 무작위 배치 ${MC_DRAWS.toLocaleString('en-US')}개로 계산한다. 동등 p는 처리 표본을 ±δ 옮긴 두 단측 순열 검정 중 큰 값이다. 95% 구간은 순열 검정을 뒤집어 구했고 Holm 보정 전 값이다. Holm 보정은 차이 검정 ${family.length}개와 동등 검정 ${family.length}개에 따로 적용했다.`,
+);
+out();
+out(
+  '| 프로젝트 | 모델 | 대조 | skill 실행 | 대조 실행 | 평균 차이 | 95% 구간 | 계산 | 차이 p | Holm 조정 p | 동등 p | Holm 조정 동등 p | 판정 |',
+);
+out('|---|---|---|---|---|---|---|---|---|---|---|---|---|');
+results.forEach((r, i) => {
+  const s = samples[i];
+  const method = r.method === null ? '-' : r.method === 'exact' ? '정확' : '몬테카를로';
+  out(
+    `| ${r.spec.project} | ${modelLabel(r.spec.model)} | ${r.spec.control} | ${s?.treatment.length ?? 0} | ${s?.control.length ?? 0} | ${pp(r.meanDifference)} | ${interval(intervals[i] ?? null)} | ${method} | ${pv(r.pDifference)} | ${pv(r.pDifferenceAdjusted)} | ${pv(r.pEquivalence)} | ${pv(r.pEquivalenceAdjusted)} | **${VERDICT_LABEL[r.verdict]}** |`,
+  );
+});
+
+// 3. 결론
+const stateCount = (own: readonly RunRecord[], arm: Arm) => {
+  const all = own.filter((r) => r.meta.arm === arm);
   const byState = Object.fromEntries(
-    STATES.map((s) => [s, all.filter((r) => r.meta.state === s).length]),
-  ) as Record<RunStateName, number>;
+    RUN_STATES.map((s) => [s, all.filter((r) => r.meta.state === s).length]),
+  ) as Record<(typeof RUN_STATES)[number], number>;
+  const ungraded = all.filter((r) => r.meta.state === 'completed' && r.grade === null).length;
   return {
-    arm,
     total: all.length,
     byState,
+    ungraded,
     contaminatedShare: all.length === 0 ? 0 : byState.contaminated / all.length,
   };
-});
-const overContaminated = armCounts.filter((a) => a.contaminatedShare > 0.05);
+};
 
 out();
-out('## 2. 판정 문장과 결론');
-for (const purpose of ['p1', 'p2'] as const satisfies readonly Purpose[]) {
-  const [vsBaseline, vsPlacebo] =
-    purpose === 'p1' ? (['H1', 'H3'] as const) : (['H2', 'H4'] as const);
-  const conclusion = conclude(decisions[vsBaseline].verdict, decisions[vsPlacebo].verdict);
+out('## 3. 판정 문장과 결론');
+for (const cell of cells) {
+  const vsBaseline = resultFor(cell.project, cell.model, 'baseline');
+  const vsPlacebo = resultFor(cell.project, cell.model, 'placebo');
+  const conclusion = conclude(vsBaseline.result.verdict, vsPlacebo.result.verdict);
   out();
-  out(`### ${purpose === 'p1' ? '목적 1' : '목적 2'}`);
+  out(`### ${cellName(cell)}`);
   out();
-  for (const id of [vsBaseline, vsPlacebo]) {
-    const spec = HYPOTHESES.find((h) => h.id === id);
-    if (spec !== undefined) out(`- ${id}: ${verdictSentence(spec, decisions[id].verdict, delta)}`);
+  for (const h of [vsBaseline, vsPlacebo]) {
+    out(`- ${verdictSentence(h.result.spec, h.result.verdict, delta)}`);
   }
   out();
-  out(`**결론:** ${conclusionSentence(purpose, conclusion, delta)}`);
+  out(`**결론:** ${conclusionSentence(cell.project, cell.model, conclusion, delta)}`);
   if (conclusion === 'undetermined') {
     out();
+    out(`baseline 대비 평균 차이의 95% 구간(순열 검정 역산): ${interval(vsBaseline.interval)}`);
+  }
+  const over = ARMS.map((arm) => ({ arm, ...stateCount(cell.runs, arm) })).filter(
+    (a) => a.contaminatedShare > 0.05,
+  );
+  if (over.length > 0) {
+    out();
     out(
-      `baseline 대비 평균 차이의 95% 구간(부호 뒤집기 역산): ${interval(intervals[vsBaseline].inversion)}`,
+      `**한계:** 오염 실행 비율이 5%를 넘은 조건이 있다 (${over.map((a) => `${a.arm} ${pct(a.contaminatedShare)}`).join(', ')}). 오염 실행은 분석에서 뺐다.`,
     );
   }
 }
-if (overContaminated.length > 0) {
-  out();
-  out(
-    `**한계:** 오염 실행 비율이 5%를 넘은 조건이 있다 (${overContaminated.map((a) => `${a.arm} ${pct(a.contaminatedShare)}`).join(', ')}). 오염 실행은 분석에서 뺐다.`,
-  );
-}
 
-// 3. 목적 2의 항목 유형별 점수
+// 4. 항목별 통과율
 out();
-out('## 3. 목적 2의 항목 유형별 점수');
-out();
-out(
-  '목적 2 대상 과제의 정상 종료 실행에서 항목 점수를 모은 단순 평균이다. 재분류된 S 항목은 D로 센다. 시간·턴 한도 실행은 항목 목록이 없어 빠진다.',
-);
-out();
-out('| 조건 | S | D | C |');
-out('|---|---|---|---|');
-for (const arm of ARMS) {
-  const rows = p2ByType(runs, prereg.tasks.p2, arm);
-  out(`| ${arm} | ${rows.map((r) => `${pct(r.mean)} (${r.items})`).join(' | ')} |`);
-}
-
-// 4. 부차 지표
-out();
-out('## 4. 부차 지표 (판정하지 않음)');
+out('## 4. 항목별 통과율');
 out();
 out(
-  '모든 과제의 실행을 쓴다. 동작 보존 점수는 시간·턴 한도 실행을 0점으로 넣는다. 번들 크기는 목적 1 점수가 1인 실행만 쓴다.',
+  '1절과 같은 실행을 쓴다. 한도 실행은 모든 항목을 실패로 센다. 조건 사이 차이가 큰 항목부터 적었다.',
 );
-out();
-out(
-  '| 조건 | 동작 보존 점수 | 번들 바이트 평균 | 기준 해답 대비 번들 비율 | 평균 비용(USD) | 총 비용(USD) | 평균 시간(초) | 평균 턴 |',
-);
-out('|---|---|---|---|---|---|---|---|');
-for (const arm of ARMS) {
-  const own = runs.filter((r) => r.meta.arm === arm && r.meta.state !== 'contaminated');
-  const behaviour = own
-    .map((r) =>
-      r.meta.state === 'limit'
-        ? 0
-        : r.meta.state === 'completed'
-          ? (r.grade?.behaviourOnly ?? null)
-          : null,
-    )
-    .filter((v): v is number => v !== null);
-  const passing = own.filter(
-    (r) => r.grade !== null && runScore(r, 'p1') === 1 && r.grade.bundleBytes !== null,
+const passShare = (r: ItemPassRate | undefined): number | null =>
+  r === undefined || r.runs === 0 ? null : r.passed / r.runs;
+const diff = (a: number | null, b: number | null): number | null =>
+  a === null || b === null ? null : a - b;
+for (const cell of cells) {
+  const byArm = Object.fromEntries(
+    ARMS.map((arm) => [arm, itemPassRates(cell.runs, arm)]),
+  ) as Record<Arm, ItemPassRate[]>;
+  const rows = byArm.skill.map((skillRow) => {
+    const find = (arm: Arm) => byArm[arm].find((r) => r.id === skillRow.id);
+    const s = passShare(skillRow);
+    const vsBaseline = diff(s, passShare(find('baseline')));
+    const vsPlacebo = diff(s, passShare(find('placebo')));
+    return { skillRow, find, vsBaseline, vsPlacebo };
+  });
+  rows.sort(
+    (a, b) =>
+      Math.max(Math.abs(b.vsBaseline ?? 0), Math.abs(b.vsPlacebo ?? 0)) -
+      Math.max(Math.abs(a.vsBaseline ?? 0), Math.abs(a.vsPlacebo ?? 0)),
   );
-  const bytes = passing.map((r) => r.grade?.bundleBytes ?? 0);
-  const ratios = passing
-    .map((r) => {
-      const ref = prereg.referenceBundleBytes[r.meta.taskId];
-      return ref === undefined ? null : (r.grade?.bundleBytes ?? 0) / ref;
-    })
-    .filter((v): v is number => v !== null);
-  const costs = own
-    .map((r) => runCost(r.meta, prereg.pricing))
-    .filter((v): v is number => v !== null);
-  const durations = own.map((r) => runDurationMs(r.meta)).filter((v): v is number => v !== null);
-  const turns = own.map((r) => runTurnCount(r.meta)).filter((v): v is number => v !== null);
-  const fmt = (v: number | null, digits: number): string => (v === null ? '-' : v.toFixed(digits));
-  out(
-    `| ${arm} | ${pct(avg(behaviour))} | ${fmt(avg(bytes), 0)} (${bytes.length}) | ${fmt(avg(ratios), 3)} (${ratios.length}) | ${fmt(avg(costs), 4)} | ${costs.reduce((s, c) => s + c, 0).toFixed(2)} | ${fmt(avg(durations.map((d) => d / 1000)), 0)} | ${fmt(avg(turns), 1)} |`,
-  );
-}
-if (Object.keys(prereg.referenceBundleBytes).length === 0) {
   out();
-  out('사전 등록에 기준 해답 번들 크기(referenceBundleBytes)가 없어 비율은 계산하지 않았다.');
+  out(`### ${cellName(cell)}`);
+  out();
+  if (rows.length === 0) {
+    out('grade.json이 없어 항목을 집계하지 못했다.');
+    continue;
+  }
+  out('| 항목 | 종류 | baseline | skill | placebo | skill − baseline | skill − placebo |');
+  out('|---|---|---|---|---|---|---|');
+  for (const { skillRow, find, vsBaseline, vsPlacebo } of rows) {
+    const cellText = (arm: Arm): string => {
+      const r = find(arm);
+      return r === undefined ? '-' : rate(r.passed, r.runs);
+    };
+    out(
+      `| ${skillRow.id} | ${skillRow.kind} | ${cellText('baseline')} | ${cellText('skill')} | ${cellText('placebo')} | ${pp(vsBaseline)} | ${pp(vsPlacebo)} |`,
+    );
+  }
 }
 
 // 5. 실행 상태
 out();
 out('## 5. 실행 상태');
 out();
-out('| 조건 | 실행 | 정상 종료 | 한도 | 인프라 실패 | 하네스 결함 | 오염 | 오염 비율 |');
-out('|---|---|---|---|---|---|---|---|');
-for (const a of armCounts) {
-  out(
-    `| ${a.arm} | ${a.total} | ${a.byState.completed} | ${a.byState.limit} | ${a.byState.infra} | ${a.byState.harness} | ${a.byState.contaminated} | ${pct(a.contaminatedShare)}${a.contaminatedShare > 0.05 ? ' **5% 초과**' : ''} |`,
-  );
+out(
+  '| 프로젝트 | 모델 | 조건 | 실행 | 정상 종료 | 한도 | 인프라 실패 | 하네스 결함 | 오염 | 오염 비율 | 채점 없음 |',
+);
+out('|---|---|---|---|---|---|---|---|---|---|---|');
+for (const cell of cells) {
+  for (const arm of ARMS) {
+    const a = stateCount(cell.runs, arm);
+    out(
+      `| ${cell.project} | ${modelLabel(cell.model)} | ${arm} | ${a.total} | ${a.byState.completed} | ${a.byState.limit} | ${a.byState.infra} | ${a.byState.harness} | ${a.byState.contaminated} | ${pct(a.contaminatedShare)}${a.contaminatedShare > 0.05 ? ' **5% 초과**' : ''} | ${a.ungraded} |`,
+    );
+  }
 }
 
 // 6. 조작 확인
@@ -265,85 +296,68 @@ const manipulationKeys = [
 out();
 out('## 6. 조작 확인');
 out();
-if (manipulationKeys.length === 0 && runs.every((r) => r.meta.loadedSkills === undefined)) {
-  out('meta.json에 조작 확인 기록(loadedSkills, ranAvailabilityCheck 등)이 없다.');
-} else {
-  out('오염·인프라·하네스 실행을 뺀 실행 가운데 해당 행동을 한 비율이다.');
-  out();
-  out(`| 조건 | Skill 로드 | 외부 접근 시도 | ${manipulationKeys.join(' | ')} |`);
-  out(`|---|---|---|${manipulationKeys.map(() => '---|').join('')}`);
+out(
+  '정상 종료와 한도 실행 가운데 해당 행동을 한 비율이다. 그 값을 기록하지 않은 실행은 분모에서 뺀다.',
+);
+out();
+out(`| 프로젝트 | 모델 | 조건 | Skill 로드 | 외부 접근 시도 | ${manipulationKeys.join(' | ')} |`);
+out(`|---|---|---|---|---|${manipulationKeys.map(() => '---|').join('')}`);
+for (const cell of cells) {
   for (const arm of ARMS) {
-    const own = runs.filter(
+    const own = cell.runs.filter(
       (r) => r.meta.arm === arm && (r.meta.state === 'completed' || r.meta.state === 'limit'),
     );
-    const loaded = own.filter((r) => r.meta.loadedSkills !== undefined);
-    const rate = (keyRuns: readonly RunRecord[], hit: (r: RunRecord) => boolean): string =>
-      keyRuns.length === 0
-        ? '-'
-        : `${pct(keyRuns.filter(hit).length / keyRuns.length)} (${keyRuns.length})`;
-    const cells = manipulationKeys.map((key) => {
-      const withKey = own.filter((r) => manipulationFlags(r.meta)[key] !== undefined);
-      return rate(withKey, (r) => manipulationFlags(r.meta)[key] === true);
-    });
-    const network = own.filter((r) => r.meta.networkAttempts !== undefined);
+    const share = (pick: (r: RunRecord) => boolean | undefined): string => {
+      const known = own.map(pick).filter((v): v is boolean => v !== undefined);
+      return rate(known.filter((v) => v).length, known.length);
+    };
+    const flags = manipulationKeys.map((key) => share((r) => manipulationFlags(r.meta)[key]));
+    const loaded = share((r) =>
+      r.meta.loadedSkills === undefined ? undefined : r.meta.loadedSkills.length > 0,
+    );
+    const network = share((r) =>
+      r.meta.networkAttempts === undefined ? undefined : r.meta.networkAttempts.length > 0,
+    );
     out(
-      `| ${arm} | ${rate(loaded, (r) => (r.meta.loadedSkills?.length ?? 0) > 0)} | ${rate(network, (r) => (r.meta.networkAttempts?.length ?? 0) > 0)} | ${cells.join(' | ')} |`,
+      `| ${cell.project} | ${modelLabel(cell.model)} | ${arm} | ${loaded} | ${network} | ${flags.join(' | ')} |`,
     );
   }
 }
 
-// 7. 재분류 항목
+// 7. 비용·시간·턴
 out();
-out('## 7. 재분류된 항목');
+out('## 7. 비용·시간·턴 (판정하지 않음)');
 out();
-const reclassified = runs.flatMap((r) =>
-  (r.grade?.items ?? [])
-    .filter((i) => i.reclassify === true)
-    .map((i) => ({ run: r.meta, item: i })),
-);
-if (reclassified.length === 0) {
-  out('S에서 D로 재분류된 항목이 없다.');
-} else {
-  out(
-    '에이전트가 범위 안의 유효한 반례를 낸 S 항목이다. 재분류는 모든 조건에 똑같이 적용한다(설계 6.2).',
-  );
-  out();
-  out('| 실행 | 조건 | 항목 | 함수 |');
-  out('|---|---|---|---|');
-  for (const { run, item } of reclassified)
-    out(`| ${run.runId} | ${run.arm} | ${item.name} | ${item.fn} |`);
-}
-
-// 8. 판정 절차 검증
+out('오염 실행을 뺀 모든 실행의 두 턴 합이다. 단가는 사전 등록의 모델별 값(1M 토큰당 USD)이다.');
 out();
-out('## 8. 판정 절차 자체의 검증 (설계 8.2)');
-out();
-out(
-  `baseline 실행만 쓴다. 판정은 1절과 같은 절차(Holm 4개 포함)이고, 검증 대상 가설 하나만 데이터를 넣고 나머지 셋은 p = 1로 둔다. 반복 ${iterations}회.`,
-);
-const strengths = [0.1, 0.2, 0.3, 0.5];
-for (const purpose of ['p1', 'p2'] as const) {
-  const itemRuns = itemRunsByTask(runs, prereg.tasks[purpose], 'baseline', purpose);
-  const split = splitHalfCheck(itemRuns, iterations, alpha, delta, 1);
-  out();
-  out(`### ${purpose === 'p1' ? '목적 1' : '목적 2'}`);
-  out();
-  if (split.tasks === 0) {
-    out('baseline 실행이 2개 이상인 과제가 없어 계산하지 않았다.');
-    continue;
-  }
-  out(
-    `- 반분 재표집 (과제 ${split.tasks}개): 차이 없는 데이터에서 높음·낮음 판정 비율 ${pct(split.directionalRate)}, 동등 판정 비율 ${pct(split.equivalentRate)}. 분할끼리 독립이 아니므로 오판정률 추정치가 아니라 구현 확인용이다.`,
-  );
-  out();
-  out('| 처리 쪽 0점 항목을 1점으로 바꾼 확률 | 실제로 들어간 평균 차이 | 높음 판정 비율 |');
-  out('|---|---|---|');
-  for (const point of injectedPowerCurve(itemRuns, strengths, iterations, alpha, delta, 2)) {
+out('| 프로젝트 | 모델 | 조건 | 평균 비용(USD) | 총 비용(USD) | 평균 시간(분) | 평균 턴 |');
+out('|---|---|---|---|---|---|---|');
+let grandTotal = 0;
+for (const cell of cells) {
+  const pricing = prereg.pricing[cell.model];
+  for (const arm of ARMS) {
+    const own = cell.runs.filter((r) => r.meta.arm === arm && r.meta.state !== 'contaminated');
+    const costs =
+      pricing === undefined
+        ? []
+        : own.map((r) => runCost(r.meta, pricing)).filter((v): v is number => v !== null);
+    const total = costs.reduce((s, c) => s + c, 0);
+    grandTotal += total;
+    const minutes = own
+      .map((r) => runDurationMs(r.meta))
+      .filter((v): v is number => v !== null)
+      .map((ms) => ms / 60_000);
+    const turns = own.map((r) => runTurnCount(r.meta)).filter((v): v is number => v !== null);
     out(
-      `| ${(point.strength * 100).toFixed(0)}% | ${pp(point.injectedDifference)} | ${pct(point.detectionRate)} |`,
+      `| ${cell.project} | ${modelLabel(cell.model)} | ${arm} | ${num(avg(costs), 4)} | ${total.toFixed(2)} | ${num(avg(minutes), 1)} | ${num(avg(turns), 1)} |`,
     );
   }
 }
+out();
+out(`분석 범위 실행의 총 비용: ${grandTotal.toFixed(2)} USD.`);
+
+const analysed = runs.filter((r) => inScope.has(r.meta.runId) && runScore(r) !== null).length;
+out(`판정에 쓴 실행: ${analysed}개.`);
 
 writeFileSync(join(outRoot, 'report.md'), `${lines.join('\n')}\n`, 'utf8');
 console.log(lines.join('\n'));

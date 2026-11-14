@@ -1,0 +1,43 @@
+{
+  "swagger": "2.0",
+  "info": { "title": "Legacy store", "version": "0.9" },
+  "host": "legacy.example.com",
+  "basePath": "/v1",
+  "schemes": ["https"],
+  "consumes": ["application/json"],
+  "produces": ["application/json"],
+  "paths": {
+    "/orders/{order_id}": {
+      "parameters": [
+        { "name": "order_id", "in": "path", "required": true, "type": "string" }
+      ],
+      "put": {
+        "operationId": "updateOrder",
+        "consumes": ["application/x-www-form-urlencoded", "application/x-www-form-urlencoded"],
+        "parameters": [
+          { "name": "note", "in": "formData", "type": "string" },
+          { "name": "qty", "in": "formData", "type": "integer" }
+        ],
+        "responses": {
+          "200": { "description": "ok", "schema": { "$ref": "#/definitions/Order" } }
+        }
+      },
+      "get": {
+        "operationId": "getOrder",
+        "responses": {
+          "200": { "description": "ok", "schema": { "$ref": "#/definitions/Order" } }
+        }
+      }
+    }
+  },
+  "definitions": {
+    "Order": {
+      "type": "object",
+      "properties": {
+        "id": { "type": "string" },
+        "coupon": { "type": "string", "x-nullable": true },
+        "total": { "type": "number" }
+      }
+    }
+  }
+}

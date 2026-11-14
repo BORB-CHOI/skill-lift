@@ -9,3 +9,6 @@ vendor
 sealed
 revealed
 runs
+
+# 숨김 검사는 대상 프로젝트에 그대로 복사해 쓰므로 이 저장소의 포맷을 적용하지 않는다.
+suites/es-toolkit/projects/*/hidden

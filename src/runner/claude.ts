@@ -7,8 +7,7 @@
  *   거부 목록을 모든 arm에 똑같이 준다.
  * - 프롬프트는 인자가 아니라 stdin으로 넘긴다. 셸 인코딩의 영향을 받지 않는다.
  * - 타임아웃 때는 에이전트가 띄운 자식 프로세스까지 종료한다.
- * - 실행 하나는 두 턴이다. 두 번째 턴은 `--resume <session_id>`로 같은 세션을 잇는다.
- *   그래서 `--no-session-persistence`를 쓰지 않는다(세션이 저장돼야 이어 받을 수 있다).
+ * - 실행 하나는 한 턴이다. `--resume <session_id>`는 이어 받기가 필요할 때를 위해 남겨 둔다.
  */
 import { spawn } from 'node:child_process';
 
@@ -80,9 +79,20 @@ export const DISALLOWED_TOOLS = [
   'Bash(npm i:*)',
   'Bash(npm view:*)',
   'Bash(npm info:*)',
+  'Bash(npm ci:*)',
   'Bash(pnpm:*)',
-  'Bash(yarn:*)',
-  'Bash(git:*)',
+  // 프로젝트 단위 과제에서는 개발자처럼 git status·diff와 yarn 스크립트를 쓸 수 있어야 한다.
+  // 원격에 닿는 하위 명령과 패키지 설치만 막는다. 프록시도 함께 막는다.
+  'Bash(yarn add:*)',
+  'Bash(yarn install:*)',
+  'Bash(yarn dlx:*)',
+  'Bash(yarn up:*)',
+  'Bash(git fetch:*)',
+  'Bash(git pull:*)',
+  'Bash(git push:*)',
+  'Bash(git clone:*)',
+  'Bash(git remote:*)',
+  'Bash(git submodule:*)',
 ] as const;
 
 export interface RunConfig {

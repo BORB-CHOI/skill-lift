@@ -1,113 +1,141 @@
 /**
- * 에이전트가 작업할 폴더를 실행마다 새로 만든다.
+ * 실행마다 쓰는 프로젝트 작업 폴더.
  *
- * 과제의 src/와 미리 설치한 의존성의 사본만 넣는다. 비공개 채점 자료는 넣지 않는다.
- * 의존성은 폴더를 연결하지 않고 복사한다. 연결해 공유하면 에이전트가 node_modules 안에
- * 만든 파일이 다음 실행에 남는다(시험 실행에서 관측).
+ * 1. 고정 사본(fixture)을 새 임시 폴더로 통째로 복사한다. node_modules와 .git도 포함한다.
+ *    연결(심볼릭 링크·정션)로 공유하지 않는다. 에이전트가 node_modules를 고치면 다음 실행에 남는다.
+ * 2. 실행이 끝나면 base 태그 대비 변경을 changes.patch로 저장한다. node_modules는 패치에 넣지 않는다.
+ * 3. 작업 폴더를 지운다. 채점은 새 사본에 패치를 적용해서 따로 한다.
  */
+import { execFileSync, spawnSync } from 'node:child_process';
+import { createHash } from 'node:crypto';
 import {
-  copyFileSync,
   cpSync,
   existsSync,
   mkdirSync,
   mkdtempSync,
+  readdirSync,
   readFileSync,
+  rmSync,
   writeFileSync,
 } from 'node:fs';
 import { tmpdir } from 'node:os';
-import { dirname, join, relative, sep } from 'node:path';
+import { join } from 'node:path';
+
+/** 고정 사본의 기준 커밋을 가리키는 태그. scripts/prepare-fixtures.ts가 만든다. */
+export const BASE_TAG = 'base';
+
+/** robocopy 종료 코드 0~7은 성공(복사·추가 파일 있음 등), 8 이상은 실패다. */
+const ROBOCOPY_FAILURE = 8;
 
 /**
- * 작업 폴더에 설치하는 패키지와 버전(설계 7절). 버전이 null이면 설치 여부만 확인한다.
- * 의존성 폴더에 다른 패키지(예: esbuild)가 있어도 복사하지 않는다.
+ * src를 dest로 복사한다. Windows에서는 robocopy /MIR /MT:16을 쓴다.
+ * cpSync는 node_modules(파일 수만 개) 복사가 robocopy보다 몇 배 느리다.
  */
-export const WORKSPACE_PACKAGES: Readonly<Record<string, string | null>> = {
-  lodash: '4.18.1',
-  '@types/lodash': null,
-  'es-toolkit': '1.53.2',
-  typescript: null,
-};
-
-const TSCONFIG = {
-  compilerOptions: {
-    strict: true,
-    noEmit: true,
-    target: 'ES2022',
-    module: 'ESNext',
-    moduleResolution: 'Bundler',
-    esModuleInterop: true,
-    skipLibCheck: true,
-    types: [],
-  },
-  include: ['src', 'out'],
-};
-
-function installedVersion(depsNodeModules: string, name: string): string | null {
-  const file = join(depsNodeModules, name, 'package.json');
-  if (!existsSync(file)) return null;
-  const pkg = JSON.parse(readFileSync(file, 'utf8')) as { version?: unknown };
-  return typeof pkg.version === 'string' ? pkg.version : null;
-}
-
-/**
- * 의존성 폴더에 필요한 패키지가 정해진 버전으로 있는지 확인하고, 실제 버전을 돌려준다.
- * 하나라도 없거나 버전이 다르면 실행 전에 실패한다.
- */
-export function verifyDeps(depsNodeModules: string): Record<string, string> {
-  const versions: Record<string, string> = {};
-  for (const [name, expected] of Object.entries(WORKSPACE_PACKAGES)) {
-    const actual = installedVersion(depsNodeModules, name);
-    if (actual === null) throw new Error(`${depsNodeModules}에 ${name}이 없다`);
-    if (expected !== null && actual !== expected) {
-      throw new Error(`${name} 버전이 ${actual}이다. ${expected}이어야 한다`);
+export function copyTree(src: string, dest: string): void {
+  if (process.platform === 'win32') {
+    const result = spawnSync(
+      'robocopy',
+      [src, dest, '/MIR', '/MT:16', '/R:1', '/W:1', '/NFL', '/NDL', '/NJH', '/NJS', '/NP'],
+      { stdio: ['ignore', 'pipe', 'pipe'], windowsHide: true },
+    );
+    const code = result.status;
+    if (code === null || code >= ROBOCOPY_FAILURE) {
+      throw new Error(
+        `robocopy ${src} → ${dest} 실패(종료 코드 ${String(code)}): ${result.stdout.toString('utf8').slice(0, 500)}`,
+      );
     }
-    versions[name] = actual;
+    return;
   }
-  return versions;
+  cpSync(src, dest, { recursive: true, verbatimSymlinks: true });
 }
 
-/** node_modules 안의 경로가 설치 대상 패키지(와 그 실행 파일 shim)에 속하는지. */
-function isWorkspacePackagePath(depsNodeModules: string, path: string): boolean {
-  const rel = relative(depsNodeModules, path).split(sep).join('/');
-  if (rel === '' || rel === '.bin' || rel === '@types') return true;
-  if (rel.startsWith('.bin/')) {
-    // typescript의 tsc·tsserver shim만 남긴다.
-    return /^\.bin\/(?:tsc|tsserver)(?:\.cmd|\.ps1)?$/.test(rel);
-  }
-  return Object.keys(WORKSPACE_PACKAGES).some((name) => rel === name || rel.startsWith(`${name}/`));
+/** 폴더를 지운다. 걸린 시간(ms)을 돌려준다. */
+export function removeTree(dir: string): number {
+  const started = Date.now();
+  rmSync(dir, { recursive: true, force: true, maxRetries: 5, retryDelay: 500 });
+  return Date.now() - started;
+}
+
+export interface ProjectWorkspace {
+  readonly dir: string;
+  /** 고정 사본을 복사하는 데 걸린 시간. */
+  readonly copyMs: number;
 }
 
 /**
- * @param taskDir 과제의 공개 폴더. src/만 복사한다.
- * @param depsNodeModules 미리 설치한 의존성의 node_modules 경로
- * @param versions verifyDeps가 돌려준 버전. package.json의 dependencies에 적는다.
+ * 고정 사본을 새 임시 폴더로 복사한다.
+ * @param root 임시 폴더를 만들 위치. 기본은 OS 임시 폴더다. 저장소 안이면 안 된다.
  */
-export function prepareWorkspace(
-  taskDir: string,
-  depsNodeModules: string,
-  versions: Readonly<Record<string, string>>,
-): string {
-  const dir = mkdtempSync(join(tmpdir(), 'skill-eval-'));
-  cpSync(join(taskDir, 'src'), join(dir, 'src'), { recursive: true });
-  // Skill은 "es-toolkit에 의존하는 패키지"에서 확인 명령을 돌리라고 한다. 실제 프로젝트처럼 의존성을 적는다.
-  const packageJson = { name: 'fixture', private: true, type: 'module', dependencies: versions };
-  writeFileSync(join(dir, 'package.json'), `${JSON.stringify(packageJson, null, 2)}\n`, 'utf8');
-  writeFileSync(join(dir, 'tsconfig.json'), `${JSON.stringify(TSCONFIG, null, 2)}\n`, 'utf8');
-  cpSync(depsNodeModules, join(dir, 'node_modules'), {
-    recursive: true,
-    filter: (source) => isWorkspacePackagePath(depsNodeModules, source),
-  });
-  return dir;
+export function prepareProjectWorkspace(fixtureDir: string, root = tmpdir()): ProjectWorkspace {
+  if (!existsSync(join(fixtureDir, '.git'))) throw new Error(`${fixtureDir}에 .git이 없다`);
+  if (!existsSync(join(fixtureDir, 'node_modules'))) {
+    throw new Error(`${fixtureDir}에 node_modules가 없다`);
+  }
+  mkdirSync(root, { recursive: true });
+  const dir = mkdtempSync(join(root, 'skill-eval-'));
+  const started = Date.now();
+  copyTree(fixtureDir, dir);
+  return { dir, copyMs: Date.now() - started };
+}
+
+function git(ws: string, args: readonly string[]): Buffer {
+  return execFileSync(
+    'git',
+    ['-C', ws, '-c', 'core.autocrlf=false', '-c', 'core.quotepath=false', ...args],
+    { maxBuffer: 1024 * 1024 * 1024, stdio: ['ignore', 'pipe', 'pipe'], windowsHide: true },
+  );
 }
 
 /**
- * 작업 폴더의 산출물을 실행 폴더로 복사한다. 없으면 false를 돌려준다.
- * 바이트를 그대로 복사한다. 줄바꿈 정리는 채점기가 한다.
+ * diff에서 node_modules를 빼는 pathspec. 고정 사본의 info/exclude가 1차로 막고 이것이 2차로 막는다.
+ * add에는 쓰지 않는다. 무시된 경로를 pathspec에 적으면 git add가 오류로 끝난다.
  */
-export function copyArtifact(workspace: string, relPath: string, destination: string): boolean {
-  const source = join(workspace, relPath);
-  if (!existsSync(source)) return false;
-  mkdirSync(dirname(destination), { recursive: true });
-  copyFileSync(source, destination);
-  return true;
+const PATHSPEC = ['--', '.', ':(exclude)node_modules', ':(exclude)**/node_modules/**'] as const;
+
+export interface SavedChanges {
+  readonly patchBytes: number;
+  /** base 대비 바뀐 파일. `<상태>\t<경로>` 형식(git diff --name-status). */
+  readonly changedFiles: readonly string[];
+}
+
+/**
+ * 작업 폴더의 변경(추적되지 않던 새 파일 포함)을 base 태그 대비 바이너리 패치로 저장한다.
+ * 에이전트는 git을 쓸 수 없으므로 인덱스는 base 그대로다. 여기서 전부 스테이징한 뒤 비교한다.
+ */
+export function saveChanges(ws: string, patchFile: string): SavedChanges {
+  git(ws, ['add', '-A']);
+  const diffArgs = ['diff', '--cached', '--no-ext-diff', '--no-color', BASE_TAG];
+  const patch = git(ws, [...diffArgs, '--binary', ...PATHSPEC]);
+  const names = git(ws, [...diffArgs, '--name-status', ...PATHSPEC]).toString('utf8');
+  writeFileSync(patchFile, patch);
+  return {
+    patchBytes: patch.byteLength,
+    changedFiles: names.split('\n').filter((line) => line.trim() !== ''),
+  };
+}
+
+function hashFile(path: string): string {
+  return existsSync(path) ? createHash('sha256').update(readFileSync(path)).digest('hex') : 'none';
+}
+
+/**
+ * node_modules를 에이전트가 건드렸는지 싸게 확인하는 지문.
+ * es-toolkit·lodash의 package.json 해시와 최상위(스코프는 한 단계 더) 폴더 목록을 합친다.
+ * 패키지를 지우거나 버전을 바꾸면 달라진다. 패키지 안의 파일 수정까지는 잡지 못한다.
+ */
+export function nodeModulesFingerprint(ws: string): string {
+  const nm = join(ws, 'node_modules');
+  if (!existsSync(nm)) return 'missing';
+  const entries: string[] = [];
+  for (const name of readdirSync(nm).sort()) {
+    entries.push(name);
+    if (name.startsWith('@')) {
+      for (const sub of readdirSync(join(nm, name)).sort()) entries.push(`${name}/${sub}`);
+    }
+  }
+  return createHash('sha256')
+    .update(hashFile(join(nm, 'es-toolkit/package.json')))
+    .update(hashFile(join(nm, 'lodash/package.json')))
+    .update(entries.join('\n'))
+    .digest('hex');
 }

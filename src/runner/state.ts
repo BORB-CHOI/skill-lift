@@ -55,23 +55,14 @@ export function classifyRun(outcome: RunOutcome, arm: ArmExpectation): RunState 
 }
 
 /**
- * 두 턴의 상태와 네트워크 검사 결과로 실행 하나의 상태를 정한다.
+ * 턴 상태와 네트워크 검사 결과로 실행 하나의 상태를 정한다.
  *
- * 1. 어느 턴이든 infra·harness면 그 상태다. 실행 전체를 다시 한다.
- * 2. 네트워크 접근 시도가 있으면 contaminated다. 한도에 걸린 실행이어도 오염이 우선한다.
- * 3. 어느 턴이든 contaminated(대조 arm에 대상 Skill 로드)면 contaminated다.
- * 4. 어느 턴이든 limit면 limit다. 첫 턴이 limit면 두 번째 턴은 실행하지 않으므로 turn2는 null이다.
- * 5. 그 밖에는 completed다. 첫 턴이 끝났는데 두 번째 턴이 없으면 하네스 결함이다.
+ * 1. infra·harness면 그 상태다. 실행 전체를 다시 한다.
+ * 2. 프록시를 우회할 수 있는 접근 시도가 있으면 contaminated다. 한도에 걸린 실행이어도 오염이 우선한다.
+ * 3. 그 밖에는 턴 상태 그대로다(completed, limit, 대조 arm에 대상 Skill이 로드된 contaminated).
  */
-export function combineTurns(
-  turn1: RunState,
-  turn2: RunState | null,
-  networkAttempts: number,
-): RunState {
-  const states = turn2 === null ? [turn1] : [turn1, turn2];
-  if (states.includes('infra')) return 'infra';
-  if (states.includes('harness')) return 'harness';
-  if (networkAttempts > 0 || states.includes('contaminated')) return 'contaminated';
-  if (states.includes('limit')) return 'limit';
-  return turn2 === null ? 'harness' : 'completed';
+export function finalState(turn: RunState, bypassAttempts: number): RunState {
+  if (turn === 'infra' || turn === 'harness') return turn;
+  if (bypassAttempts > 0) return 'contaminated';
+  return turn;
 }

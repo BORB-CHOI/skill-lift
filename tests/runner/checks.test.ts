@@ -1,5 +1,9 @@
 import { describe, expect, it } from 'vitest';
-import { manipulationChecks, scanNetworkAttempts } from '../../src/runner/checks.js';
+import {
+  manipulationChecks,
+  scanAnswerAccess,
+  scanNetworkAttempts,
+} from '../../src/runner/checks.js';
 import type { ToolUse } from '../../src/runner/stream.js';
 
 const bash = (command: string): ToolUse => ({ name: 'Bash', input: { command } });
@@ -28,7 +32,19 @@ describe('scanNetworkAttempts', () => {
 
   it('WebFetch·WebSearch 사용은 이름만으로 잡는다', () => {
     const found = scanNetworkAttempts([{ name: 'WebFetch', input: { url: 'x' } }], 2);
-    expect(found).toEqual([{ turn: 2, tool: 'WebFetch', pattern: 'WebFetch', excerpt: 'x' }]);
+    expect(found).toEqual([
+      { turn: 2, tool: 'WebFetch', pattern: 'WebFetch', excerpt: 'x', bypassesProxy: true },
+    ]);
+  });
+
+  it('입력 문자열의 XMLHttpRequest는 잡지 않고 생성자 호출만 잡는다', () => {
+    const asInput = scanNetworkAttempts(
+      [bash(`node -e "console.log(camelCase('XMLHttpRequest'))"`)],
+      1,
+    );
+    expect(asInput).toEqual([]);
+    const asCall = scanNetworkAttempts([bash('node -e "new XMLHttpRequest()"')], 1);
+    expect(asCall.map((e) => e.pattern)).toEqual(['XMLHttpRequest']);
   });
 
   it('설치된 실행 파일을 부르는 npx와 평범한 명령은 잡지 않는다', () => {
@@ -50,6 +66,41 @@ describe('scanNetworkAttempts', () => {
 
   it('읽기 도구의 입력은 보지 않는다', () => {
     expect(scanNetworkAttempts([read('https://example.com')], 1)).toEqual([]);
+  });
+});
+
+describe('scanAnswerAccess', () => {
+  it('작업 폴더 밖 정답 자료 접근을 잡는다', () => {
+    const found = scanAnswerAccess([
+      { name: 'Bash', input: { command: 'git -C D:\\Develop\\eval-projects\\recharts log --all' } },
+      {
+        name: 'Read',
+        input: { file_path: 'C:/Users/u/AppData/Local/Temp/claude/x/scratchpad/pr5811.diff' },
+      },
+      { name: 'Grep', input: { pattern: 'x', path: 'D:/Develop/GitHub/skill-route-eval/suites' } },
+    ]);
+    expect(found.map((f) => f.pattern)).toEqual([
+      'upstream checkout',
+      'claude temp',
+      'human PR diff',
+      'eval repo',
+    ]);
+  });
+
+  it('작업 폴더 안의 평범한 탐색과 에이전트 자신의 임시 폴더는 잡지 않는다', () => {
+    const found = scanAnswerAccess([
+      {
+        name: 'Read',
+        input: {
+          file_path:
+            'C:/Users/u/AppData/Local/Temp/claude/C--Users-u-AppData-Local-Temp-skill-eval-dwW2w1/e3a4/tasks/b1.output',
+        },
+      },
+      { name: 'Bash', input: { command: 'git status && git diff' } },
+      { name: 'Read', input: { file_path: 'node_modules/es-toolkit/dist/compat/index.d.ts' } },
+      { name: 'Grep', input: { pattern: "from 'lodash", path: 'src' } },
+    ]);
+    expect(found).toEqual([]);
   });
 });
 

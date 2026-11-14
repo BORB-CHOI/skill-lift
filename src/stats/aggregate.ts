@@ -1,38 +1,25 @@
 /**
- * 실행 결과(meta.json, grade.json)를 과제·조건 단위 점수로 모은다 (설계 6절, 8절).
+ * 실행 결과(meta.json, grade.json)를 실행 단위 점수로 모은다.
  *
- * 실행 점수는 그 실행의 항목 평균이다(grade.json의 p1, p2).
- * - completed: grade.json의 값을 쓴다. grade.json이 없으면 결측으로 둔다.
- * - limit: 두 목적 모두 0점이다.
+ * 분석 단위는 실행이다. (프로젝트, 모델, 조건)마다 독립 실행 K개가 있고, 실행 점수는 그 실행에서
+ * 통과한 채점 항목의 비율(grade.json의 score)이다.
+ * - completed: grade.json의 score를 쓴다. grade.json이 없으면 결측으로 둔다.
+ * - limit: 0점으로 넣는다.
  * - contaminated: 분석에서 뺀다.
  * - infra, harness: 결측이다.
- * 과제·조건 점수는 실행 점수의 평균이고, 과제별 차이는 skill − 대조다.
  */
-import type { ControlArm, Purpose } from './decision.js';
 import { mean } from './paired.js';
 
 export type Arm = 'baseline' | 'skill' | 'placebo';
+export const ARMS: readonly Arm[] = ['baseline', 'skill', 'placebo'];
 export type RunStateName = 'completed' | 'limit' | 'infra' | 'contaminated' | 'harness';
-export type ItemType = 'S' | 'D' | 'C';
-
-export interface RunMeta {
-  readonly runId: string;
-  readonly taskId: string;
-  readonly arm: Arm;
-  readonly repeat: number;
-  readonly state: RunStateName;
-  /** 턴별 기록. 본 실행은 두 턴이다. */
-  readonly turns?: readonly TurnRecord[];
-  /** 첫 턴 init 메시지에 로드된 Skill 이름. */
-  readonly loadedSkills?: readonly string[];
-  /** 조작 확인 지표 (설계 6.4). */
-  readonly ranAvailabilityCheck?: boolean;
-  readonly readEsToolkitSource?: boolean;
-  readonly ranLodashComparison?: boolean;
-  readonly networkAttempts?: readonly unknown[];
-  /** 추가 조작 확인 지표. 키마다 그 행동을 했는지. */
-  readonly manipulation?: Readonly<Record<string, boolean>>;
-}
+export const RUN_STATES: readonly RunStateName[] = [
+  'completed',
+  'limit',
+  'infra',
+  'contaminated',
+  'harness',
+];
 
 export interface TokenUsage {
   readonly input: number;
@@ -45,6 +32,138 @@ export interface TurnRecord {
   readonly usage?: TokenUsage | null;
   readonly durationMs?: number | null;
   readonly numTurns?: number | null;
+}
+
+export interface RunMeta {
+  /** 실행 폴더 이름. meta.json에 없으면 load-runs가 폴더 이름으로 채운다. */
+  readonly runId: string;
+  /** 프로젝트 이름 (예: recharts). */
+  readonly taskId: string;
+  readonly arm: Arm;
+  readonly repeat: number;
+  readonly state: RunStateName;
+  /** 첫 턴 init 메시지에 찍힌 모델 ID. */
+  readonly model?: string | null;
+  /** 실행기에 넘긴 모델 ID. 있으면 이 값으로 모델을 가른다. */
+  readonly requestedModel?: string | null;
+  readonly turns?: readonly TurnRecord[];
+  /** 첫 턴 init 메시지에 로드된 Skill 이름. */
+  readonly loadedSkills?: readonly string[];
+  readonly ranAvailabilityCheck?: boolean;
+  readonly readEsToolkitSource?: boolean;
+  readonly ranLodashComparison?: boolean;
+  readonly networkAttempts?: readonly unknown[];
+  /** 추가 조작 확인 지표. 키마다 그 행동을 했는지. */
+  readonly manipulation?: Readonly<Record<string, boolean>>;
+}
+
+export interface GradeItem {
+  readonly id: string;
+  readonly kind: string;
+  readonly pass: boolean;
+}
+
+export interface Grade {
+  readonly project: string;
+  readonly items: readonly GradeItem[];
+  /** 통과한 항목의 비율, 0..1. */
+  readonly score: number;
+}
+
+export interface RunRecord {
+  readonly meta: RunMeta;
+  /** grade.json이 있을 때만 있다. */
+  readonly grade: Grade | null;
+}
+
+/** 실행의 모델 ID. 실행기에 넘긴 값을 먼저 쓴다. */
+export const runModel = (meta: RunMeta): string | null => meta.requestedModel ?? meta.model ?? null;
+
+/** 실행 하나의 점수. null은 분석에서 빠지는 실행이다. */
+export function runScore(run: RunRecord): number | null {
+  switch (run.meta.state) {
+    case 'limit':
+      return 0;
+    case 'completed':
+      return run.grade === null ? null : run.grade.score;
+    case 'contaminated':
+    case 'infra':
+    case 'harness':
+      return null;
+  }
+}
+
+/** (프로젝트, 모델)에 속한 실행. */
+export function cellRuns(runs: readonly RunRecord[], project: string, model: string): RunRecord[] {
+  return runs.filter((r) => r.meta.taskId === project && runModel(r.meta) === model);
+}
+
+/** 한 조건의 분석 대상 실행 점수. 회차 순서로 낸다. */
+export function armScores(runs: readonly RunRecord[], arm: Arm): number[] {
+  return runs
+    .filter((r) => r.meta.arm === arm)
+    .sort((a, b) => a.meta.repeat - b.meta.repeat)
+    .map(runScore)
+    .filter((v): v is number => v !== null);
+}
+
+export interface Summary {
+  readonly n: number;
+  readonly mean: number | null;
+  /** 표본 표준편차(n − 1). 실행이 2개 미만이면 null. */
+  readonly sd: number | null;
+}
+
+export function summarize(values: readonly number[]): Summary {
+  if (values.length === 0) return { n: 0, mean: null, sd: null };
+  const m = mean(values);
+  if (values.length < 2) return { n: values.length, mean: m, sd: null };
+  const ss = values.reduce((s, v) => s + (v - m) ** 2, 0);
+  return { n: values.length, mean: m, sd: Math.sqrt(ss / (values.length - 1)) };
+}
+
+export interface ItemPassRate {
+  readonly id: string;
+  readonly kind: string;
+  readonly passed: number;
+  /** 분석 대상 실행 수. limit 실행은 모든 항목을 통과하지 못한 것으로 센다. */
+  readonly runs: number;
+}
+
+/**
+ * 조건 하나의 항목별 통과 수. 점수와 같은 실행을 쓴다: completed(grade 있음)와 limit.
+ * limit 실행은 점수 0과 맞추려고 모든 항목을 실패로 센다. 항목 목록은 grade.json에서 모은다.
+ */
+export function itemPassRates(runs: readonly RunRecord[], arm: Arm): ItemPassRate[] {
+  const own = runs.filter((r) => r.meta.arm === arm && runScore(r) !== null);
+  const kinds = new Map<string, string>();
+  for (const run of runs) for (const item of run.grade?.items ?? []) kinds.set(item.id, item.kind);
+  return [...kinds.entries()]
+    .sort(([a], [b]) => a.localeCompare(b))
+    .map(([id, kind]) => {
+      let passed = 0;
+      let counted = 0;
+      for (const run of own) {
+        if (run.meta.state === 'limit') {
+          counted++;
+          continue;
+        }
+        const item = run.grade?.items.find((i) => i.id === id);
+        if (item === undefined) continue;
+        counted++;
+        if (item.pass) passed++;
+      }
+      return { id, kind, passed, runs: counted };
+    });
+}
+
+/** 항목 수의 중앙값. grade.json이 없으면 null. */
+export function medianItemCount(runs: readonly RunRecord[]): number | null {
+  const counts = runs
+    .map((r) => r.grade?.items.length)
+    .filter((v): v is number => v !== undefined && v > 0)
+    .sort((a, b) => a - b);
+  return counts.length === 0 ? null : (counts[Math.floor(counts.length / 2)] ?? null);
 }
 
 const MANIPULATION_KEYS = [
@@ -76,125 +195,6 @@ export const runDurationMs = (meta: RunMeta): number | null => sumTurns(meta, (t
 
 /** 모든 턴의 에이전트 턴 수 합. 기록이 없으면 null. */
 export const runTurnCount = (meta: RunMeta): number | null => sumTurns(meta, (t) => t.numTurns);
-
-export interface GradeItem {
-  readonly name: string;
-  readonly fn: string;
-  readonly type: ItemType;
-  readonly p1: { readonly score: number };
-  readonly p2: { readonly score: number };
-  readonly reclassify?: boolean;
-}
-
-export interface Grade {
-  readonly items: readonly GradeItem[];
-  readonly p1: number;
-  readonly p2: number;
-  readonly behaviourOnly: number;
-  readonly bundleBytes: number | null;
-}
-
-export interface RunRecord {
-  readonly meta: RunMeta;
-  /** completed이고 grade.json이 있을 때만 있다. */
-  readonly grade: Grade | null;
-}
-
-/** 실행 하나의 목적별 점수. null은 분석에서 빠지는 실행이다. */
-export function runScore(run: RunRecord, purpose: Purpose): number | null {
-  switch (run.meta.state) {
-    case 'limit':
-      return 0;
-    case 'completed':
-      return run.grade === null ? null : run.grade[purpose];
-    case 'contaminated':
-    case 'infra':
-    case 'harness':
-      return null;
-  }
-}
-
-/** 과제·조건별 점수 = 실행 점수의 평균. 점수가 있는 실행이 없으면 null. */
-export function taskArmMean(
-  runs: readonly RunRecord[],
-  taskId: string,
-  arm: Arm,
-  purpose: Purpose,
-): number | null {
-  const values = runs
-    .filter((r) => r.meta.taskId === taskId && r.meta.arm === arm)
-    .map((r) => runScore(r, purpose))
-    .filter((v): v is number => v !== null);
-  return values.length === 0 ? null : mean(values);
-}
-
-export interface PairedTask {
-  readonly taskId: string;
-  readonly skill: number;
-  readonly control: number;
-  readonly difference: number;
-}
-
-export interface PairedSet {
-  readonly pairs: readonly PairedTask[];
-  /** 한쪽 조건 점수가 없어 뺀 과제. */
-  readonly dropped: readonly string[];
-}
-
-/** 사전 등록한 과제 집합에서 skill − 대조 차이를 만든다. */
-export function pairTasks(
-  runs: readonly RunRecord[],
-  taskIds: readonly string[],
-  control: ControlArm,
-  purpose: Purpose,
-): PairedSet {
-  const pairs: PairedTask[] = [];
-  const dropped: string[] = [];
-  for (const taskId of taskIds) {
-    const skill = taskArmMean(runs, taskId, 'skill', purpose);
-    const ctrl = taskArmMean(runs, taskId, control, purpose);
-    if (skill === null || ctrl === null) {
-      dropped.push(taskId);
-      continue;
-    }
-    pairs.push({ taskId, skill, control: ctrl, difference: skill - ctrl });
-  }
-  return { pairs, dropped };
-}
-
-/** 6.2의 재분류를 반영한 항목 유형. 재분류된 S 항목은 D로 센다. */
-export function effectiveType(item: GradeItem): ItemType {
-  return item.reclassify === true ? 'D' : item.type;
-}
-
-export interface TypeBreakdown {
-  readonly type: ItemType;
-  readonly items: number;
-  readonly mean: number | null;
-}
-
-/**
- * 조건 하나의 목적 2 점수를 항목 유형별로 낸다. 과제 집합 안의 completed 실행 항목을 모두 모은
- * 단순 평균이다. limit 실행은 항목 목록이 없어 이 표에서 빠진다.
- */
-export function p2ByType(
-  runs: readonly RunRecord[],
-  taskIds: readonly string[],
-  arm: Arm,
-): TypeBreakdown[] {
-  const wanted = new Set(taskIds);
-  const scores: Record<ItemType, number[]> = { S: [], D: [], C: [] };
-  for (const run of runs) {
-    if (run.meta.arm !== arm || !wanted.has(run.meta.taskId)) continue;
-    if (run.meta.state !== 'completed' || run.grade === null) continue;
-    for (const item of run.grade.items) scores[effectiveType(item)].push(item.p2.score);
-  }
-  return (['S', 'D', 'C'] as const).map((type) => ({
-    type,
-    items: scores[type].length,
-    mean: scores[type].length === 0 ? null : mean(scores[type]),
-  }));
-}
 
 export interface Pricing {
   /** 1M 토큰당 달러. */

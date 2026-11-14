@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
 import { buildRunPlan, executePlan } from '../../src/runner/plan.js';
-import { classifyRun, combineTurns } from '../../src/runner/state.js';
+import { classifyRun, finalState } from '../../src/runner/state.js';
 import { parseTranscript, type Transcript } from '../../src/runner/stream.js';
 
 const arms = [
@@ -123,25 +123,19 @@ describe('classifyRun', () => {
   });
 });
 
-describe('combineTurns', () => {
-  it('두 턴이 모두 정상이면 completed다', () => {
-    expect(combineTurns('completed', 'completed', 0)).toBe('completed');
+describe('finalState', () => {
+  it('정상 종료와 한도는 그대로다', () => {
+    expect(finalState('completed', 0)).toBe('completed');
+    expect(finalState('limit', 0)).toBe('limit');
   });
 
-  it('첫 턴이 한도에 걸리면 두 번째 턴 없이 limit다', () => {
-    expect(combineTurns('limit', null, 0)).toBe('limit');
-    expect(combineTurns('completed', 'limit', 0)).toBe('limit');
+  it('우회 가능한 네트워크 시도는 한도보다 우선해 contaminated다', () => {
+    expect(finalState('completed', 1)).toBe('contaminated');
+    expect(finalState('limit', 2)).toBe('contaminated');
   });
 
-  it('네트워크 접근 시도는 한도보다 우선해 contaminated다', () => {
-    expect(combineTurns('completed', 'completed', 1)).toBe('contaminated');
-    expect(combineTurns('limit', null, 2)).toBe('contaminated');
-  });
-
-  it('어느 턴이든 infra·harness면 다시 실행할 상태다', () => {
-    expect(combineTurns('completed', 'infra', 3)).toBe('infra');
-    expect(combineTurns('harness', null, 0)).toBe('harness');
-    // 첫 턴이 끝났는데 두 번째 턴 기록이 없으면 하네스 결함이다.
-    expect(combineTurns('completed', null, 0)).toBe('harness');
+  it('infra·harness는 네트워크 시도가 있어도 다시 실행할 상태다', () => {
+    expect(finalState('infra', 3)).toBe('infra');
+    expect(finalState('harness', 0)).toBe('harness');
   });
 });

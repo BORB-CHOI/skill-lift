@@ -2,22 +2,43 @@ import { describe, expect, it } from 'vitest';
 import {
   conclude,
   conclusionSentence,
+  decideFromPValues,
   decideHypotheses,
   holmAdjusted,
-  HYPOTHESES,
+  hypothesisFamily,
+  modelLabel,
   verdictSentence,
-  type HypothesisId,
+  type HypothesisSample,
   type Verdict,
 } from '../../src/stats/decision.js';
 
 const OPTIONS = { alpha: 0.05, delta: 0.15 };
 const repeat = (value: number, n: number): number[] => Array.from({ length: n }, () => value);
+const FAMILY = hypothesisFamily(
+  ['recharts', 'swagger-typescript-api'],
+  ['claude-sonnet-5-5', 'claude-haiku-5-5'],
+);
 
-function input(
-  partial: Partial<Record<HypothesisId, number[]>>,
-): Record<HypothesisId, readonly number[]> {
-  return { H1: [], H2: [], H3: [], H4: [], ...partial };
+/** 가설 8개 가운데 index번에만 표본을 넣고 나머지는 비운다(p = 1). */
+function only(index: number, treatment: number[], control: number[]): HypothesisSample[] {
+  return FAMILY.map((spec, i) =>
+    i === index ? { spec, treatment, control } : { spec, treatment: [], control: [] },
+  );
 }
+
+describe('hypothesisFamily', () => {
+  it('프로젝트 2 × 모델 2 × 대조 2 = 8개를 프로젝트 → 모델 → 대조 순서로 만든다', () => {
+    expect(FAMILY).toHaveLength(8);
+    expect(FAMILY[0]).toEqual({
+      project: 'recharts',
+      model: 'claude-sonnet-5-5',
+      control: 'baseline',
+    });
+    expect(FAMILY[1]?.control).toBe('placebo');
+    expect(FAMILY[2]?.model).toBe('claude-haiku-5-5');
+    expect(FAMILY[7]?.project).toBe('swagger-typescript-api');
+  });
+});
 
 describe('holmAdjusted', () => {
   it('손으로 계산한 Holm 조정 p값과 같다', () => {
@@ -29,54 +50,73 @@ describe('holmAdjusted', () => {
   });
 });
 
-describe('decideHypotheses', () => {
-  it('10개 과제가 모두 크게 오르면 높음이다', () => {
-    const r = decideHypotheses(input({ H1: repeat(0.4, 10) }), OPTIONS);
-    expect(r.H1.verdict).toBe('higher');
-    expect(r.H1.pDifference).toBeCloseTo(2 / 1024, 12);
-  });
-
-  it('모두 크게 내리면 낮음이다', () => {
-    const r = decideHypotheses(input({ H2: repeat(-0.4, 10) }), OPTIONS);
-    expect(r.H2.verdict).toBe('lower');
-  });
-
-  it('차이가 0 근처에 몰리면 동등이다', () => {
-    const d = [0, 0.05, -0.05, 0, 0.02, -0.02, 0, 0.03, -0.03, 0];
-    const r = decideHypotheses(input({ H3: d }), OPTIONS);
-    expect(r.H3.verdict).toBe('equivalent');
-    expect(r.H3.differenceSignificant).toBe(false);
-  });
-
-  it('과제가 적으면 판정 불가다', () => {
-    const r = decideHypotheses(input({ H4: [0.4, 0.4, 0.4, 0.4, 0.4] }), OPTIONS);
-    expect(r.H4.verdict).toBe('inconclusive');
-  });
-
-  it('과제가 없는 가설은 p = 1로 판정 불가다', () => {
-    const r = decideHypotheses(input({}), OPTIONS);
-    for (const spec of HYPOTHESES) {
-      expect(r[spec.id].verdict).toBe('inconclusive');
-      expect(r[spec.id].pDifference).toBe(1);
-    }
+describe('decideFromPValues', () => {
+  it('Holm은 8개 묶음 안에서 적용된다', () => {
+    const rows = Array.from({ length: 8 }, () => ({
+      meanDifference: 0,
+      pDifference: 1,
+      pEquivalence: 1,
+    }));
+    // α/8 = 0.00625. 0.006은 기각, 0.007은 기각되지 않는다.
+    const pass = decideFromPValues(
+      [{ ...rows[0], meanDifference: 0.2, pDifference: 0.006, pEquivalence: 1 }, ...rows.slice(1)],
+      0.05,
+    );
+    expect(pass[0]?.verdict).toBe('higher');
+    const fail = decideFromPValues(
+      [{ meanDifference: 0.2, pDifference: 0.007, pEquivalence: 1 }, ...rows.slice(1)],
+      0.05,
+    );
+    expect(fail[0]?.verdict).toBe('inconclusive');
+    expect(fail[0]?.pDifferenceAdjusted).toBeCloseTo(0.056, 12);
   });
 
   it('차이가 유의하면 동등보다 먼저 쓴다', () => {
-    // 평균 +0.05로 ±0.15 안이지만 모두 양수라 차이도 유의하다.
-    const r = decideHypotheses(input({ H1: repeat(0.05, 12) }), OPTIONS);
-    expect(r.H1.equivalenceSignificant).toBe(true);
-    expect(r.H1.differenceSignificant).toBe(true);
-    expect(r.H1.verdict).toBe('higher');
+    const r = decideFromPValues(
+      [{ meanDifference: -0.05, pDifference: 0.001, pEquivalence: 0.001 }],
+      0.05,
+    );
+    expect(r[0]?.equivalenceSignificant).toBe(true);
+    expect(r[0]?.verdict).toBe('lower');
+  });
+});
+
+describe('decideHypotheses', () => {
+  it('skill이 10회 모두 1점, baseline이 10회 모두 0점이면 높음이다', () => {
+    const [r] = decideHypotheses(only(0, repeat(1, 10), repeat(0, 10)), OPTIONS);
+    expect(r?.verdict).toBe('higher');
+    expect(r?.method).toBe('exact');
+    // C(20, 10) = 184,756배치 중 양 끝 두 배치만 극단이다. Holm은 8을 곱한다.
+    expect(r?.pDifference).toBeCloseTo(2 / 184_756, 15);
+    expect(r?.pDifferenceAdjusted).toBeCloseTo((8 * 2) / 184_756, 15);
   });
 
-  it('Holm 보정은 차이 p값 4개 안에서 적용된다', () => {
-    // 8개 과제 전부 양수: p = 2/256 ≈ 0.0078. 혼자면 α/4 = 0.0125보다 작아 유의하다.
-    const alone = decideHypotheses(input({ H1: repeat(0.3, 8) }), OPTIONS);
-    expect(alone.H1.verdict).toBe('higher');
-    // 7개 과제: p = 2/128 ≈ 0.0156 > 0.0125. 네 가설 중 가장 작아도 기각되지 않는다.
-    const seven = decideHypotheses(input({ H1: repeat(0.3, 7) }), OPTIONS);
-    expect(seven.H1.verdict).toBe('inconclusive');
-    expect(seven.H1.pDifferenceAdjusted).toBeCloseTo(4 * (2 / 128), 12);
+  it('반대 방향이면 낮음이다', () => {
+    const r = decideHypotheses(only(3, repeat(0, 10), repeat(1, 10)), OPTIONS);
+    expect(r[3]?.verdict).toBe('lower');
+  });
+
+  it('두 조건 점수가 0.05 안에서 섞여 있으면 동등이다', () => {
+    const skill = [0.5, 0.55, 0.5, 0.45, 0.5, 0.55, 0.5, 0.45, 0.5, 0.5];
+    const base = [0.5, 0.45, 0.55, 0.5, 0.5, 0.45, 0.55, 0.5, 0.5, 0.5];
+    const r = decideHypotheses(only(1, skill, base), OPTIONS);
+    expect(r[1]?.differenceSignificant).toBe(false);
+    expect(r[1]?.verdict).toBe('equivalent');
+  });
+
+  it('실행이 적으면 판정 불가다', () => {
+    const r = decideHypotheses(only(0, [1, 1, 1], [0, 0, 0]), OPTIONS);
+    expect(r[0]?.pDifference).toBeCloseTo(0.1, 12);
+    expect(r[0]?.verdict).toBe('inconclusive');
+  });
+
+  it('실행이 없는 가설은 p = 1로 판정 불가다', () => {
+    for (const r of decideHypotheses(only(-1, [], []), OPTIONS)) {
+      expect(r.verdict).toBe('inconclusive');
+      expect(r.pDifference).toBe(1);
+      expect(r.meanDifference).toBeNull();
+      expect(r.method).toBeNull();
+    }
   });
 });
 
@@ -102,21 +142,36 @@ describe('conclude', () => {
 });
 
 describe('문장', () => {
-  it('판정 문장은 주어와 비교 대상을 쓴다', () => {
-    const h1 = HYPOTHESES[0];
-    if (h1 === undefined) throw new Error('가설 표가 비었다');
-    expect(verdictSentence(h1, 'higher', 0.15)).toBe(
-      '평가 시스템은 공식 Skill 실행의 목적 1(전환 정확성) 점수가 baseline 실행(Skill 없음)보다 높다고 판정한다.',
-    );
-    expect(verdictSentence(h1, 'equivalent', 0.15)).toContain('±15pp 안에서 같다고 판정한다');
+  it('모델 ID를 사람이 읽는 이름으로 바꾼다', () => {
+    expect(modelLabel('claude-sonnet-5-5')).toBe('Sonnet 5.5');
+    expect(modelLabel('claude-haiku-5-5')).toBe('Haiku 5.5');
+    expect(modelLabel('other-model')).toBe('other-model');
   });
 
-  it('결론 문장은 2.1 표의 문구를 따른다', () => {
-    expect(conclusionSentence('p2', 'no-meaningful-change', 0.15)).toBe(
-      '공식 Skill은 목적 2(차이 판단의 정확성) 달성률을 15pp 넘게 바꾸지 않는다.',
+  it('판정 문장은 주어, 프로젝트, 모델, 비교 대상을 쓴다', () => {
+    const spec = FAMILY[0];
+    if (spec === undefined) throw new Error('가설 묶음이 비었다');
+    expect(verdictSentence(spec, 'higher', 0.15)).toBe(
+      '평가 시스템은 recharts 전환에서 Sonnet 5.5의 공식 Skill 실행 점수가 baseline 실행보다 높다고 판정한다.',
     );
-    expect(conclusionSentence('p1', 'content-effect', 0.15)).toBe(
-      '공식 Skill의 내용이 목적 1(전환 정확성) 달성률을 높였다.',
+    expect(verdictSentence({ ...spec, control: 'placebo' }, 'equivalent', 0.15)).toBe(
+      '평가 시스템은 recharts 전환에서 Sonnet 5.5의 공식 Skill 실행 점수가 placebo 실행과 ±15pp 안에서 같다고 판정한다.',
+    );
+  });
+
+  it('결론 문장은 대응표의 문구에 프로젝트와 모델을 넣는다', () => {
+    expect(
+      conclusionSentence(
+        'swagger-typescript-api',
+        'claude-haiku-5-5',
+        'no-meaningful-change',
+        0.15,
+      ),
+    ).toBe(
+      'swagger-typescript-api 전환에서 공식 Skill은 Haiku 5.5의 실행 점수를 15pp 넘게 바꾸지 않는다.',
+    );
+    expect(conclusionSentence('recharts', 'claude-sonnet-5-5', 'content-effect', 0.15)).toBe(
+      'recharts 전환에서 공식 Skill의 내용이 Sonnet 5.5의 실행 점수를 높였다.',
     );
   });
 });
