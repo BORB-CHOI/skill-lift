@@ -1,0 +1,21 @@
+{
+  "id": "task-18",
+  "file": "src/module.ts",
+  "items": [
+    {
+      "fn": "isEqual",
+      "name": "sameConfig",
+      "type": "S"
+    },
+    {
+      "fn": "chunk",
+      "name": "pages",
+      "type": "D"
+    },
+    {
+      "fn": "isEmpty",
+      "name": "isBlank",
+      "type": "C"
+    }
+  ]
+}

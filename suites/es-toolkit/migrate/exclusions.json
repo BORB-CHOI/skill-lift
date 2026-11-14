@@ -1,0 +1,3 @@
+{
+  "withoutField": "omit: 분류 입력 20,000개에서는 compat이 lodash와 같았지만, 채점기 관문(비공개 숨김 입력)에서 compat 기준 해답이 동작 보존에 실패했다. compat도 lodash와 다른 함수(X)로 보고 뺀다."
+}

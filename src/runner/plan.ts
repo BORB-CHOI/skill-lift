@@ -1,16 +1,17 @@
 /**
  * 실행 계획과 동시 실행.
  *
- * 실행 순서는 반복 회차 단위의 블록 안에서 무작위로 섞는다. 한 arm을 몰아서 실행하면
- * 시간대에 따른 변화(서비스 상태, 사용 한도)가 arm의 차이로 보일 수 있다.
+ * 모든 (과제, arm, 회차) 실행을 한 목록에 넣고 시드 고정 난수로 통째로 섞는다(설계 3절).
+ * 한 arm을 몰아서 실행하면 시간대에 따른 변화(서비스 상태, 사용 한도)가 arm의 차이로 보일 수 있다.
  * 시드를 기록해 같은 계획을 다시 만들 수 있게 한다.
  */
 import { mulberry32 } from '../stats/paired.js';
 
 export interface ArmPlan {
   readonly name: string;
-  /** 과제당 실행 횟수. */
-  readonly repeats: number;
+  /** 실행할 회차의 범위. 양 끝을 포함하고 1부터 센다. 파일럿 3~4회차처럼 중간부터 시작할 수 있다. */
+  readonly fromRepeat: number;
+  readonly toRepeat: number;
 }
 
 export interface RunSpec {
@@ -43,25 +44,29 @@ export function buildRunPlan(
 ): RunSpec[] {
   const names = new Set(arms.map((arm) => arm.name));
   if (names.size !== arms.length) throw new Error('arm 이름이 겹친다');
+  if (new Set(taskIds).size !== taskIds.length) throw new Error('과제 ID가 겹친다');
   for (const arm of arms) {
-    if (!Number.isInteger(arm.repeats) || arm.repeats < 1) {
-      throw new RangeError(`arm ${arm.name}: 실행 횟수는 1 이상의 정수여야 한다`);
+    const { fromRepeat, toRepeat } = arm;
+    if (
+      !Number.isInteger(fromRepeat) ||
+      !Number.isInteger(toRepeat) ||
+      fromRepeat < 1 ||
+      toRepeat < fromRepeat
+    ) {
+      throw new RangeError(
+        `arm ${arm.name}: 회차 범위는 1 이상의 정수이고 시작이 끝보다 크지 않아야 한다`,
+      );
     }
   }
-  const random = mulberry32(seed);
-  const maxRepeats = Math.max(0, ...arms.map((arm) => arm.repeats));
-  const plan: RunSpec[] = [];
-  for (let repeat = 1; repeat <= maxRepeats; repeat++) {
-    const block: RunSpec[] = [];
-    for (const taskId of taskIds) {
-      for (const arm of arms) {
-        if (arm.repeats < repeat) continue;
-        block.push({ runId: `${taskId}__${arm.name}__${repeat}`, taskId, arm: arm.name, repeat });
+  const jobs: RunSpec[] = [];
+  for (const taskId of taskIds) {
+    for (const arm of arms) {
+      for (let repeat = arm.fromRepeat; repeat <= arm.toRepeat; repeat++) {
+        jobs.push({ runId: `${taskId}__${arm.name}__${repeat}`, taskId, arm: arm.name, repeat });
       }
     }
-    plan.push(...shuffle(block, random));
   }
-  return plan;
+  return shuffle(jobs, mulberry32(seed));
 }
 
 /**

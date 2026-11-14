@@ -1,290 +1,157 @@
 /**
- * migrate 과제를 함수 목록에서 규칙으로 조합해 생성한다.
+ * 과제 생성(설계 문서 4.1~4.3).
  *
- * 과제 하나는 함수 세 개로 이루어진다: 동작이 같을 것으로 보는 함수(A), 동작이 다를 것으로 보는
- * 함수(C), compat에만 있거나 es-toolkit에 없는 함수(B·D). 조합은 손으로 고르지 않고 목록을
- * 순환하며 만든다. 층 표시는 작성자의 예상일 뿐이고, 실제 정답은 기준 해답 계산이 정한다.
+ * 분류 결과(classification.json)에서 S·D·C 항목만 쓴다. exclusions.json에 적은 항목은 X로 보고 뺀다. lodash 함수 하나는 과제 하나에만 넣고,
+ * 같은 함수의 사용 방식이 둘이면 S 항목을 쓴다(S가 없으면 목록에서 먼저 나온 것).
+ * 고정 시드로 유형별 목록을 섞은 뒤 S·D·C를 하나씩 묶어 과제를 만든다. 남는 항목은 섞어서
+ * 3개씩 묶고, 3개가 안 되면 버린다.
+ *
+ * 출력
+ * - suites/es-toolkit/migrate/tasks/<id>/src/module.ts: 원본 lodash 모듈(에이전트에게 주는 파일)
+ * - suites/es-toolkit/migrate/tasks/<id>/task.json: 항목 이름과 유형(채점용, 작업 폴더에 복사하지 않는다)
+ * - <SKILL_EVAL_SEALED>/reference/<id>.ts: 기준 해답
+ * - <SKILL_EVAL_SEALED>/seed: 숨김 입력 시드(이미 있으면 그대로 둔다)
  *
  * 사용: pnpm tsx scripts/build-tasks.ts
- * 출력: suites/es-toolkit/migrate/tasks/<id>/ (공개), sealed/es-toolkit/migrate/<id>.json (비공개)
  */
-import { mkdirSync, rmSync, writeFileSync } from 'node:fs';
-import { dirname, join } from 'node:path';
-import { fileURLToPath, pathToFileURL } from 'node:url';
+import { existsSync, mkdirSync, readFileSync, rmSync, writeFileSync } from 'node:fs';
+import { randomInt } from 'node:crypto';
+import { join } from 'node:path';
+import { fileURLToPath } from 'node:url';
 import { mulberry32 } from '../src/stats/paired.js';
+// @ts-expect-error 생성기 목록은 타입 선언이 없는 .mjs다.
+import { catalog } from '../suites/es-toolkit/migrate/catalog.mjs';
 
 interface Entry {
-  readonly key: string;
-  readonly fn: string;
-  readonly exportName: string;
-  /** 내보내는 함수의 코드. lodash 함수는 fn 이름 그대로 부른다. */
-  readonly code: string;
-  readonly range: string;
-  /** 인자 이름. 입력 범위 설명에 쓴다. */
-  readonly params: string;
-  readonly variants: Readonly<Record<string, string>>;
+  fn: string;
+  name: string;
+  params: string;
+  returns: string;
+  body: string;
+  doc: string;
+}
+interface Classified {
+  fn: string;
+  name: string;
+  type: 'S' | 'D' | 'C' | 'X';
+}
+type ItemType = 'S' | 'D' | 'C';
+interface Item extends Entry {
+  type: ItemType;
 }
 
-const strict = (fn: string): string => `import { ${fn} } from 'es-toolkit';`;
-const compat = (fn: string): string => `import { ${fn} } from 'es-toolkit/compat';`;
-const both = (fn: string): Record<string, string> => ({ strict: strict(fn), compat: compat(fn) });
-
-/** 속성 이름을 받는 lodash 호출을 strict 함수와 화살표 함수로 감싼 어댑터. */
-const keyAdapter = (fn: string, returns: string, body: string): string =>
-  `import { ${fn} as ${fn}With } from 'es-toolkit';\nconst ${fn} = <T, K extends keyof T>(items: readonly T[], key: K): ${returns} =>\n  ${fn}With(items, (item) => ${body});`;
-
-const A: readonly Entry[] = [
-  {
-    key: 'merge',
-    fn: 'merge',
-    exportName: 'applyPatch',
-    params: 'base, patch',
-    range: 'configPair',
-    variants: both('merge'),
-    code: 'export function applyPatch(base: Config, patch: Config): Config {\n  return merge(base, patch);\n}',
-  },
-  {
-    key: 'groupByFn',
-    fn: 'groupBy',
-    exportName: 'byName',
-    params: 'rows',
-    range: 'rows',
-    variants: both('groupBy'),
-    code: 'export function byName(rows: Row[]): Record<string, Row[]> {\n  return groupBy(rows, (row) => row.name);\n}',
-  },
-  {
-    key: 'pick',
-    fn: 'pick',
-    exportName: 'publicFields',
-    params: 'row',
-    range: 'row',
-    variants: both('pick'),
-    code: "export function publicFields(row: Row): Pick<Row, 'id' | 'name'> {\n  return pick(row, ['id', 'name']);\n}",
-  },
-  {
-    key: 'mapValues',
-    fn: 'mapValues',
-    exportName: 'doubled',
-    params: 'scores',
-    range: 'scores',
-    variants: both('mapValues'),
-    code: 'export function doubled(scores: Record<string, number>): Record<string, number> {\n  return mapValues(scores, (score) => score * 2);\n}',
-  },
-  {
-    key: 'camelCase',
-    fn: 'camelCase',
-    exportName: 'toKey',
-    params: 'label',
-    range: 'label',
-    variants: both('camelCase'),
-    code: 'export function toKey(label: string): string {\n  return camelCase(label);\n}',
-  },
-  {
-    key: 'words',
-    fn: 'words',
-    exportName: 'tokens',
-    params: 'text',
-    range: 'label',
-    variants: both('words'),
-    code: 'export function tokens(text: string): string[] {\n  return words(text);\n}',
-  },
-  {
-    key: 'keyByFn',
-    fn: 'keyBy',
-    exportName: 'byId',
-    params: 'rows',
-    range: 'rows',
-    variants: both('keyBy'),
-    code: 'export function byId(rows: Row[]): Record<string, Row> {\n  return keyBy(rows, (row) => row.id);\n}',
-  },
-  {
-    key: 'kebabCase',
-    fn: 'kebabCase',
-    exportName: 'toSlug',
-    params: 'label',
-    range: 'label',
-    variants: both('kebabCase'),
-    code: 'export function toSlug(label: string): string {\n  return kebabCase(label);\n}',
-  },
-];
-
-const C: readonly Entry[] = [
-  {
-    key: 'startCase',
-    fn: 'startCase',
-    exportName: 'toTitle',
-    params: 'key',
-    range: 'label',
-    variants: both('startCase'),
-    code: 'export function toTitle(key: string): string {\n  return startCase(key);\n}',
-  },
-  {
-    key: 'groupByKey',
-    fn: 'groupBy',
-    exportName: 'byAge',
-    params: 'rows',
-    range: 'rows',
-    variants: {
-      ...both('groupBy'),
-      adapted: keyAdapter('groupBy', 'Record<string, T[]>', 'String(item[key])'),
-    },
-    code: "export function byAge(rows: Row[]): Record<string, Row[]> {\n  return groupBy(rows, 'age');\n}",
-  },
-  {
-    key: 'sumByKey',
-    fn: 'sumBy',
-    exportName: 'totalAge',
-    params: 'rows',
-    range: 'rows',
-    variants: { ...both('sumBy'), adapted: keyAdapter('sumBy', 'number', 'Number(item[key])') },
-    code: "export function totalAge(rows: Row[]): number {\n  return sumBy(rows, 'age');\n}",
-  },
-  {
-    key: 'keyByKey',
-    fn: 'keyBy',
-    exportName: 'byNameKey',
-    params: 'rows',
-    range: 'rows',
-    variants: {
-      ...both('keyBy'),
-      adapted: keyAdapter('keyBy', 'Record<string, T>', 'String(item[key])'),
-    },
-    code: "export function byNameKey(rows: Row[]): Record<string, Row> {\n  return keyBy(rows, 'name');\n}",
-  },
-];
-
-const BD: readonly Entry[] = [
-  {
-    key: 'truncate',
-    fn: 'truncate',
-    exportName: 'preview',
-    params: 'text',
-    range: 'asciiText',
-    variants: { compat: compat('truncate') },
-    code: 'export function preview(text: string): string {\n  return truncate(text, { length: 24 });\n}',
-  },
-  {
-    key: 'isEmpty',
-    fn: 'isEmpty',
-    exportName: 'isBlank',
-    params: 'value',
-    range: 'jsonAny',
-    variants: { compat: compat('isEmpty') },
-    code: 'export function isBlank(value: unknown): boolean {\n  return isEmpty(value);\n}',
-  },
-  {
-    key: 'toNumber',
-    fn: 'toNumber',
-    exportName: 'parseAmount',
-    params: 'text',
-    range: 'amountText',
-    variants: { compat: compat('toNumber') },
-    code: 'export function parseAmount(text: string): number {\n  return toNumber(text);\n}',
-  },
-  {
-    key: 'fromPairs',
-    fn: 'fromPairs',
-    exportName: 'toLookup',
-    params: 'pairs',
-    range: 'pairs',
-    variants: { compat: compat('fromPairs') },
-    code: 'export function toLookup(pairs: [string, number][]): Record<string, number> {\n  return fromPairs(pairs);\n}',
-  },
-  {
-    key: 'sortedUniq',
-    fn: 'sortedUniq',
-    exportName: 'dedupeSorted',
-    params: 'values',
-    range: 'sortedInts',
-    variants: {},
-    code: 'export function dedupeSorted(values: number[]): number[] {\n  return sortedUniq(values);\n}',
-  },
-];
-
-/** 조합 규칙을 몇 번째까지 적용할지. 채택된 과제가 16개가 되도록 22번째까지 만든다. */
-const TASK_COUNT = 22;
-const HIDDEN_COUNT = 3000;
-const HIDDEN_SEED = Number(process.env['SKILL_EVAL_HIDDEN_SEED'] ?? '20261113');
-const EXAMPLE_SEED = 7;
-const HEADER =
-  'export interface Row {\n  id: number;\n  name: string;\n  age: number;\n}\n\nexport type Config = Record<string, unknown>;\n';
-
+const BUILD_SEED = 20261115;
 const repoRoot = fileURLToPath(new URL('../', import.meta.url));
-const publicRoot = join(repoRoot, 'suites/es-toolkit/migrate/tasks');
-const sealedRoot = process.env['SKILL_EVAL_SEALED'] ?? join(repoRoot, 'sealed/es-toolkit/migrate');
-const { ranges } = (await import(
-  pathToFileURL(join(repoRoot, 'suites/es-toolkit/migrate/lib/gen.mjs')).href
-)) as { ranges: Record<string, { describe: string; make: (random: () => number) => unknown[] }> };
+const suiteDir = join(repoRoot, 'suites/es-toolkit/migrate');
+const sealedDir = process.env.SKILL_EVAL_SEALED ?? join(repoRoot, 'sealed/es-toolkit/migrate-v3');
 
-function write(file: string, content: string): void {
-  mkdirSync(dirname(file), { recursive: true });
-  writeFileSync(file, content, 'utf8');
-}
-
-rmSync(publicRoot, { recursive: true, force: true });
-rmSync(sealedRoot, { recursive: true, force: true });
-
-for (let i = 0; i < TASK_COUNT; i++) {
-  // 세 목록을 순환하며 조합한다. 길이가 8, 4, 5라 40번째까지는 같은 조합이 반복되지 않는다.
-  const picked = [A[i % A.length], C[i % C.length], BD[i % BD.length]].filter(
-    (entry): entry is Entry => entry !== undefined,
-  );
-  // 한 파일에서 같은 lodash 함수를 두 번 가져올 수 없다. 겹치면 그 조합은 건너뛴다.
-  if (new Set(picked.map((entry) => entry.fn)).size !== picked.length) {
-    console.log(
-      `조합 ${i + 1}: lodash 함수가 겹쳐 건너뜀 (${picked.map((e) => e.key).join(', ')})`,
-    );
-    continue;
+const classified = (
+  JSON.parse(readFileSync(join(suiteDir, 'classification.json'), 'utf8')) as {
+    results: Classified[];
   }
-  const id = `task-${String(i + 1).padStart(2, '0')}`;
-  const imports = picked.map((entry) => `import ${entry.fn} from 'lodash/${entry.fn}';`);
-  const source = `${imports.join('\n')}\n\n${HEADER}\n${picked.map((e) => e.code).join('\n\n')}\n`;
-  const exampleRandom = mulberry32(EXAMPLE_SEED + i);
+).results;
+const typeOf = new Map(classified.map((c) => [c.name, c.type]));
+// 채점기 관문에서 기준 해답이 실패해 X로 본 항목. 이름과 사유를 파일로 남긴다.
+const excluded = JSON.parse(readFileSync(join(suiteDir, 'exclusions.json'), 'utf8')) as Record<
+  string,
+  string
+>;
+for (const name of Object.keys(excluded)) typeOf.set(name, 'X');
 
-  write(join(publicRoot, id, 'src/module.ts'), source);
-  write(
-    join(publicRoot, id, 'task.json'),
-    `${JSON.stringify(
-      {
-        id,
-        file: 'src/module.ts',
-        functions: picked.map((entry) => entry.key),
-        inputRange: picked
-          .map(
-            (entry) =>
-              `${entry.exportName}(${entry.params}): ${ranges[entry.range]?.describe ?? ''}.`,
-          )
-          .join(' '),
-        exports: picked.map((entry) => ({
-          name: entry.exportName,
-          examples: [0, 1].map(() => ranges[entry.range]?.make(exampleRandom) ?? []),
-        })),
-      },
-      null,
-      2,
-    )}\n`,
-  );
-  write(
-    join(publicRoot, id, 'inputs.mjs'),
-    `import { ranges } from '../../lib/gen.mjs';\n\nexport const generators = {\n${picked
-      .map((entry) => `  ${entry.exportName}: ranges.${entry.range}.make,`)
-      .join('\n')}\n};\n`,
-  );
-  write(
-    join(sealedRoot, `${id}.json`),
-    `${JSON.stringify(
-      {
-        slots: picked.map((entry, index) => ({
-          name: entry.fn,
-          original: imports[index],
-          variants: entry.variants,
-        })),
-        hidden: {},
-        generated: { seed: HIDDEN_SEED + i * 100, count: HIDDEN_COUNT },
-      },
-      null,
-      2,
-    )}\n`,
-  );
-  console.log(`${id}: ${picked.map((entry) => entry.key).join(', ')}`);
+const byFn = new Map<string, Item>();
+for (const entry of catalog as Entry[]) {
+  const type = typeOf.get(entry.name);
+  if (type === undefined || type === 'X') continue;
+  const current = byFn.get(entry.fn);
+  if (current === undefined || (current.type !== 'S' && type === 'S')) {
+    byFn.set(entry.fn, { ...entry, type });
+  }
 }
+
+function shuffle<T>(xs: T[], random: () => number): T[] {
+  const out = [...xs];
+  for (let i = out.length - 1; i > 0; i--) {
+    const j = Math.floor(random() * (i + 1));
+    const a = out[i] as T;
+    out[i] = out[j] as T;
+    out[j] = a;
+  }
+  return out;
+}
+
+/** 배열 끝 원소를 꺼낸다. 비어 있으면 생성 규칙이 깨진 것이므로 멈춘다. */
+function take<T>(xs: T[]): T {
+  const x = xs.pop();
+  if (x === undefined) throw new Error('빈 목록에서 항목을 꺼내려 했다');
+  return x;
+}
+
+const random = mulberry32(BUILD_SEED);
+const pools: Record<ItemType, Item[]> = { S: [], D: [], C: [] };
+for (const item of byFn.values()) pools[item.type].push(item);
+for (const t of ['S', 'D', 'C'] as const) pools[t] = shuffle(pools[t], random);
+
+const groups: Item[][] = [];
+while (pools.S.length > 0 && pools.D.length > 0 && pools.C.length > 0) {
+  groups.push([take(pools.S), take(pools.D), take(pools.C)]);
+}
+const rest = shuffle([...pools.S, ...pools.D, ...pools.C], random);
+while (rest.length >= 3) groups.push(rest.splice(0, 3));
+
+const TYPES = `export interface Row {
+  id: number;
+  name: string;
+  age: number | null;
+  score: number;
+}
+
+export type Config = Record<string, unknown>;
+`;
+
+function functionsSource(items: Item[]): string {
+  return items
+    .map(
+      (i) =>
+        `/** ${i.doc} */\nexport function ${i.name}(${i.params}): ${i.returns} {\n  ${i.body}\n}`,
+    )
+    .join('\n\n');
+}
+
+function moduleSource(items: Item[]): string {
+  const imports = items.map((i) => `import ${i.fn} from 'lodash/${i.fn}';`).join('\n');
+  return `${imports}\n\n${TYPES}\n${functionsSource(items)}\n`;
+}
+
+function referenceSource(items: Item[]): string {
+  const imports = items
+    .map((i) =>
+      i.type === 'S'
+        ? `import { ${i.fn} } from 'es-toolkit';`
+        : `import { ${i.fn} } from 'es-toolkit/compat';`,
+    )
+    .join('\n');
+  return `${imports}\n\n${TYPES}\n${functionsSource(items)}\n`;
+}
+
+const tasksDir = join(suiteDir, 'tasks');
+rmSync(tasksDir, { recursive: true, force: true });
+mkdirSync(join(sealedDir, 'reference'), { recursive: true });
+if (!existsSync(join(sealedDir, 'seed'))) {
+  writeFileSync(join(sealedDir, 'seed'), `${randomInt(1, 2 ** 31 - 1)}\n`, 'utf8');
+}
+
+groups.forEach((items, index) => {
+  const id = `task-${String(index + 1).padStart(2, '0')}`;
+  const dir = join(tasksDir, id);
+  mkdirSync(join(dir, 'src'), { recursive: true });
+  writeFileSync(join(dir, 'src/module.ts'), moduleSource(items), 'utf8');
+  const task = {
+    id,
+    file: 'src/module.ts',
+    items: items.map((i) => ({ fn: i.fn, name: i.name, type: i.type })),
+  };
+  writeFileSync(join(dir, 'task.json'), `${JSON.stringify(task, null, 2)}\n`, 'utf8');
+  writeFileSync(join(sealedDir, 'reference', `${id}.ts`), referenceSource(items), 'utf8');
+  console.log(id, items.map((i) => `${i.type}:${i.fn}`).join(' '));
+});
+console.log(`과제 ${groups.length}개, 항목 ${groups.length * 3}개`);

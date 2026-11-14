@@ -1,126 +1,21 @@
 {
   "id": "task-22",
   "file": "src/module.ts",
-  "functions": ["words", "groupByKey", "isEmpty"],
-  "inputRange": "tokens(text): 길이 0~40의 문자열이고 ASCII 영문자, 숫자, 공백, 하이픈, 밑줄, 마침표로 이루어진다. 대문자가 연속되거나 숫자가 글자 사이에 올 수 있다. byAge(rows): 길이 0~12의 배열이고 각 원소는 { id: 0~9의 정수, name: 다섯 가지 소문자 이름 중 하나, age: 18~60의 정수 }. isBlank(value): JSON 값 하나. null, 불리언, -5~99의 정수, 문자열, 깊이 2 이하의 배열이나 객체(빈 것 포함).",
-  "exports": [
+  "items": [
     {
-      "name": "tokens",
-      "examples": [["Id_MAX "], [""]]
+      "fn": "kebabCase",
+      "name": "toCssName",
+      "type": "S"
     },
     {
-      "name": "byAge",
-      "examples": [
-        [
-          [
-            {
-              "id": 4,
-              "name": "jung",
-              "age": 54
-            },
-            {
-              "id": 8,
-              "name": "kim",
-              "age": 32
-            },
-            {
-              "id": 9,
-              "name": "jung",
-              "age": 19
-            },
-            {
-              "id": 2,
-              "name": "jung",
-              "age": 25
-            },
-            {
-              "id": 3,
-              "name": "lee",
-              "age": 36
-            },
-            {
-              "id": 8,
-              "name": "lee",
-              "age": 55
-            },
-            {
-              "id": 2,
-              "name": "choi",
-              "age": 44
-            },
-            {
-              "id": 1,
-              "name": "park",
-              "age": 47
-            },
-            {
-              "id": 7,
-              "name": "kim",
-              "age": 56
-            },
-            {
-              "id": 8,
-              "name": "jung",
-              "age": 48
-            },
-            {
-              "id": 1,
-              "name": "lee",
-              "age": 52
-            },
-            {
-              "id": 6,
-              "name": "choi",
-              "age": 48
-            }
-          ]
-        ],
-        [
-          [
-            {
-              "id": 2,
-              "name": "park",
-              "age": 23
-            },
-            {
-              "id": 2,
-              "name": "choi",
-              "age": 30
-            },
-            {
-              "id": 5,
-              "name": "park",
-              "age": 50
-            },
-            {
-              "id": 9,
-              "name": "lee",
-              "age": 41
-            },
-            {
-              "id": 8,
-              "name": "park",
-              "age": 59
-            },
-            {
-              "id": 0,
-              "name": "choi",
-              "age": 25
-            }
-          ]
-        ]
-      ]
+      "fn": "dropWhile",
+      "name": "skipNegatives",
+      "type": "S"
     },
     {
-      "name": "isBlank",
-      "examples": [
-        [
-          {
-            "theme": [43, null, 89]
-          }
-        ],
-        [{}]
-      ]
+      "fn": "without",
+      "name": "dropZeros",
+      "type": "S"
     }
   ]
 }

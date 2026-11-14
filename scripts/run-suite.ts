@@ -1,96 +1,174 @@
 /**
- * migrate 과제의 본 실행. 에이전트를 실행해 실행 기록과 산출물만 저장한다. 채점은 rescore.ts가 한다.
+ * migrate 과제의 에이전트 실행. 두 턴의 실행 기록과 산출물만 저장한다. 채점은 따로 한다.
  *
- * 사용: pnpm tsx scripts/run-suite.ts <실행 이름> <모델> <K> <동시 실행 수> [primary|controls] [과제 수]
- * 출력: results/es-toolkit-migrate/<실행 이름>/<runId>/{transcript.jsonl, submission.ts, meta.json}
+ * 사용:
+ *   pnpm tsx scripts/run-suite.ts --label <이름> --mode <full|pilot|smoke> --repeats <K | a-b>
+ *     --max-turns <N> --timeout-min <분> [--tasks t1,t2] [--arms baseline,skill,placebo]
+ *     [--model claude-sonnet-5-5] [--concurrency 4] [--seed 20261114]
  *
- * 같은 실행 이름으로 다시 돌리면 끝난 실행은 건너뛴다. 인프라·하네스 실패는 다시 실행한다.
+ *   full   세 arm 전부. --arms로 줄일 수 있다.
+ *   pilot  baseline만. 설계 4.4의 거르기(1-2)와 추정(3-4)을 --repeats로 나눠 돌린다.
+ *   smoke  --tasks와 --arms를 반드시 준다. 설계 4.5의 한도 설정용 실행이다.
+ *
+ * 턴 한도와 시간 한도는 턴 하나에 적용한다. 기본값이 없다. 인자나 환경 변수
+ * (SKILL_EVAL_MAX_TURNS, SKILL_EVAL_TIMEOUT_MIN)로 반드시 준다.
+ *
+ * 출력: results/es-toolkit-migrate/<이름>/<runId>/
+ *   transcript-1.jsonl, transcript-2.jsonl, submission.ts, report.json, meta.json
+ *
+ * 같은 이름으로 다시 돌리면 끝난 실행(completed, limit, contaminated)은 건너뛴다.
+ * 인프라·하네스 실패만 다시 실행한다.
  */
-import { existsSync, mkdirSync, readFileSync, rmSync, writeFileSync } from 'node:fs';
+import { existsSync, mkdirSync, readdirSync, readFileSync, rmSync, writeFileSync } from 'node:fs';
 import { join } from 'node:path';
 import { fileURLToPath } from 'node:url';
-import { buildArgs, runProcess } from '../src/runner/claude.js';
-import { buildRunPlan, executePlan, type RunSpec } from '../src/runner/plan.js';
-import { classifyRun, type RunState } from '../src/runner/state.js';
-import { parseTranscript } from '../src/runner/stream.js';
-import { buildTaskPrompt, collectSubmission, prepareWorkspace } from '../src/runner/workspace.js';
-import { loadMigrateTask } from '../src/tasks/spec.js';
+import { parseArgs } from 'node:util';
+import { networkBlockEnv } from '../src/runner/claude.js';
+import { buildRunPlan, executePlan, type ArmPlan, type RunSpec } from '../src/runner/plan.js';
+import { SKILL_PREFIX } from '../src/runner/prompts.js';
+import { runTwoTurns } from '../src/runner/session.js';
+import type { RunState } from '../src/runner/state.js';
+import { prepareWorkspace, verifyDeps } from '../src/runner/workspace.js';
 
-const [label = '', model = 'haiku', kArg = '3', concurrencyArg = '4', stage = 'primary', limitArg] =
-  process.argv.slice(2);
-if (label === '') throw new Error('실행 이름을 지정해야 한다');
-const K = Number(kArg);
-const concurrency = Number(concurrencyArg);
+const { values: opts } = parseArgs({
+  options: {
+    label: { type: 'string' },
+    mode: { type: 'string', default: 'full' },
+    repeats: { type: 'string' },
+    tasks: { type: 'string' },
+    arms: { type: 'string' },
+    model: { type: 'string', default: 'claude-sonnet-5-5' },
+    concurrency: { type: 'string', default: '4' },
+    seed: { type: 'string', default: '20261114' },
+    'max-turns': { type: 'string' },
+    'timeout-min': { type: 'string' },
+  },
+  strict: true,
+});
+
+function positiveInt(value: string | undefined, name: string): number {
+  const n = Number(value);
+  if (value === undefined || !Number.isInteger(n) || n < 1) {
+    throw new Error(`${name}는 1 이상의 정수여야 한다 (받은 값: ${String(value)})`);
+  }
+  return n;
+}
+
+/** "3"은 1~3, "3-4"는 3~4. */
+function repeatRange(value: string | undefined): { fromRepeat: number; toRepeat: number } {
+  if (value === undefined) throw new Error('--repeats를 지정해야 한다 (예: 4 또는 3-4)');
+  const [a, b] = value.split('-');
+  return b === undefined
+    ? { fromRepeat: 1, toRepeat: positiveInt(a, '--repeats') }
+    : { fromRepeat: positiveInt(a, '--repeats 시작'), toRepeat: positiveInt(b, '--repeats 끝') };
+}
+
+const list = (value: string | undefined): string[] | undefined =>
+  value
+    ?.split(',')
+    .map((s) => s.trim())
+    .filter((s) => s !== '');
+
+const label = opts.label ?? '';
+if (label === '') throw new Error('--label을 지정해야 한다');
+const mode = opts.mode;
+const model = opts.model;
+const concurrency = positiveInt(opts.concurrency, '--concurrency');
+const seed = positiveInt(opts.seed, '--seed');
+const maxTurns = positiveInt(
+  opts['max-turns'] ?? process.env['SKILL_EVAL_MAX_TURNS'],
+  '--max-turns',
+);
+const timeoutMin = Number(opts['timeout-min'] ?? process.env['SKILL_EVAL_TIMEOUT_MIN']);
+if (!(timeoutMin > 0)) throw new Error('--timeout-min(분)을 지정해야 한다');
+const timeoutMs = Math.round(timeoutMin * 60_000);
+const range = repeatRange(opts.repeats);
 
 const repoRoot = fileURLToPath(new URL('../', import.meta.url));
-const publicRoot = join(repoRoot, 'suites/es-toolkit/migrate/tasks');
-const sealedRoot = process.env['SKILL_EVAL_SEALED'] ?? join(repoRoot, 'sealed/es-toolkit/migrate');
+const tasksRoot =
+  process.env['SKILL_EVAL_TASKS'] ?? join(repoRoot, 'suites/es-toolkit/migrate/tasks');
 const pilotDir = join(repoRoot, '.pilot');
-/** 작업 폴더에 복사할 의존성. v2는 lodash를 뺀 폴더를 쓴다. */
+/** 작업 폴더에 복사할 의존성. lodash를 포함한 폴더여야 한다(verifyDeps가 확인). */
 const depsNodeModules = process.env['SKILL_EVAL_DEPS'] ?? join(pilotDir, 'deps/node_modules');
+const emptyMcpConfig = join(pilotDir, 'empty-mcp.json');
 const outRoot = join(repoRoot, 'results/es-toolkit-migrate', label);
 
-const PLAN_SEED = 20261113;
-const MAX_TURNS = 40;
-const TIMEOUT_MS = 10 * 60 * 1000;
 const MAX_ATTEMPTS = 3;
 const RETRY_DELAY_MS = 90_000;
 const TARGET_PREFIX = 'es-toolkit:';
 
 interface Arm {
   readonly name: string;
-  readonly repeats: number;
   readonly pluginDir: string | null;
   readonly prefix: string;
   readonly expectedSkill: string | null;
 }
 
-/** Skill을 로드하는 arm. 플러그인 폴더는 scripts/prepare-arms.ts가 만든다. */
-function skillArm(name: string): Arm {
-  return {
-    name,
-    repeats: K,
-    pluginDir: join(repoRoot, '.arms', name),
-    prefix: '/es-toolkit:migrate ',
+/** 설계 3절의 세 조건. 플러그인 폴더는 scripts/prepare-arms.ts가 만든다. */
+const ARMS: readonly Arm[] = [
+  { name: 'baseline', pluginDir: null, prefix: '', expectedSkill: null },
+  {
+    name: 'skill',
+    pluginDir: join(repoRoot, '.arms/skill'),
+    prefix: SKILL_PREFIX,
     expectedSkill: 'es-toolkit:migrate',
-  };
+  },
+  {
+    name: 'placebo',
+    pluginDir: join(repoRoot, '.arms/placebo'),
+    prefix: SKILL_PREFIX,
+    expectedSkill: 'es-toolkit:migrate',
+  },
+];
+
+function selectArms(): Arm[] {
+  const requested = list(opts.arms);
+  if (mode === 'pilot') {
+    if (requested !== undefined && requested.join() !== 'baseline')
+      throw new Error('pilot은 baseline만 실행한다');
+    return ARMS.filter((a) => a.name === 'baseline');
+  }
+  if (mode === 'smoke' && requested === undefined)
+    throw new Error('smoke는 --arms를 지정해야 한다');
+  if (mode !== 'full' && mode !== 'smoke') throw new Error(`알 수 없는 모드: ${mode}`);
+  if (requested === undefined) return [...ARMS];
+  return requested.map((name) => {
+    const arm = ARMS.find((a) => a.name === name);
+    if (arm === undefined) throw new Error(`알 수 없는 arm: ${name}`);
+    return arm;
+  });
 }
 
-// 실행은 두 단계로 나눈다. primary는 1차 가설(skill 대 baseline)의 실행이고 두 arm을 한 블록에서
-// 섞는다. controls는 탐색용 대조 arm이다. 대조 arm은 과제당 2K회 실행한다. 앞의 K회는 주 비교에,
-// 2K회 전부는 분석 절차의 검증에 쓴다.
-const STAGES: Readonly<Record<string, readonly Arm[]>> = {
-  primary: [
-    { name: 'baseline', repeats: 2 * K, pluginDir: null, prefix: '', expectedSkill: null },
-    skillArm('skill'),
-  ],
-  controls: [skillArm('placebo'), skillArm('procedure'), skillArm('sabotage')],
-};
-const stageArms = STAGES[stage];
-if (stageArms === undefined) throw new Error(`알 수 없는 단계: ${stage} (primary 또는 controls)`);
-const arms: readonly Arm[] = stageArms;
-
-interface Validation {
-  readonly id: string;
-  readonly accepted: boolean;
+function selectTasks(): string[] {
+  const requested = list(opts.tasks);
+  if (mode === 'smoke' && requested === undefined)
+    throw new Error('smoke는 --tasks를 지정해야 한다');
+  const ids =
+    requested ??
+    readdirSync(tasksRoot).filter((id) => existsSync(join(tasksRoot, id, 'src/module.ts')));
+  for (const id of ids) {
+    if (!existsSync(join(tasksRoot, id, 'src/module.ts')))
+      throw new Error(`${id}: src/module.ts가 없다`);
+  }
+  return ids.sort();
 }
-const validation = JSON.parse(
-  readFileSync(join(sealedRoot, 'validation.json'), 'utf8'),
-) as Validation[];
-const taskIds = validation
-  .filter((v) => v.accepted)
-  .map((v) => v.id)
-  .slice(0, limitArg === undefined ? undefined : Number(limitArg));
 
-const plan = buildRunPlan(
-  taskIds,
-  arms.map(({ name, repeats }) => ({ name, repeats })),
-  PLAN_SEED,
-);
+const arms = selectArms();
+const taskIds = selectTasks();
+for (const arm of arms) {
+  if (arm.pluginDir !== null && !existsSync(join(arm.pluginDir, 'skills/migrate/SKILL.md'))) {
+    throw new Error(`${arm.pluginDir}가 없다. pnpm eval:prepare-arms를 먼저 실행한다`);
+  }
+}
+const versions = verifyDeps(depsNodeModules);
+const env = networkBlockEnv();
+
+const armPlans: ArmPlan[] = arms.map(({ name }) => ({ name, ...range }));
+const plan = buildRunPlan(taskIds, armPlans, seed);
 mkdirSync(outRoot, { recursive: true });
 writeFileSync(
-  join(outRoot, `plan-${stage}.json`),
-  `${JSON.stringify({ label, stage, model, K, concurrency, seed: PLAN_SEED, sealedRoot, depsNodeModules, maxTurns: MAX_TURNS, timeoutMs: TIMEOUT_MS, taskIds, arms, plan }, null, 2)}\n`,
+  join(outRoot, `plan-${mode}-${String(range.fromRepeat)}-${String(range.toRepeat)}.json`),
+  `${JSON.stringify({ label, mode, model, concurrency, seed, maxTurns, timeoutMs, tasksRoot, depsNodeModules, versions, env, taskIds, arms, repeats: range, plan }, null, 2)}\n`,
   'utf8',
 );
 
@@ -101,77 +179,74 @@ function isDone(runDir: string): boolean {
   return state === 'completed' || state === 'limit' || state === 'contaminated';
 }
 
+async function attemptOnce(
+  spec: RunSpec,
+  arm: Arm,
+  runDir: string,
+  attempt: number,
+): Promise<RunState> {
+  // 지난 시도의 산출물이 남지 않게 실행 폴더를 비운다.
+  rmSync(runDir, { recursive: true, force: true });
+  mkdirSync(runDir, { recursive: true });
+  const workspace = prepareWorkspace(join(tasksRoot, spec.taskId), depsNodeModules, versions);
+  try {
+    const result = await runTwoTurns({
+      command: 'claude',
+      workspace,
+      runDir,
+      prefix: arm.prefix,
+      config: { model, maxTurns, emptyMcpConfig, pluginDir: arm.pluginDir },
+      expectation: { expectedSkill: arm.expectedSkill, targetPrefix: TARGET_PREFIX },
+      timeoutMs,
+      env,
+    });
+    result.transcripts.forEach((text, i) => {
+      writeFileSync(join(runDir, `transcript-${String(i + 1)}.jsonl`), text, 'utf8');
+    });
+    const meta = {
+      ...spec,
+      state: result.state,
+      attempt,
+      model: result.model,
+      requestedModel: model,
+      claudeVersion: result.claudeVersion,
+      sessionId: result.sessionId,
+      submission: result.submission ? 'submission.ts' : null,
+      report: result.report ? 'report.json' : null,
+      loadedSkills: result.loadedSkills,
+      ...result.checks,
+      networkAttempts: result.networkAttempts,
+      limits: { maxTurns, timeoutMs },
+      turns: result.turns,
+    };
+    writeFileSync(join(runDir, 'meta.json'), `${JSON.stringify(meta, null, 2)}\n`, 'utf8');
+    return result.state;
+  } finally {
+    rmSync(workspace, { recursive: true, force: true, maxRetries: 5, retryDelay: 500 });
+  }
+}
+
 async function runOne(spec: RunSpec): Promise<RunState | 'skipped'> {
   const runDir = join(outRoot, spec.runId);
   if (isDone(runDir)) return 'skipped';
   const arm = arms.find((a) => a.name === spec.arm);
   if (arm === undefined) throw new Error(`알 수 없는 arm: ${spec.arm}`);
-  const taskDir = join(publicRoot, spec.taskId);
-  const { task, source } = loadMigrateTask(taskDir, join(sealedRoot, `${spec.taskId}.json`));
-  const prompt = arm.prefix + buildTaskPrompt(task.file, task.inputRange, task.exports);
 
   let state: RunState = 'infra';
   for (let attempt = 1; attempt <= MAX_ATTEMPTS; attempt++) {
-    const workspace = prepareWorkspace(taskDir, depsNodeModules);
-    try {
-      const run = await runProcess({
-        command: 'claude',
-        args: buildArgs({
-          model,
-          maxTurns: MAX_TURNS,
-          emptyMcpConfig: join(pilotDir, 'empty-mcp.json'),
-          pluginDir: arm.pluginDir,
-        }),
-        cwd: workspace,
-        prompt,
-        timeoutMs: TIMEOUT_MS,
-      });
-      const transcript = parseTranscript(run.stdout);
-      state = classifyRun(
-        { timedOut: run.timedOut, exitCode: run.exitCode, transcript },
-        { expectedSkill: arm.expectedSkill, targetPrefix: TARGET_PREFIX },
-      );
-      const submission = collectSubmission(workspace, task.file, source);
-      mkdirSync(runDir, { recursive: true });
-      writeFileSync(join(runDir, 'transcript.jsonl'), run.stdout, 'utf8');
-      writeFileSync(join(runDir, 'submission.ts'), submission.code, 'utf8');
-      writeFileSync(
-        join(runDir, 'meta.json'),
-        `${JSON.stringify(
-          {
-            ...spec,
-            state,
-            attempt,
-            submissionKind: submission.kind,
-            model: transcript.init?.model ?? null,
-            loadedSkills: transcript.init?.skills.filter((s) => s.startsWith(TARGET_PREFIX)) ?? [],
-            turns: transcript.result?.numTurns ?? null,
-            durationMs: run.durationMs,
-            usage: transcript.result?.usage ?? null,
-            deniedTools: transcript.result?.deniedTools.length ?? null,
-            malformedLines: transcript.malformedLines,
-          },
-          null,
-          2,
-        )}\n`,
-        'utf8',
-      );
-    } finally {
-      rmSync(workspace, { recursive: true, force: true, maxRetries: 5, retryDelay: 500 });
-    }
-    // 인프라와 하네스의 실패만 다시 실행한다. 모델 쪽 결과(completed, limit)는 그대로 둔다.
+    state = await attemptOnce(spec, arm, runDir, attempt);
+    // 인프라와 하네스의 실패만 다시 실행한다. 두 턴을 처음부터 다시 돌린다.
     if (state !== 'infra' && state !== 'harness') break;
     // 일시 차단(예: 인증 요청의 403)은 몇 분 이어진다. 바로 다시 시도하면 같은 구간에서 또 실패한다.
-    if (attempt < MAX_ATTEMPTS) {
+    if (attempt < MAX_ATTEMPTS)
       await new Promise((resolve) => setTimeout(resolve, attempt * RETRY_DELAY_MS));
-    }
   }
   console.log(`${spec.runId}  ${state}`);
   return state;
 }
 
 console.log(
-  `과제 ${taskIds.length}개, 실행 ${plan.length}회, 모델 ${model}, K=${K}, 동시 ${concurrency}개`,
+  `${mode}: 과제 ${String(taskIds.length)}개, arm ${arms.map((a) => a.name).join('/')}, 회차 ${String(range.fromRepeat)}-${String(range.toRepeat)}, 실행 ${String(plan.length)}회, 모델 ${model}, 턴당 ${String(maxTurns)}턴·${String(timeoutMin)}분, 동시 ${String(concurrency)}개`,
 );
 const results = await executePlan(plan, concurrency, runOne);
 const counts: Record<string, number> = {};

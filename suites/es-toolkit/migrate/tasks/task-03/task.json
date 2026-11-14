@@ -1,99 +1,21 @@
 {
   "id": "task-03",
   "file": "src/module.ts",
-  "functions": ["pick", "sumByKey", "toNumber"],
-  "inputRange": "publicFields(row): { id: 0~9의 정수, name: 다섯 가지 소문자 이름 중 하나, age: 18~60의 정수 }. totalAge(rows): 길이 0~12의 배열이고 각 원소는 { id: 0~9의 정수, name: 다섯 가지 소문자 이름 중 하나, age: 18~60의 정수 }. parseAmount(text): 길이 0~8의 문자열이고 숫자, 소수점, 부호, 공백, 영문자 e와 x로 이루어진다. 숫자로 읽히지 않는 문자열도 포함한다.",
-  "exports": [
+  "items": [
     {
-      "name": "publicFields",
-      "examples": [
-        [
-          {
-            "id": 1,
-            "name": "jung",
-            "age": 24
-          }
-        ],
-        [
-          {
-            "id": 8,
-            "name": "choi",
-            "age": 47
-          }
-        ]
-      ]
+      "fn": "upperFirst",
+      "name": "toSentence",
+      "type": "S"
     },
     {
-      "name": "totalAge",
-      "examples": [
-        [
-          [
-            {
-              "id": 9,
-              "name": "kim",
-              "age": 45
-            },
-            {
-              "id": 6,
-              "name": "park",
-              "age": 30
-            },
-            {
-              "id": 9,
-              "name": "lee",
-              "age": 49
-            }
-          ]
-        ],
-        [
-          [
-            {
-              "id": 3,
-              "name": "park",
-              "age": 56
-            },
-            {
-              "id": 8,
-              "name": "park",
-              "age": 55
-            },
-            {
-              "id": 1,
-              "name": "choi",
-              "age": 32
-            },
-            {
-              "id": 0,
-              "name": "jung",
-              "age": 26
-            },
-            {
-              "id": 5,
-              "name": "park",
-              "age": 21
-            },
-            {
-              "id": 8,
-              "name": "choi",
-              "age": 26
-            },
-            {
-              "id": 0,
-              "name": "park",
-              "age": 31
-            },
-            {
-              "id": 6,
-              "name": "lee",
-              "age": 41
-            }
-          ]
-        ]
-      ]
+      "fn": "words",
+      "name": "tokenize",
+      "type": "D"
     },
     {
-      "name": "parseAmount",
-      "examples": [["92858+99"], [".72e"]]
+      "fn": "indexOf",
+      "name": "positionOf",
+      "type": "C"
     }
   ]
 }

@@ -1,0 +1,21 @@
+{
+  "id": "task-02",
+  "file": "src/module.ts",
+  "items": [
+    {
+      "fn": "union",
+      "name": "allIds",
+      "type": "S"
+    },
+    {
+      "fn": "snakeCase",
+      "name": "toColumn",
+      "type": "D"
+    },
+    {
+      "fn": "fromPairs",
+      "name": "toScores",
+      "type": "C"
+    }
+  ]
+}

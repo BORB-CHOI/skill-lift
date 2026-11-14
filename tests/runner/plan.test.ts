@@ -1,11 +1,11 @@
 import { describe, expect, it } from 'vitest';
 import { buildRunPlan, executePlan } from '../../src/runner/plan.js';
-import { classifyRun } from '../../src/runner/state.js';
+import { classifyRun, combineTurns } from '../../src/runner/state.js';
 import { parseTranscript, type Transcript } from '../../src/runner/stream.js';
 
 const arms = [
-  { name: 'baseline', repeats: 4 },
-  { name: 'skill', repeats: 2 },
+  { name: 'baseline', fromRepeat: 1, toRepeat: 4 },
+  { name: 'skill', fromRepeat: 1, toRepeat: 2 },
 ];
 
 describe('buildRunPlan', () => {
@@ -22,36 +22,39 @@ describe('buildRunPlan', () => {
     expect(buildRunPlan(tasks, arms, 6).map((run) => run.runId)).not.toEqual(a);
   });
 
-  it('회차 블록 순서를 지키고 블록 안에서만 섞는다', () => {
-    const plan = buildRunPlan(['t1', 't2', 't3'], arms, 9);
+  it('회차 블록 없이 전체를 섞어 arm과 회차가 뒤섞인다', () => {
+    const plan = buildRunPlan(['t1', 't2', 't3', 't4', 't5'], arms, 9);
     const repeats = plan.map((run) => run.repeat);
-    expect(repeats).toEqual([...repeats].sort((x, y) => x - y));
-    // 첫 블록에는 두 arm이 섞여 있다.
-    const firstBlock = plan.filter((run) => run.repeat === 1).map((run) => run.arm);
-    expect(new Set(firstBlock)).toEqual(new Set(['baseline', 'skill']));
-    // 3회차부터는 반복 횟수가 많은 arm만 남는다.
-    expect(plan.filter((run) => run.repeat === 3).every((run) => run.arm === 'baseline')).toBe(
-      true,
-    );
+    expect(repeats).not.toEqual([...repeats].sort((x, y) => x - y));
+    const firstTen = new Set(plan.slice(0, 10).map((run) => run.arm));
+    expect(firstTen).toEqual(new Set(['baseline', 'skill']));
   });
 
-  it('잘못된 arm 설정은 거부한다', () => {
-    expect(() => buildRunPlan(['t1'], [{ name: 'a', repeats: 0 }], 1)).toThrow(RangeError);
-    expect(() =>
-      buildRunPlan(
-        ['t1'],
-        [
-          { name: 'a', repeats: 1 },
-          { name: 'a', repeats: 1 },
-        ],
-        1,
-      ),
-    ).toThrow();
+  it('회차 범위의 중간부터 시작할 수 있다', () => {
+    const plan = buildRunPlan(['t1', 't2'], [{ name: 'baseline', fromRepeat: 3, toRepeat: 4 }], 1);
+    expect(plan.map((run) => run.runId).sort()).toEqual([
+      't1__baseline__3',
+      't1__baseline__4',
+      't2__baseline__3',
+      't2__baseline__4',
+    ]);
+  });
+
+  it('잘못된 설정은 거부한다', () => {
+    expect(() => buildRunPlan(['t1'], [{ name: 'a', fromRepeat: 0, toRepeat: 1 }], 1)).toThrow(
+      RangeError,
+    );
+    expect(() => buildRunPlan(['t1'], [{ name: 'a', fromRepeat: 3, toRepeat: 2 }], 1)).toThrow(
+      RangeError,
+    );
+    const one = { name: 'a', fromRepeat: 1, toRepeat: 1 };
+    expect(() => buildRunPlan(['t1'], [one, one], 1)).toThrow();
+    expect(() => buildRunPlan(['t1', 't1'], [one], 1)).toThrow();
   });
 });
 
 describe('executePlan', () => {
-  const plan = buildRunPlan(['t1', 't2', 't3'], [{ name: 'a', repeats: 2 }], 1);
+  const plan = buildRunPlan(['t1', 't2', 't3'], [{ name: 'a', fromRepeat: 1, toRepeat: 2 }], 1);
 
   it('동시 실행 수를 넘지 않고 결과를 계획 순서대로 돌려준다', async () => {
     let active = 0;
@@ -117,5 +120,28 @@ describe('classifyRun', () => {
     const apiError = { subtype: 'error_during_execution', is_error: true };
     expect(classifyRun(outcome(transcript([], apiError)), control)).toBe('infra');
     expect(classifyRun(outcome(parseTranscript('')), control)).toBe('infra');
+  });
+});
+
+describe('combineTurns', () => {
+  it('두 턴이 모두 정상이면 completed다', () => {
+    expect(combineTurns('completed', 'completed', 0)).toBe('completed');
+  });
+
+  it('첫 턴이 한도에 걸리면 두 번째 턴 없이 limit다', () => {
+    expect(combineTurns('limit', null, 0)).toBe('limit');
+    expect(combineTurns('completed', 'limit', 0)).toBe('limit');
+  });
+
+  it('네트워크 접근 시도는 한도보다 우선해 contaminated다', () => {
+    expect(combineTurns('completed', 'completed', 1)).toBe('contaminated');
+    expect(combineTurns('limit', null, 2)).toBe('contaminated');
+  });
+
+  it('어느 턴이든 infra·harness면 다시 실행할 상태다', () => {
+    expect(combineTurns('completed', 'infra', 3)).toBe('infra');
+    expect(combineTurns('harness', null, 0)).toBe('harness');
+    // 첫 턴이 끝났는데 두 번째 턴 기록이 없으면 하네스 결함이다.
+    expect(combineTurns('completed', null, 0)).toBe('harness');
   });
 });

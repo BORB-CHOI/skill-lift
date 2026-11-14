@@ -1,20 +1,21 @@
 {
   "id": "task-05",
   "file": "src/module.ts",
-  "functions": ["camelCase", "startCase", "sortedUniq"],
-  "inputRange": "toKey(label): 길이 0~40의 문자열이고 ASCII 영문자, 숫자, 공백, 하이픈, 밑줄, 마침표로 이루어진다. 대문자가 연속되거나 숫자가 글자 사이에 올 수 있다. toTitle(key): 길이 0~40의 문자열이고 ASCII 영문자, 숫자, 공백, 하이픈, 밑줄, 마침표로 이루어진다. 대문자가 연속되거나 숫자가 글자 사이에 올 수 있다. dedupeSorted(values): 오름차순으로 정렬된 길이 0~20의 정수 배열. 값은 -5~20이고 겹칠 수 있다.",
-  "exports": [
+  "items": [
     {
-      "name": "toKey",
-      "examples": [["Height-ApiHeight "], ["API_user"]]
+      "fn": "zipObject",
+      "name": "toRecord",
+      "type": "S"
     },
     {
-      "name": "toTitle",
-      "examples": [["WIDTH-"], [""]]
+      "fn": "trimStart",
+      "name": "stripLeading",
+      "type": "D"
     },
     {
-      "name": "dedupeSorted",
-      "examples": [[[-4, 1, 2, 3, 5, 9, 11, 14, 14, 15, 16, 20]], [[4, 9, 14]]]
+      "fn": "get",
+      "name": "readSetting",
+      "type": "C"
     }
   ]
 }

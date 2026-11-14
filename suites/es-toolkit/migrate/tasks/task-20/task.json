@@ -1,123 +1,21 @@
 {
   "id": "task-20",
   "file": "src/module.ts",
-  "functions": ["mapValues", "keyByKey", "sortedUniq"],
-  "inputRange": "doubled(scores): 키가 소문자 이름이고 값이 -5~99의 정수인 객체. 키는 0~5개. byNameKey(rows): 길이 0~12의 배열이고 각 원소는 { id: 0~9의 정수, name: 다섯 가지 소문자 이름 중 하나, age: 18~60의 정수 }. dedupeSorted(values): 오름차순으로 정렬된 길이 0~20의 정수 배열. 값은 -5~20이고 겹칠 수 있다.",
-  "exports": [
+  "items": [
     {
-      "name": "doubled",
-      "examples": [
-        [
-          {
-            "choi": 48,
-            "kim": 81,
-            "park": 98
-          }
-        ],
-        [
-          {
-            "jung": -2,
-            "lee": 1
-          }
-        ]
-      ]
+      "fn": "sumBy",
+      "name": "totalQty",
+      "type": "S"
     },
     {
-      "name": "byNameKey",
-      "examples": [
-        [
-          [
-            {
-              "id": 6,
-              "name": "choi",
-              "age": 21
-            },
-            {
-              "id": 5,
-              "name": "lee",
-              "age": 45
-            },
-            {
-              "id": 9,
-              "name": "park",
-              "age": 29
-            },
-            {
-              "id": 6,
-              "name": "choi",
-              "age": 44
-            },
-            {
-              "id": 8,
-              "name": "kim",
-              "age": 36
-            },
-            {
-              "id": 0,
-              "name": "kim",
-              "age": 38
-            },
-            {
-              "id": 1,
-              "name": "choi",
-              "age": 54
-            },
-            {
-              "id": 2,
-              "name": "park",
-              "age": 36
-            }
-          ]
-        ],
-        [
-          [
-            {
-              "id": 8,
-              "name": "kim",
-              "age": 36
-            },
-            {
-              "id": 8,
-              "name": "choi",
-              "age": 50
-            },
-            {
-              "id": 5,
-              "name": "kim",
-              "age": 28
-            },
-            {
-              "id": 7,
-              "name": "jung",
-              "age": 41
-            },
-            {
-              "id": 1,
-              "name": "choi",
-              "age": 19
-            },
-            {
-              "id": 6,
-              "name": "park",
-              "age": 20
-            },
-            {
-              "id": 0,
-              "name": "choi",
-              "age": 26
-            },
-            {
-              "id": 7,
-              "name": "kim",
-              "age": 46
-            }
-          ]
-        ]
-      ]
+      "fn": "partition",
+      "name": "splitAdults",
+      "type": "D"
     },
     {
-      "name": "dedupeSorted",
-      "examples": [[[2, 5, 7, 14, 20]], [[5, 7, 9, 11, 12, 13, 15, 17, 19]]]
+      "fn": "some",
+      "name": "anyMissingAge",
+      "type": "C"
     }
   ]
 }
