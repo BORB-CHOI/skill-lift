@@ -6,9 +6,20 @@ LLM 에이전트에게 Agent Skill(`SKILL.md`)을 줬을 때 **Skill이 내세�
 
 ## 결과
 
-<!-- RESULTS -->
+recharts와 swagger-typescript-api 전체를 lodash에서 es-toolkit으로 옮기는 과제에서 공식 Skill은 Sonnet 5.5와 Haiku 5.5의 실행 점수를 ±15pp 밖으로 바꾸지 않았다. 96회 실행, 오염 0회, 한도 도달 0회다.
 
-본 실험 결과는 [docs/results.md](docs/results.md)에 있다.
+| 프로젝트               | 모델       | Skill − baseline    | Skill − placebo      | 판정                             |
+| ---------------------- | ---------- | ------------------- | -------------------- | -------------------------------- |
+| recharts               | Sonnet 5.5 | +0.0pp [−0.0, +0.0] | +0.0pp [−0.0, +0.0]  | 둘 다 동등                       |
+| recharts               | Haiku 5.5  | +0.0pp [−0.0, +0.0] | +0.0pp [−0.0, +0.0]  | 둘 다 동등                       |
+| swagger-typescript-api | Sonnet 5.5 | −0.9pp [−2.5, +0.0] | +6.3pp [−0.6, +16.7] | baseline 동등, placebo 판정 불가 |
+| swagger-typescript-api | Haiku 5.5  | −0.0pp [−1.3, +1.3] | +0.6pp [−0.8, +1.9]  | 둘 다 동등                       |
+
+괄호는 순열 검정을 뒤집은 95% 구간이다. 차이가 없었던 이유는 Skill 없는 baseline이 이미 97~100%를 통과했기 때문이다. baseline도 Skill이 권하는 "compat 먼저" 전략을 스스로 썼다(호출 지점의 77~99%). 남은 실패는 모든 조건에 공통이었다. recharts의 `throttle` 타이밍 차이(사람이 머지한 PR에도 있음)와 swagger-typescript-api의 d.ts 생성 오류(TS2742)다.
+
+채점기는 lodash 제거 여부만 보는 검사가 놓치는 회귀도 잡았다. placebo 실행 1개가 lodash 체이닝 래퍼 `_(...)`를 남겨 런타임에 깨졌는데, lodash 제거·의존성 항목은 통과하고 기존 테스트 31개와 숨김 검사 17개가 실패했다.
+
+판정 표 전체, 원인 분석, 비용, 사전 등록 이후 변경은 [docs/results.md](docs/results.md)에 있다.
 
 ## 무엇을 판정하나
 

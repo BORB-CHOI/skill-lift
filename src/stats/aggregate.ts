@@ -47,6 +47,8 @@ export interface RunMeta {
   /** 실행기에 넘긴 모델 ID. 있으면 이 값으로 모델을 가른다. */
   readonly requestedModel?: string | null;
   readonly turns?: readonly TurnRecord[];
+  /** 지시를 한 번만 주는 프로젝트 실행의 턴 기록. turns가 없을 때 쓴다. */
+  readonly turn?: TurnRecord;
   /** 첫 턴 init 메시지에 로드된 Skill 이름. */
   readonly loadedSkills?: readonly string[];
   readonly ranAvailabilityCheck?: boolean;
@@ -182,11 +184,19 @@ export function manipulationFlags(meta: RunMeta): Record<string, boolean> {
   return flags;
 }
 
+/** 턴 기록 목록. 여러 턴이면 turns, 프로젝트 실행처럼 한 턴이면 turn을 쓴다. */
+function turnsOf(meta: RunMeta): readonly TurnRecord[] {
+  if (meta.turns !== undefined) return meta.turns;
+  return meta.turn === undefined ? [] : [meta.turn];
+}
+
 function sumTurns(
   meta: RunMeta,
   pick: (turn: TurnRecord) => number | null | undefined,
 ): number | null {
-  const values = (meta.turns ?? []).map(pick).filter((v): v is number => typeof v === 'number');
+  const values = turnsOf(meta)
+    .map(pick)
+    .filter((v): v is number => typeof v === 'number');
   return values.length === 0 ? null : values.reduce((s, v) => s + v, 0);
 }
 
@@ -206,7 +216,7 @@ export interface Pricing {
 
 /** 실행 하나의 비용(달러). 모든 턴의 usage를 더한다. usage가 있는 턴이 없으면 null. */
 export function runCost(meta: RunMeta, pricing: Pricing): number | null {
-  const usages = (meta.turns ?? [])
+  const usages = turnsOf(meta)
     .map((t) => t.usage)
     .filter((u): u is TokenUsage => u !== undefined && u !== null);
   if (usages.length === 0) return null;

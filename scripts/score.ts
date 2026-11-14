@@ -50,6 +50,8 @@ if (label === '' || preregPath === '') {
 }
 
 const repoRoot = fileURLToPath(new URL('../', import.meta.url));
+/** 평가 대상 Skill. 조작 확인의 'Skill 로드'는 init 메시지의 Skill 목록에 이 이름이 있는지로 센다. */
+const EVALUATED_SKILL = 'es-toolkit:migrate';
 const outRoot = join(repoRoot, 'results/es-toolkit-migrate-project', label);
 const prereg = parsePreregistration(JSON.parse(readFileSync(preregPath, 'utf8')));
 const runs = loadRuns(outRoot);
@@ -297,7 +299,7 @@ out();
 out('## 6. 조작 확인');
 out();
 out(
-  '정상 종료와 한도 실행 가운데 해당 행동을 한 비율이다. 그 값을 기록하지 않은 실행은 분모에서 뺀다.',
+  '정상 종료와 한도 실행 가운데 해당 행동을 한 비율이다. Skill 로드는 init 메시지의 Skill 목록에 es-toolkit:migrate가 있었는지다. 그 값을 기록하지 않은 실행은 분모에서 뺀다.',
 );
 out();
 out(`| 프로젝트 | 모델 | 조건 | Skill 로드 | 외부 접근 시도 | ${manipulationKeys.join(' | ')} |`);
@@ -313,7 +315,7 @@ for (const cell of cells) {
     };
     const flags = manipulationKeys.map((key) => share((r) => manipulationFlags(r.meta)[key]));
     const loaded = share((r) =>
-      r.meta.loadedSkills === undefined ? undefined : r.meta.loadedSkills.length > 0,
+      r.meta.loadedSkills === undefined ? undefined : r.meta.loadedSkills.includes(EVALUATED_SKILL),
     );
     const network = share((r) =>
       r.meta.networkAttempts === undefined ? undefined : r.meta.networkAttempts.length > 0,
@@ -328,7 +330,7 @@ for (const cell of cells) {
 out();
 out('## 7. 비용·시간·턴 (판정하지 않음)');
 out();
-out('오염 실행을 뺀 모든 실행의 두 턴 합이다. 단가는 사전 등록의 모델별 값(1M 토큰당 USD)이다.');
+out('오염 실행을 뺀 모든 실행의 턴 기록 합이다. 단가는 사전 등록의 모델별 값(1M 토큰당 USD)이다.');
 out();
 out('| 프로젝트 | 모델 | 조건 | 평균 비용(USD) | 총 비용(USD) | 평균 시간(분) | 평균 턴 |');
 out('|---|---|---|---|---|---|---|');

@@ -110,6 +110,22 @@ describe('턴 합산', () => {
     expect(runTurnCount(meta)).toBe(13);
   });
 
+  it('프로젝트 실행처럼 turn 하나만 기록한 meta도 읽는다', () => {
+    const { turns, ...rest } = meta;
+    expect(turns).toBeDefined();
+    const single: RunMeta = {
+      ...rest,
+      turn: {
+        usage: { input: 1_000_000, output: 0, cacheRead: 0, cacheCreation: 0 },
+        durationMs: 700,
+        numTurns: 9,
+      },
+    };
+    expect(runCost(single, pricing)).toBeCloseTo(2, 10);
+    expect(runDurationMs(single)).toBe(700);
+    expect(runTurnCount(single)).toBe(9);
+  });
+
   it('턴 기록이 없으면 null이다', () => {
     const bare: RunMeta = { ...meta, turns: [] };
     expect(runCost(bare, pricing)).toBeNull();
