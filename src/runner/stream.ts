@@ -8,9 +8,12 @@
  * - 첫 system/init 메시지에 로드된 skills, plugins, tools, mcp_servers가 들어 있다.
  * - 슬래시 명령으로 확장된 사용자 메시지는 출력에 나오지 않는다.
  * - 거부된 도구 호출은 result 메시지의 permission_denials에 입력과 함께 남는다.
+ * - init과 result 메시지에 session_id가, init에 claude_code_version이 들어 있다.
  */
 
 export interface InitInfo {
+  readonly sessionId: string | null;
+  readonly claudeCodeVersion: string | null;
   readonly model: string | null;
   readonly permissionMode: string | null;
   readonly tools: readonly string[];
@@ -33,6 +36,7 @@ export interface TokenUsage {
 }
 
 export interface ResultInfo {
+  readonly sessionId: string | null;
   readonly subtype: string;
   readonly isError: boolean;
   readonly numTurns: number;
@@ -45,6 +49,8 @@ export interface Transcript {
   readonly init: InitInfo | null;
   readonly toolUses: readonly ToolUse[];
   readonly result: ResultInfo | null;
+  /** 다음 턴에서 --resume에 넘길 세션 ID. result의 값을 먼저 쓰고, 없으면 init의 값을 쓴다. */
+  readonly sessionId: string | null;
   /** JSON으로 읽히지 않은 줄 수. 0이 아니면 기록이 잘렸거나 섞였다는 신호다. */
   readonly malformedLines: number;
 }
@@ -88,6 +94,8 @@ function toToolUse(value: unknown, nameKey: string, inputKey: string): ToolUse |
 
 function parseInit(event: Json): InitInfo {
   return {
+    sessionId: asString(event['session_id']),
+    claudeCodeVersion: asString(event['claude_code_version']),
     model: asString(event['model']),
     permissionMode: asString(event['permissionMode']),
     tools: names(event['tools']),
@@ -107,6 +115,7 @@ function parseResult(event: Json): ResultInfo {
     if (use !== null) deniedTools.push(use);
   }
   return {
+    sessionId: asString(event['session_id']),
     subtype: asString(event['subtype']) ?? 'unknown',
     isError: event['is_error'] === true,
     numTurns: asNumber(event['num_turns']),
@@ -171,5 +180,6 @@ export function parseTranscript(jsonl: string): Transcript {
     }
   }
 
-  return { init, toolUses, result, malformedLines };
+  const sessionId = result?.sessionId ?? init?.sessionId ?? null;
+  return { init, toolUses, result, sessionId, malformedLines };
 }

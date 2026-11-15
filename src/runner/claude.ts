@@ -7,16 +7,39 @@
  *   거부 목록을 모든 arm에 똑같이 준다.
  * - 프롬프트는 인자가 아니라 stdin으로 넘긴다. 셸 인코딩의 영향을 받지 않는다.
  * - 타임아웃 때는 에이전트가 띄운 자식 프로세스까지 종료한다.
+ * - 실행 하나는 한 턴이다. `--resume <session_id>`는 이어 받기가 필요할 때를 위해 남겨 둔다.
  */
 import { spawn } from 'node:child_process';
 
 /** 사용자 환경을 차단하는 옵션. 격리 프로브로 검증했다. */
-export const ISOLATION_ARGS = [
-  '--setting-sources',
-  '',
-  '--strict-mcp-config',
-  '--no-session-persistence',
-] as const;
+export const ISOLATION_ARGS = ['--setting-sources', '', '--strict-mcp-config'] as const;
+
+/** 닿지 않는 로컬 포트. 이 프록시를 거치는 연결은 바로 거부된다. */
+export const BLOCKING_PROXY = 'http://127.0.0.1:9';
+
+/**
+ * 프록시를 거치지 않는 호스트. CLI가 API 호출과 OAuth 토큰 갱신에 쓰는 것만 둔다
+ * (code.claude.com/docs/en/network-config의 Network access requirements 표).
+ * 선택 사항인 원격 측정 호스트(Datadog)는 넣지 않아 차단된다.
+ */
+export const API_HOSTS = ['api.anthropic.com', 'claude.ai', 'platform.claude.com'] as const;
+
+/**
+ * 자식 프로세스 환경에 넣는 네트워크 차단 변수. 대소문자 두 형태를 모두 넣는다.
+ * NODE_USE_ENV_PROXY=1이면 에이전트가 띄운 node의 fetch도 이 프록시를 따른다.
+ */
+export function networkBlockEnv(): Record<string, string> {
+  const noProxy = API_HOSTS.join(',');
+  return {
+    HTTP_PROXY: BLOCKING_PROXY,
+    HTTPS_PROXY: BLOCKING_PROXY,
+    http_proxy: BLOCKING_PROXY,
+    https_proxy: BLOCKING_PROXY,
+    NO_PROXY: noProxy,
+    no_proxy: noProxy,
+    NODE_USE_ENV_PROXY: '1',
+  };
+}
 
 /** 에이전트에게 허용하는 Bash 명령. 탐색 명령을 포함해 Skill 없는 arm이 불리하지 않게 한다. */
 export const ALLOWED_TOOLS = [
@@ -56,9 +79,20 @@ export const DISALLOWED_TOOLS = [
   'Bash(npm i:*)',
   'Bash(npm view:*)',
   'Bash(npm info:*)',
+  'Bash(npm ci:*)',
   'Bash(pnpm:*)',
-  'Bash(yarn:*)',
-  'Bash(git:*)',
+  // 프로젝트 단위 과제에서는 개발자처럼 git status·diff와 yarn 스크립트를 쓸 수 있어야 한다.
+  // 원격에 닿는 하위 명령과 패키지 설치만 막는다. 프록시도 함께 막는다.
+  'Bash(yarn add:*)',
+  'Bash(yarn install:*)',
+  'Bash(yarn dlx:*)',
+  'Bash(yarn up:*)',
+  'Bash(git fetch:*)',
+  'Bash(git pull:*)',
+  'Bash(git push:*)',
+  'Bash(git clone:*)',
+  'Bash(git remote:*)',
+  'Bash(git submodule:*)',
 ] as const;
 
 export interface RunConfig {
@@ -68,9 +102,11 @@ export interface RunConfig {
   readonly emptyMcpConfig: string;
   /** 로드할 플러그인 폴더. 대조 arm은 null. */
   readonly pluginDir: string | null;
+  /** 두 번째 턴에서 이어 받을 세션 ID. 첫 턴은 null. */
+  readonly resumeSessionId?: string | null;
 }
 
-/** arm 사이의 차이는 --plugin-dir 하나뿐이다. */
+/** arm 사이의 차이는 --plugin-dir 하나뿐이다. 턴 사이의 차이는 --resume 하나뿐이다. */
 export function buildArgs(config: RunConfig): string[] {
   const args = [
     '-p',
@@ -91,6 +127,7 @@ export function buildArgs(config: RunConfig): string[] {
     '--disallowedTools',
     ...DISALLOWED_TOOLS,
   ];
+  if (config.resumeSessionId != null) args.push('--resume', config.resumeSessionId);
   if (config.pluginDir !== null) args.push('--plugin-dir', config.pluginDir);
   return args;
 }
@@ -102,6 +139,8 @@ export interface SpawnOptions {
   readonly cwd: string;
   readonly prompt: string;
   readonly timeoutMs: number;
+  /** 부모 환경 위에 덮어쓸 변수. */
+  readonly env?: Readonly<Record<string, string>>;
 }
 
 export interface SpawnResult {
@@ -131,7 +170,7 @@ export function runProcess(options: SpawnOptions): Promise<SpawnResult> {
   return new Promise((resolve, reject) => {
     const started = Date.now();
     // 중첩 실행을 막는 표시를 지운다. 대화형 터미널 충돌을 막으려는 표시라 하위 프로세스에는 무해하다.
-    const env = { ...process.env };
+    const env = { ...process.env, ...options.env };
     delete env['CLAUDECODE'];
 
     const child = spawn(options.command, [...options.args], {

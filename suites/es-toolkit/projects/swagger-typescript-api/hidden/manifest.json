@@ -1,0 +1,360 @@
+[
+  {
+    "id": "sta-01",
+    "file": "hidden-config.test.ts",
+    "title": "configuration.ts:constructor/objectAssign(primitiveTypeConstructs): function result is deep-merged into primitiveTypes",
+    "srcFile": "src/configuration.ts (src/util/object-assign.ts)",
+    "lodashFn": "merge (inside objectAssign)",
+    "divergence": "Deep merge of the primitiveTypeConstructs() result: only string/date-time changes, sibling formats ($default, binary) survive. Shallow Object.assign drops siblings; Object.assign(target, fn) ignores the function entirely.",
+    "passesAtBase": true,
+    "failsOnHumanPR": true
+  },
+  {
+    "id": "sta-02",
+    "file": "hidden-config.test.ts",
+    "title": "configuration.ts:constructor/objectAssign(codeGenConstructs): partial Keyword override keeps the other keywords",
+    "srcFile": "src/configuration.ts (src/util/object-assign.ts)",
+    "lodashFn": "merge (inside objectAssign)",
+    "divergence": "Deep merge of codeGenConstructs() result: overriding Keyword.Any keeps Keyword.Number/String; shallow assign replaces the Keyword map, Object.assign(target, fn) ignores the function.",
+    "passesAtBase": true,
+    "failsOnHumanPR": true
+  },
+  {
+    "id": "sta-03",
+    "file": "hidden-config.test.ts",
+    "title": "configuration.ts:update/objectAssign(extractingOptions): partial extractingOptions keeps default suffix lists",
+    "srcFile": "src/configuration.ts (src/util/object-assign.ts)",
+    "lodashFn": "merge (inside objectAssign)",
+    "divergence": "Nested extractingOptions merged deeply and arrays index-wise (['Form','Body','Input']); shallow assign loses the default suffix lists.",
+    "passesAtBase": true,
+    "failsOnHumanPR": true
+  },
+  {
+    "id": "sta-04",
+    "file": "hidden-config.test.ts",
+    "title": "configuration.ts:update/objectAssign(fileNames): partial fileNames keeps the other modular file names",
+    "srcFile": "src/configuration.ts (src/util/object-assign.ts)",
+    "lodashFn": "merge (inside objectAssign)",
+    "divergence": "Partial fileNames keeps httpClient/routeTypes defaults; shallow assign leaves them undefined (TypeError in modular output).",
+    "passesAtBase": true,
+    "failsOnHumanPR": true
+  },
+  {
+    "id": "sta-05",
+    "file": "hidden-config.test.ts",
+    "title": "request.ts:download(lodash.merge): requestOptions headers are deep-merged with the Authorization header",
+    "srcFile": "src/util/request.ts",
+    "lodashFn": "merge",
+    "divergence": "lodash.merge deep-merges requestOptions.headers with the Authorization header from authorizationToken; a shallow merge/spread drops one of them.",
+    "passesAtBase": true,
+    "failsOnHumanPR": false
+  },
+  {
+    "id": "sta-06",
+    "file": "hidden-config.test.ts",
+    "title": "code-gen-process.ts:createApiConfig(lodash.merge externalDocs / compact tags): defaults filled, missing values tolerated",
+    "srcFile": "src/code-gen-process.ts",
+    "lodashFn": "merge, compact",
+    "divergence": "merge(defaults, externalDocs) fills description:'' and tolerates missing externalDocs; compact(undefined tags) -> [] (strict merge/compact throw on undefined).",
+    "passesAtBase": true,
+    "failsOnHumanPR": false
+  },
+  {
+    "id": "sta-07",
+    "file": "hidden-config.test.ts",
+    "title": "schema-parser.ts:parseSchema(lodash.merge onPreParseSchema): hook result is deep-merged into the schema",
+    "srcFile": "src/schema-parser/schema-parser.ts",
+    "lodashFn": "merge",
+    "divergence": "Hook result deep-merged into the schema (nested property patch keeps type and sibling properties); shallow assign replaces properties; strict merge(target, undefined) throws for hooks returning nothing.",
+    "passesAtBase": true,
+    "failsOnHumanPR": false
+  },
+  {
+    "id": "sta-08",
+    "file": "hidden-naming.test.ts",
+    "title": "type-name-formatter.ts:format/fixModelName(lodash.startCase): acronym, kebab-case and accented model names",
+    "srcFile": "src/type-name-formatter.ts",
+    "lodashFn": "startCase",
+    "divergence": "lodash keeps acronym runs (APIError, OAuth2Token, XMLDocument) and deburrs (Rechnungsübersicht -> Rechnungsubersicht); strict es-toolkit startCase yields 'Api Error' and keeps the umlaut.",
+    "passesAtBase": true,
+    "failsOnHumanPR": false
+  },
+  {
+    "id": "sta-09",
+    "file": "hidden-naming.test.ts",
+    "title": "type-name-formatter.ts:format(lodash.startCase): CJK model names split from the Latin suffix",
+    "srcFile": "src/type-name-formatter.ts",
+    "lodashFn": "startCase",
+    "divergence": "lodash splits '用户' from 'Controller' and keeps the capital; es-toolkit/compat and strict give Type用户controller.",
+    "passesAtBase": true,
+    "failsOnHumanPR": false,
+    "note": "es-toolkit 1.53.2 fixture 관문에서 사람 PR이 통과(서수·한자 처리는 v1.50.0에서 lodash와 같아짐). 이 버전에서는 사람 PR을 판별하지 않지만 strict 치환은 잡는다."
+  },
+  {
+    "id": "sta-10",
+    "file": "hidden-naming.test.ts",
+    "title": "type-name-formatter.ts:format(lodash.startCase enum-key): ordinal enum values keep 1st/2nd/3rd/4th intact",
+    "srcFile": "src/type-name-formatter.ts",
+    "lodashFn": "startCase",
+    "divergence": "lodash keeps ordinals as one word (Value1st); es-toolkit/compat and strict split '1st' -> Value1St.",
+    "passesAtBase": true,
+    "failsOnHumanPR": false,
+    "note": "es-toolkit 1.53.2 fixture 관문에서 사람 PR이 통과(서수·한자 처리는 v1.50.0에서 lodash와 같아짐). 이 버전에서는 사람 PR을 판별하지 않지만 strict 치환은 잡는다."
+  },
+  {
+    "id": "sta-11",
+    "file": "hidden-naming.test.ts",
+    "title": "enum.ts:parse(lodash.size/lodash.get x-enumNames): x-enumNames with ordinals map to the enum values by index",
+    "srcFile": "src/schema-parser/base-schema-parsers/enum.ts",
+    "lodashFn": "size, get",
+    "divergence": "x-enumNames mapped by index with get(enum, i); keys formatted via startCase (Review1st vs compat Review1St).",
+    "passesAtBase": true,
+    "failsOnHumanPR": false,
+    "note": "es-toolkit 1.53.2 fixture 관문에서 사람 PR이 통과(서수·한자 처리는 v1.50.0에서 lodash와 같아짐). 이 버전에서는 사람 PR을 판별하지 않지만 strict 치환은 잡는다."
+  },
+  {
+    "id": "sta-12",
+    "file": "hidden-naming.test.ts",
+    "title": "schema-routes.ts:getRouteName/moduleName(lodash.camelCase firstTag): tags with umlauts/accents become deburred module names",
+    "srcFile": "src/schema-routes/schema-routes.ts",
+    "lodashFn": "camelCase",
+    "divergence": "camelCase(firstTag) deburrs (Rechnungsübersicht -> rechnungsubersicht, Café -> cafe); strict es-toolkit camelCase keeps accents.",
+    "passesAtBase": true,
+    "failsOnHumanPR": false
+  },
+  {
+    "id": "sta-13",
+    "file": "hidden-naming.test.ts",
+    "title": "route-name.ejs:_.camelCase(operationId)/createCustomOperationId: Springfox, ordinal and accented route names",
+    "srcFile": "templates/base/route-name.ejs (+ src/schema-routes/schema-routes.ts path params)",
+    "lodashFn": "_.camelCase, _.compact, _.replace, _.lowerCase, camelCase",
+    "divergence": "Template route names: Springfox ids, ordinal ids (list2ndFactorMethods vs compat list2NdFactorMethods), deburred custom ids (cremeBruleeList), camelCased path params.",
+    "passesAtBase": true,
+    "failsOnHumanPR": false,
+    "note": "es-toolkit 1.53.2 fixture 관문에서 사람 PR이 통과(서수·한자 처리는 v1.50.0에서 lodash와 같아짐). 이 버전에서는 사람 PR을 판별하지 않지만 strict 치환은 잡는다."
+  },
+  {
+    "id": "sta-14",
+    "file": "hidden-naming.test.ts",
+    "title": "util/pascal-case.ts:pascalCase(lodash.upperFirst+camelCase): @name JSDoc of ordinal / Springfox routes",
+    "srcFile": "src/util/pascal-case.ts",
+    "lodashFn": "upperFirst, camelCase",
+    "divergence": "pascalCase(routeName) in @name JSDoc: List2ndFactorMethods (lodash) vs List2NdFactorMethods (es-toolkit compat/strict).",
+    "passesAtBase": true,
+    "failsOnHumanPR": false,
+    "note": "es-toolkit 1.53.2 fixture 관문에서 사람 PR이 통과(서수·한자 처리는 v1.50.0에서 lodash와 같아짐). 이 버전에서는 사람 PR을 판별하지 않지만 strict 치환은 잡는다."
+  },
+  {
+    "id": "sta-15",
+    "file": "hidden-naming.test.ts",
+    "title": "schema-utils.ts:buildTypeNameFromPath(lodash.uniq/compact/camelCase): extracted inline enum names",
+    "srcFile": "src/schema-parser/schema-utils.ts",
+    "lodashFn": "uniq, compact, camelCase",
+    "divergence": "Extracted inline enum names pascalCase(camelCase(typeName_prop)) + Enum: ApiErrorLevelEnum, deburred RechnungsubersichtStatusEnum (strict camelCase keeps 'ü').",
+    "passesAtBase": true,
+    "failsOnHumanPR": false
+  },
+  {
+    "id": "sta-16",
+    "file": "hidden-schema.test.ts",
+    "title": "object.ts:getObjectSchemaContent(lodash.map(allOf, 'description')/lodash.get rawTypeData): property descriptions from allOf members and referenced schemas",
+    "srcFile": "src/schema-parser/base-schema-parsers/object.ts",
+    "lodashFn": "map (property shorthand), compact, get (default {})",
+    "divergence": "Property description from allOf member descriptions via map(allOf,'description') and from the referenced schema via get(refType,'rawTypeData',{}).",
+    "passesAtBase": true,
+    "failsOnHumanPR": false
+  },
+  {
+    "id": "sta-17",
+    "file": "hidden-schema.test.ts",
+    "title": "complex.ts:parse(lodash.omit/clone/keys/compact/map): allOf plus sibling properties becomes an intersection with the description of an allOf member",
+    "srcFile": "src/schema-parser/base-schema-parsers/complex.ts",
+    "lodashFn": "omit, clone, keys, compact, map",
+    "divergence": "allOf with sibling properties -> 'Pet & { bark?: boolean }', description taken from the allOf member.",
+    "passesAtBase": true,
+    "failsOnHumanPR": false
+  },
+  {
+    "id": "sta-18",
+    "file": "hidden-schema.test.ts",
+    "title": "discriminator.ts:createMappingContent(lodash.entries mapping, lodash.reduce enum keys, lodash.get): mapping with an enum-typed discriminator property, with and without union enums",
+    "srcFile": "src/schema-parser/base-schema-parsers/discriminator.ts",
+    "lodashFn": "entries, reduce, get, keys, omit",
+    "divergence": "Mapping via entries(mapping) (undefined mapping -> []), enum-key map built by reduce over the enum array, union-enum literal keys.",
+    "passesAtBase": true,
+    "failsOnHumanPR": false
+  },
+  {
+    "id": "sta-19",
+    "file": "hidden-schema.test.ts",
+    "title": "schema-utils.ts:getInternalSchemaType(lodash.isEmpty enum): an empty enum array is not treated as an enum",
+    "srcFile": "src/schema-parser/schema-utils.ts",
+    "lodashFn": "isEmpty",
+    "divergence": "isEmpty([]) is true so enum: [] stays a primitive string; a truthiness check would route it to the enum parser.",
+    "passesAtBase": true,
+    "failsOnHumanPR": false
+  },
+  {
+    "id": "sta-20",
+    "file": "hidden-schema.test.ts",
+    "title": "schema-utils.ts:getSchemaPrimitiveType(internalCase type) / isNullMissingInType(lodash.get x-nullable): nullable types",
+    "srcFile": "src/schema-parser/schema-utils.ts",
+    "lodashFn": "camelCase+lowerCase (internalCase), get",
+    "divergence": "OAS 3.1 type ['string','null'] and Swagger 2 x-nullable both yield 'string | null'.",
+    "passesAtBase": true,
+    "failsOnHumanPR": false
+  },
+  {
+    "id": "sta-21",
+    "file": "hidden-schema.test.ts",
+    "title": "schema-utils.ts:makeAddRequiredToChildSchema(lodash.uniq/keys): parent `required` propagates into allOf members",
+    "srcFile": "src/schema-parser/schema-utils.ts",
+    "lodashFn": "uniq, keys",
+    "divergence": "Parent required list propagated into inline allOf members (street/city required, zip optional).",
+    "passesAtBase": true,
+    "failsOnHumanPR": false
+  },
+  {
+    "id": "sta-22",
+    "file": "hidden-schema.test.ts",
+    "title": "configuration.ts:Ts.UnionType(lodash.join(lodash.uniq)): duplicate oneOf members are de-duplicated",
+    "srcFile": "src/configuration.ts",
+    "lodashFn": "join, uniq",
+    "divergence": "oneOf [string, integer, string, number] -> 'string | number'.",
+    "passesAtBase": true,
+    "failsOnHumanPR": false
+  },
+  {
+    "id": "sta-23",
+    "file": "hidden-routes.test.ts",
+    "title": "schema-routes.ts:createRequestsMap(lodash.reduce/concat/compact/get): path-level parameters merged into every method, x-* keys skipped",
+    "srcFile": "src/schema-routes/schema-routes.ts",
+    "lodashFn": "reduce, concat, compact, get",
+    "divergence": "Path-level parameters concatenated into each method (concat(undefined, ...) + compact); x-* path-item keys and 'parameters' skipped while reducing over an object.",
+    "passesAtBase": true,
+    "failsOnHumanPR": false
+  },
+  {
+    "id": "sta-24",
+    "file": "hidden-routes.test.ts",
+    "title": "schema-routes.ts:getContentTypes(lodash.flatten/map/keys/uniq/compact): content kinds for multipart, text/plain, 204 and $ref responses",
+    "srcFile": "src/schema-routes/schema-routes.ts",
+    "lodashFn": "flatten, map, keys, uniq, compact",
+    "divergence": "map over a responses object, keys(undefined content) for 204/$ref responses; native .map / Object.keys(undefined) would throw. flatten vs flattenDeep is not observable here (inner arrays only hold strings).",
+    "passesAtBase": true,
+    "failsOnHumanPR": false
+  },
+  {
+    "id": "sta-25",
+    "file": "hidden-routes.test.ts",
+    "title": "swagger-schema-resolver.ts:fixSwaggerSchema(lodash.each/get/uniq/compact): Swagger 2 consumes merged and path params restored",
+    "srcFile": "src/swagger-schema-resolver.ts",
+    "lodashFn": "each, get, uniq, compact",
+    "divergence": "Swagger 2: duplicated op-level consumes de-duplicated and merged (UrlEncoded); path-level params pushed back to every method; get with [] default.",
+    "passesAtBase": true,
+    "failsOnHumanPR": false
+  },
+  {
+    "id": "sta-26",
+    "file": "hidden-routes.test.ts",
+    "title": "schema-formatters.ts:formatDescription(lodash chain compact, inline) + route-docs.ejs(_.replace): @response lines",
+    "srcFile": "src/schema-parser/schema-formatters.ts (+ templates/base/route-docs.ejs)",
+    "lodashFn": "chain split/map/compact/join, _.replace",
+    "divergence": "Inline multi-line description collapsed with compact (blank lines dropped) into @response lines; route-docs _.replace escaping.",
+    "passesAtBase": true,
+    "failsOnHumanPR": false
+  },
+  {
+    "id": "sta-27",
+    "file": "hidden-routes.test.ts",
+    "title": "schema-routes.ts:getRouteName(lodash.camelCase(lodash.compact(route.split('/'))[moduleNameIndex])) + getGroupedRoutes(lodash.reduce/each): module grouping by path index",
+    "srcFile": "src/schema-routes/schema-routes.ts",
+    "lodashFn": "camelCase, compact, reduce, each",
+    "divergence": "camelCase(compact(route.split('/'))[1]) -> 'storeId'; camelCase(undefined) -> '' puts /health out of module (strict camelCase(undefined) throws); grouping reduce over an object.",
+    "passesAtBase": true,
+    "failsOnHumanPR": false
+  },
+  {
+    "id": "sta-28",
+    "file": "hidden-templates.test.ts",
+    "title": "code-gen-process.ts:getRenderTemplateData(_): every lodash function used by the default templates is still provided",
+    "srcFile": "src/code-gen-process.ts",
+    "lodashFn": "_ object (isUndefined, compact, camelCase, map, replace, get, upperCase, values, lowerCase, join, isObject, uniq, size, isString, isEmpty)",
+    "divergence": "The `_` passed to templates must still expose every lodash function the bundled templates call (strict es-toolkit lacks map/get/values/size/join/replace/isObject).",
+    "passesAtBase": true,
+    "failsOnHumanPR": false
+  },
+  {
+    "id": "sta-29",
+    "file": "hidden-templates.test.ts",
+    "title": "templates(_.camelCase/_.lowerCase/_.upperCase): route-name / route-docs casing on Springfox, ordinal and accented inputs",
+    "srcFile": "templates/base/route-name.ejs, templates/base/route-docs.ejs",
+    "lodashFn": "_.camelCase, _.lowerCase, _.upperCase",
+    "divergence": "Ordinals (list2ndFactorMethods, 'LIST 2ND'), deburr (postUbersicht), Springfox ids through the template `_`; es-toolkit/compat splits ordinals.",
+    "passesAtBase": true,
+    "failsOnHumanPR": false,
+    "note": "es-toolkit 1.53.2 fixture 관문에서 사람 PR이 통과(서수·한자 처리는 v1.50.0에서 lodash와 같아짐). 이 버전에서는 사람 PR을 판별하지 않지만 strict 치환은 잡는다."
+  },
+  {
+    "id": "sta-30",
+    "file": "hidden-templates.test.ts",
+    "title": "templates(_.compact/_.uniq/_.join/_.size/_.isEmpty/_.isUndefined/_.isObject/_.isString): falsy filtering, de-duplication, size/emptiness and type guards on edge values",
+    "srcFile": "templates/base/data-contract-jsdoc.ejs, object-field-jsdoc.ejs, route-docs.ejs, default/procedure-call.ejs",
+    "lodashFn": "_.compact, _.uniq, _.join, _.size, _.isEmpty, _.isUndefined, _.isObject, _.isString",
+    "divergence": "compact with 0/NaN/''/null, size of undefined/object/string, isEmpty of numbers/Map/strings, isObject(function/null/Date).",
+    "passesAtBase": true,
+    "failsOnHumanPR": false
+  },
+  {
+    "id": "sta-31",
+    "file": "hidden-templates.test.ts",
+    "title": "templates(_.map/_.values/_.get/_.replace): property shorthand over objects, undefined inputs, string paths, regex replace",
+    "srcFile": "templates/default/procedure-call.ejs, route-types.ejs, base/route-docs.ejs, default/api.ejs",
+    "lodashFn": "_.map, _.values, _.get, _.replace",
+    "divergence": "map(object,'name') shorthand, map/values of undefined, values of a string, get with dotted/array/bracket paths and default, regex replace.",
+    "passesAtBase": true,
+    "failsOnHumanPR": false
+  },
+  {
+    "id": "sta-32",
+    "file": "hidden-templates.test.ts",
+    "title": "code-gen-process.ts:getRenderTemplateData(utils.internalCase/pascalCase/formatDescription): helpers exposed to templates",
+    "srcFile": "src/code-gen-process.ts (src/util/internal-case.ts, src/util/pascal-case.ts)",
+    "lodashFn": "camelCase+lowerCase (internalCase), upperFirst+camelCase (pascalCase), chain compact (formatDescription)",
+    "divergence": "utils.internalCase('list_2nd') -> 'list2nd' (compat 'list2Nd'), pascalCase keeps the CJK capital, inline description collapse.",
+    "passesAtBase": true,
+    "failsOnHumanPR": false,
+    "note": "es-toolkit 1.53.2 fixture 관문에서 사람 PR이 통과(서수·한자 처리는 v1.50.0에서 lodash와 같아짐). 이 버전에서는 사람 PR을 판별하지 않지만 strict 치환은 잡는다."
+  },
+  {
+    "id": "sta-33",
+    "file": "hidden-e2e.test.ts",
+    "title": "code-gen-process.ts:generateApi(e2e naming.json): full output equals lodash-era golden",
+    "srcFile": "src/code-gen-process.ts (whole pipeline)",
+    "lodashFn": "startCase, camelCase, upperFirst, lowerCase, compact, uniq, get, size, template _",
+    "divergence": "Whole-file golden of a spec with acronym/accented/CJK/ordinal names, tag modules, x-enumNames, extracted enums and route types.",
+    "passesAtBase": true,
+    "failsOnHumanPR": false,
+    "note": "es-toolkit 1.53.2 fixture 관문에서 사람 PR이 통과(서수·한자 처리는 v1.50.0에서 lodash와 같아짐). 이 버전에서는 사람 PR을 판별하지 않지만 strict 치환은 잡는다."
+  },
+  {
+    "id": "sta-34",
+    "file": "hidden-e2e.test.ts",
+    "title": "code-gen-process.ts:generateApi(e2e schemas.json): full output equals lodash-era golden",
+    "srcFile": "src/code-gen-process.ts (whole pipeline)",
+    "lodashFn": "map, get, omit, clone, keys, entries, reduce, isEmpty, uniq, join, compact, merge",
+    "divergence": "Whole-file golden of allOf/discriminator/nullable/empty-enum schemas with every extract flag and @response docs.",
+    "passesAtBase": true,
+    "failsOnHumanPR": false
+  },
+  {
+    "id": "sta-35",
+    "file": "hidden-e2e.test.ts",
+    "title": "code-gen-process.ts:generateApi(e2e routes.json modular): full multi-file output equals lodash-era golden",
+    "srcFile": "src/code-gen-process.ts (whole pipeline)",
+    "lodashFn": "reduce, concat, compact, flatten, keys, uniq, each, camelCase, merge",
+    "divergence": "Whole multi-file golden of a modular build (path-level params, $ref responses, multipart, route types, sortRoutes).",
+    "passesAtBase": true,
+    "failsOnHumanPR": false
+  }
+]

@@ -1,0 +1,22 @@
+{
+  "hiddenDest": "test/__hidden__",
+  "lodashScanGlobs": [
+    "src/**/*.{ts,tsx,js,jsx,mts,cts,mjs,cjs}",
+    "test/**/*.{ts,tsx,js,jsx,mts,cts,mjs,cjs}",
+    "storybook/**/*.{ts,tsx,js,jsx,mdx}",
+    "scripts/**/*.{ts,js,mjs,cjs}",
+    "*.{ts,mts,cts,js,mjs,cjs}"
+  ],
+  "packageJsonPaths": ["package.json"],
+  "testEnv": {
+    "HTTP_PROXY": "http://127.0.0.1:9",
+    "HTTPS_PROXY": "http://127.0.0.1:9",
+    "http_proxy": "http://127.0.0.1:9",
+    "https_proxy": "http://127.0.0.1:9",
+    "ALL_PROXY": "http://127.0.0.1:9",
+    "NODE_USE_ENV_PROXY": "1",
+    "CI": "1",
+    "FORCE_COLOR": "0"
+  },
+  "timeoutsSec": { "typecheck": 1200, "tests": 1800, "hidden": 900 }
+}

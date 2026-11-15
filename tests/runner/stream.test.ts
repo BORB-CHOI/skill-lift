@@ -9,6 +9,8 @@ function lines(...events: unknown[]): string {
 const init = {
   type: 'system',
   subtype: 'init',
+  session_id: 'sess-init',
+  claude_code_version: '2.1.316',
   model: 'claude-haiku-5-5',
   permissionMode: 'default',
   tools: ['Bash', 'Read', 'Write', 'Skill'],
@@ -38,6 +40,7 @@ const writeUse = {
 const result = {
   type: 'result',
   subtype: 'success',
+  session_id: 'sess-result',
   is_error: false,
   num_turns: 4,
   duration_ms: 12000,
@@ -59,6 +62,14 @@ describe('parseTranscript', () => {
     expect(t.init?.plugins).toEqual(['es-toolkit', 'cc-plugin-telemetry']);
     expect(t.init?.mcpServers).toEqual([]);
     expect(t.init?.permissionMode).toBe('default');
+  });
+
+  it('세션 ID는 result를 먼저 쓰고 없으면 init을 쓴다', () => {
+    expect(parseTranscript(lines(init, result)).sessionId).toBe('sess-result');
+    const t = parseTranscript(lines(init, bashUse));
+    expect(t.sessionId).toBe('sess-init');
+    expect(t.init?.claudeCodeVersion).toBe('2.1.316');
+    expect(parseTranscript('').sessionId).toBeNull();
   });
 
   it('도구 호출을 순서대로 모은다', () => {

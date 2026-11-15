@@ -1,0 +1,948 @@
+{
+  "version": "project-v1",
+  "createdAt": "2026-11-14T15:03:27.430Z",
+  "commit": "23ac2a26ecd25e0001340d8a4c00f9b6ee95ad4f",
+  "design": {
+    "file": "docs/design.md",
+    "sha256": "03026bb67c2a78e995ca601d295d7a14d02196424e118fc1e9b669ef0c864be0"
+  },
+  "target": {
+    "source": "toss/es-toolkit",
+    "commit": "4d5963eb2df129021efdba0de5a3a16bbb3c7bec",
+    "skillBlob": "3a83c141db5cc0045bfb7cfed3e0e519040ba937",
+    "arms": {
+      "skill": {
+        "sha256": "cca4099c964a72748ff716a03846e06ad486f0e7d0adbb4e343152a6b3f9f497",
+        "bytes": 8231
+      },
+      "placebo": {
+        "sha256": "c2a23e73b8a2763c11d08a8cc8c0d596b45cf0e2994bc1dc7c0badef42899287",
+        "bytes": 6114
+      }
+    }
+  },
+  "environment": {
+    "claudeVersion": "2.1.316 (Claude Code)",
+    "esToolkit": "1.53.2"
+  },
+  "projects": ["recharts", "swagger-typescript-api"],
+  "models": ["claude-sonnet-5-5", "claude-haiku-5-5"],
+  "arms": ["baseline", "skill", "placebo"],
+  "prompts": {
+    "armPrefix": "/es-toolkit:migrate ",
+    "project": "Migrate this project from lodash to es-toolkit. Replace every use of lodash in the project and remove lodash from its dependencies. es-toolkit 1.53.2 is already installed in node_modules; add it to package.json yourself. The network is offline, so do not run package installs. Keep the existing behaviour. Do not ask questions; decide yourself."
+  },
+  "placebo": "<!-- Evaluation-only placebo. Not the official toss/es-toolkit skill. -->\n\n# Careful Dependency Change Guide\n\nGeneral guidance for replacing one dependency with another in an existing codebase. It applies to any library swap and does not describe any particular library.\n\n## Input\n\n$ARGUMENTS — The change request.\n\n## Why a careful change matters\n\nDependency changes rarely fail because of the new library itself. They fail because the change was too large to review, was mixed with unrelated edits, or quietly altered an interface that other modules relied on. A careful change keeps each step small enough to understand, easy to explain, and easy to undo.\n\nThe goal of this guide is not speed. The goal is a change that a teammate can read once and trust.\n\n## Workflow\n\n### 1. Restate the request\n\nRead the request and restate it to yourself in one sentence. Identify which files are in scope and which are not. If the request names a single file, stay inside that file. If the request is ambiguous about scope, choose the narrower reading and mention the choice in your summary.\n\n### 2. Read the file before editing\n\nRead the file from top to bottom before changing anything. Note the public interface that other modules rely on, the naming conventions in use, the order of declarations, and the formatting style. A dependency change should leave these as they were, so that the diff shows only what the change required.\n\nPay attention to comments. Comments often record why a line looks the way it does. Keep comments that still describe the code, and update comments whose meaning the change affects.\n\n### 3. Plan the edits\n\nBefore editing, list the places in the file that refer to the old dependency. Group them by the kind of change each one needs. A short plan written in your head or in a scratch note makes it less likely that one usage is forgotten and more likely that similar usages are changed in the same way.\n\n### 4. Make one change at a time\n\nPrefer a sequence of small edits over one large rewrite. Change one usage, then the next. Avoid reformatting lines you did not need to touch, because unrelated whitespace changes make the diff harder to review and hide the lines that matter.\n\nKeep the shape of each expression close to the original when you can. A reviewer reads a diff faster when the before and after line up.\n\n### 5. Keep the public interface stable\n\nCallers should not need to change. Keep exported names, parameter names and order, optional parameters, and return shapes as they are unless the request explicitly asks for an interface change. If an internal helper becomes unused, remove it only when it is not exported.\n\n### 6. Keep types honest\n\nDo not widen a type to make an edit compile, and do not add type assertions that hide a real mismatch. If a type has to change, change it in one place and keep the change visible in the diff. Prefer explicit types on exported functions so that the interface stays readable.\n\n### 7. Write down what you did\n\nSummarize the change in plain language: what was replaced, what was left alone and why, and anything a reviewer should look at closely. Mention every assumption you made. A short, accurate summary is more useful than a long one.\n\n## Working habits\n\n| Habit                    | Why it helps                                          |\n| ------------------------ | ----------------------------------------------------- |\n| Small, focused edits     | Each step can be reviewed and reverted on its own     |\n| Stable public interface  | Callers keep working without coordinated changes      |\n| Honest types             | Type errors point at real problems instead of noise   |\n| No drive-by reformatting | The diff shows only what the change needed            |\n| Comments kept accurate   | Future readers understand why the code looks this way |\n| Plain-language summary   | Reviewers know where to focus                         |\n\n## Naming and style\n\n- Keep the existing naming style. If the file uses camelCase for functions, keep camelCase.\n- Keep import statements grouped and ordered the way the file already groups them.\n- Prefer one import statement per source module.\n- Do not rename local variables unless the change requires it.\n- Keep line length and quote style consistent with the rest of the file.\n\n## Communication\n\n- State what you changed.\n- Separate facts you observed from things you are assuming.\n- If something could not be completed, say what is left and why.\n- Keep the tone factual. Do not describe the result as better than it is.\n- If you made a judgement call, give the reason in one sentence.\n\n## When the request is broad\n\nIf the request covers many files, propose an order: start with leaf modules that few others depend on, then move toward shared modules. Suggest that each group of files be reviewed separately, so that a problem in one group does not block the others. For very large codebases, mention that the change can be split across several pull requests, each with its own summary.\n\n## Common mistakes to avoid\n\n- Mixing the dependency change with an unrelated refactor.\n- Changing exported names or signatures without being asked.\n- Removing comments that still explain the code.\n- Leaving half-changed usages, where some lines use the old dependency and similar lines use the new one without a stated reason.\n- Writing a summary that claims more than the change does.\n\n## Review checklist\n\nBefore you finish, read your own diff once as a reviewer would:\n\n1. Is every edited line needed for the change?\n2. Are exported names and signatures unchanged?\n3. Are similar usages changed in the same way?\n4. Do comments still match the code?\n5. Does the summary describe the change accurately?\n\n## Closing\n\nEnd with a brief recap of the change and any assumptions a reviewer should know about.\n",
+  "projectSetup": {
+    "recharts": {
+      "fixture": {
+        "name": "recharts",
+        "upstream": "recharts/recharts",
+        "baseSha": "a28c686267d76ede2fc4df6927219c030dab3fe3",
+        "packageManager": "npm",
+        "testCommand": "npx vitest run --config vitest.config.mts",
+        "testArgv": [
+          "node",
+          "node_modules/vitest/vitest.mjs",
+          "run",
+          "--config",
+          "vitest.config.mts"
+        ],
+        "testEnv": {},
+        "typecheckCommand": "npm run check-types",
+        "typecheckArgv": ["npm run check-types"],
+        "typecheckShell": true,
+        "fixtureDir": "D:\\Develop\\eval-projects\\fixtures\\recharts",
+        "fixtureBaseCommit": "7702cb41fa55e5cae1205d01a6255697faa3cf26",
+        "fixtureBaseTag": "base",
+        "fixtureFileCount": 612,
+        "nodeModulesBytes": 383063230,
+        "nodeModulesCopyMs": 14457,
+        "esToolkit": {
+          "installed": "1.53.2",
+          "replaced": "1.26.1"
+        },
+        "networkEnv": {
+          "HTTP_PROXY": "http://127.0.0.1:9",
+          "HTTPS_PROXY": "http://127.0.0.1:9",
+          "http_proxy": "http://127.0.0.1:9",
+          "https_proxy": "http://127.0.0.1:9",
+          "NO_PROXY": "api.anthropic.com,claude.ai,platform.claude.com",
+          "no_proxy": "api.anthropic.com,claude.ai,platform.claude.com",
+          "NODE_USE_ENV_PROXY": "1"
+        },
+        "workspaceCopyMs": 23798,
+        "baselineFailingTests": [
+          "test/cartesian/XAxis.spec.tsx > <XAxis /> time scale should render ticks of when XAxis.scale=time"
+        ],
+        "testCounts": {
+          "files": 133,
+          "failedFiles": 1,
+          "suites": 1190,
+          "total": 4358,
+          "passed": 4343,
+          "failed": 1,
+          "skipped": 12,
+          "todo": 2
+        },
+        "baselineTestDurationMs": 134915,
+        "baselineTestExitCode": 1,
+        "baselineTypecheck": {
+          "exitCode": 0,
+          "durationMs": 35876
+        },
+        "workspaceRemoveMs": 14816,
+        "preparedAt": "2026-11-14T13:08:51.674Z"
+      },
+      "grading": {
+        "hiddenDest": "test/__hidden__",
+        "lodashScanGlobs": [
+          "src/**/*.{ts,tsx,js,jsx,mts,cts,mjs,cjs}",
+          "test/**/*.{ts,tsx,js,jsx,mts,cts,mjs,cjs}",
+          "storybook/**/*.{ts,tsx,js,jsx,mdx}",
+          "scripts/**/*.{ts,js,mjs,cjs}",
+          "*.{ts,mts,cts,js,mjs,cjs}"
+        ],
+        "packageJsonPaths": ["package.json"],
+        "testEnv": {
+          "HTTP_PROXY": "http://127.0.0.1:9",
+          "HTTPS_PROXY": "http://127.0.0.1:9",
+          "http_proxy": "http://127.0.0.1:9",
+          "https_proxy": "http://127.0.0.1:9",
+          "ALL_PROXY": "http://127.0.0.1:9",
+          "NODE_USE_ENV_PROXY": "1",
+          "CI": "1",
+          "FORCE_COLOR": "0"
+        },
+        "timeoutsSec": {
+          "typecheck": 1200,
+          "tests": 1800,
+          "hidden": 900
+        }
+      },
+      "hiddenManifest": [
+        {
+          "id": "recharts-lodash-01",
+          "file": "lodash-parity.spec.tsx",
+          "test": "lodash parity (hidden) > util/ChartUtils.ts:get: dataKey deep paths (dot, bracket) resolve like lodash.get",
+          "srcFile": "src/util/ChartUtils.ts",
+          "lodashFn": "get",
+          "divergence": "native obj[key] / strict es-toolkit lacks string-path get ('a.b', 'a[1]', 'a.2') and default",
+          "passesAtBase": true,
+          "failsOnHumanPR": false
+        },
+        {
+          "id": "recharts-lodash-02",
+          "file": "lodash-parity.spec.tsx",
+          "test": "lodash parity (hidden) > util/ChartUtils.ts:get: null value is returned as null, default only for undefined",
+          "srcFile": "src/util/ChartUtils.ts",
+          "lodashFn": "get",
+          "divergence": "lodash default only for undefined; `?? default` replaces null",
+          "passesAtBase": true,
+          "failsOnHumanPR": false
+        },
+        {
+          "id": "recharts-lodash-03",
+          "file": "lodash-parity.spec.tsx",
+          "test": "lodash parity (hidden) > util/ChartUtils.ts:get: own key containing a dot wins over path traversal",
+          "srcFile": "src/util/ChartUtils.ts",
+          "lodashFn": "get",
+          "divergence": "literal own key 'v1.2' must win over path traversal (split('.') replacements fail)",
+          "passesAtBase": true,
+          "failsOnHumanPR": false
+        },
+        {
+          "id": "recharts-lodash-04",
+          "file": "lodash-parity.spec.tsx",
+          "test": "lodash parity (hidden) > util/ChartUtils.ts:get: numeric dataKey on tuple-shaped rows",
+          "srcFile": "src/util/ChartUtils.ts",
+          "lodashFn": "get",
+          "divergence": "numeric path index on tuple rows + default when out of range",
+          "passesAtBase": true,
+          "failsOnHumanPR": false
+        },
+        {
+          "id": "recharts-lodash-05",
+          "file": "lodash-parity.spec.tsx",
+          "test": "lodash parity (hidden) > util/ChartUtils.ts:sortBy: sorts frozen tick arrays numerically without mutating them",
+          "srcFile": "src/util/ChartUtils.ts",
+          "lodashFn": "sortBy",
+          "divergence": "must not mutate frozen store arrays (Array#sort throws) and must sort numerically",
+          "passesAtBase": true,
+          "failsOnHumanPR": false
+        },
+        {
+          "id": "recharts-lodash-06",
+          "file": "lodash-parity.spec.tsx",
+          "test": "lodash parity (hidden) > state/selectors/selectors.ts:sortBy: ordered tooltip ticks are a new, numerically sorted, stable array",
+          "srcFile": "src/state/selectors/selectors.ts",
+          "lodashFn": "sortBy",
+          "divergence": "new array, numeric, stable for ties; in-place sort on frozen input throws",
+          "passesAtBase": true,
+          "failsOnHumanPR": false
+        },
+        {
+          "id": "recharts-lodash-07",
+          "file": "lodash-parity.spec.tsx",
+          "test": "lodash parity (hidden) > component/DefaultLegendContent.tsx:sortBy: default string itemSorter \"value\" (property shorthand), stable",
+          "srcFile": "src/component/DefaultLegendContent.tsx",
+          "lodashFn": "sortBy",
+          "divergence": "string property shorthand iteratee ('value' default); strict es-toolkit sortBy needs criteria array; stability",
+          "passesAtBase": true,
+          "failsOnHumanPR": false
+        },
+        {
+          "id": "recharts-lodash-08",
+          "file": "lodash-parity.spec.tsx",
+          "test": "lodash parity (hidden) > component/DefaultLegendContent.tsx:sortBy: itemSorter \"dataKey\" puts entries without dataKey last",
+          "srcFile": "src/component/DefaultLegendContent.tsx",
+          "lodashFn": "sortBy",
+          "divergence": "undefined sort keys placed last",
+          "passesAtBase": true,
+          "failsOnHumanPR": false
+        },
+        {
+          "id": "recharts-lodash-09",
+          "file": "lodash-parity.spec.tsx",
+          "test": "lodash parity (hidden) > component/DefaultTooltipContent.tsx:sortBy: itemSorter \"value\" sorts numbers numerically (not lexicographically)",
+          "srcFile": "src/component/DefaultTooltipContent.tsx",
+          "lodashFn": "sortBy",
+          "divergence": "numeric vs lexicographic ordering",
+          "passesAtBase": true,
+          "failsOnHumanPR": false
+        },
+        {
+          "id": "recharts-lodash-10",
+          "file": "lodash-parity.spec.tsx",
+          "test": "lodash parity (hidden) > component/DefaultTooltipContent.tsx:sortBy: itemSorter \"name\" (Tooltip default) and function iteratee",
+          "srcFile": "src/component/DefaultTooltipContent.tsx",
+          "lodashFn": "sortBy",
+          "divergence": "string shorthand ('name' Tooltip default) and function iteratee",
+          "passesAtBase": true,
+          "failsOnHumanPR": false
+        },
+        {
+          "id": "recharts-lodash-11",
+          "file": "lodash-parity.spec.tsx",
+          "test": "lodash parity (hidden) > util/DataUtils.ts:get: findEntryInArray with nested string key and numeric key",
+          "srcFile": "src/util/DataUtils.ts",
+          "lodashFn": "get",
+          "divergence": "nested string path and numeric key in findEntryInArray",
+          "passesAtBase": true,
+          "failsOnHumanPR": false
+        },
+        {
+          "id": "recharts-lodash-12",
+          "file": "lodash-parity.spec.tsx",
+          "test": "lodash parity (hidden) > util/ReactUtils.ts:get: findAllByType tolerates text children and prefers displayName",
+          "srcFile": "src/util/ReactUtils.ts",
+          "lodashFn": "get",
+          "divergence": "get on string/number children must yield undefined, not throw; displayName before name",
+          "passesAtBase": true,
+          "failsOnHumanPR": false
+        },
+        {
+          "id": "recharts-lodash-13",
+          "file": "lodash-parity.spec.tsx",
+          "test": "lodash parity (hidden) > util/payload/getUniqPayload.ts:uniqBy: keeps first occurrence in original order (default and custom iteratee)",
+          "srcFile": "src/util/payload/getUniqPayload.ts",
+          "lodashFn": "uniqBy",
+          "divergence": "first occurrence kept, order preserved, undefined keys collapse, false returns same reference",
+          "passesAtBase": true,
+          "failsOnHumanPR": false
+        },
+        {
+          "id": "recharts-lodash-14",
+          "file": "lodash-parity.spec.tsx",
+          "test": "lodash parity (hidden) > util/CartesianUtils.ts:mapValues+every: labeled scales apply/isInRange over coordinate objects",
+          "srcFile": "src/util/CartesianUtils.ts",
+          "lodashFn": ["mapValues", "every"],
+          "divergence": "mapValues/every over objects (not arrays), every({}) === true",
+          "passesAtBase": true,
+          "failsOnHumanPR": false
+        },
+        {
+          "id": "recharts-lodash-15",
+          "file": "lodash-parity.spec.tsx",
+          "test": "lodash parity (hidden) > util/ActiveShapeUtils.tsx:isPlainObject: null-prototype option object is treated as shape props",
+          "srcFile": "src/util/ActiveShapeUtils.tsx",
+          "lodashFn": "isPlainObject",
+          "divergence": "Object.create(null) is plain (constructor === Object checks fail)",
+          "passesAtBase": true,
+          "failsOnHumanPR": false
+        },
+        {
+          "id": "recharts-lodash-16",
+          "file": "lodash-parity.spec.tsx",
+          "test": "lodash parity (hidden) > util/ActiveShapeUtils.tsx:isPlainObject: class-instance option is NOT treated as shape props",
+          "srcFile": "src/util/ActiveShapeUtils.tsx",
+          "lodashFn": "isPlainObject",
+          "divergence": "class instance is not plain (typeof === 'object' replacements merge it)",
+          "passesAtBase": true,
+          "failsOnHumanPR": false
+        },
+        {
+          "id": "recharts-lodash-17",
+          "file": "lodash-parity.spec.tsx",
+          "test": "lodash parity (hidden) > chart/Treemap.tsx:get: tooltip index path \"children[0]children[1]\" (no dots) resolves",
+          "srcFile": "src/chart/Treemap.tsx",
+          "lodashFn": "get",
+          "divergence": "dot-less bracket path 'children[0]children[1]' (split('.') fails)",
+          "passesAtBase": true,
+          "failsOnHumanPR": false
+        },
+        {
+          "id": "recharts-lodash-18",
+          "file": "lodash-parity.spec.tsx",
+          "test": "lodash parity (hidden) > chart/SunburstChart.tsx:get: tooltip index path \"children[1]children[0]\" resolves",
+          "srcFile": "src/chart/SunburstChart.tsx",
+          "lodashFn": "get",
+          "divergence": "dot-less bracket path 'children[1]children[0]'",
+          "passesAtBase": true,
+          "failsOnHumanPR": false
+        },
+        {
+          "id": "recharts-lodash-19",
+          "file": "lodash-parity.spec.tsx",
+          "test": "lodash parity (hidden) > chart/Sankey.tsx:get: sankeyPayloadSearcher resolves \"node-1\" via `${type}s[${i}]` path",
+          "srcFile": "src/chart/Sankey.tsx",
+          "lodashFn": "get",
+          "divergence": "template path `${type}s[${i}]`, out-of-range index -> undefined",
+          "passesAtBase": true,
+          "failsOnHumanPR": false
+        },
+        {
+          "id": "recharts-lodash-20",
+          "file": "lodash-parity.spec.tsx",
+          "test": "lodash parity (hidden) > chart/Sankey.tsx:maxBy+min+sumBy+get: node layout with partial margin and an isolated node",
+          "srcFile": "src/chart/Sankey.tsx",
+          "lodashFn": ["maxBy", "min", "sumBy", "get"],
+          "divergence": "layout smoke: maxBy depth, min over ratios, sumBy node values, get(margin,'left') missing -> 0",
+          "passesAtBase": true,
+          "failsOnHumanPR": false
+        },
+        {
+          "id": "recharts-lodash-21",
+          "file": "lodash-parity.spec.tsx",
+          "test": "lodash parity (hidden) > chart/Treemap.tsx:omit+get: nest treemap renders nodes and the \"root\" breadcrumb default",
+          "srcFile": "src/chart/Treemap.tsx",
+          "lodashFn": ["omit", "get"],
+          "divergence": "get(item, nameKey, 'root') default for missing key; omit children before spreading; breadcrumb after drill-down",
+          "passesAtBase": true,
+          "failsOnHumanPR": false
+        },
+        {
+          "id": "recharts-lodash-22",
+          "file": "lodash-parity.spec.tsx",
+          "test": "lodash parity (hidden) > cartesian/Funnel.tsx:omit: a data field named \"width\" does not override the computed trapezoid width",
+          "srcFile": "src/cartesian/Funnel.tsx",
+          "lodashFn": "omit",
+          "divergence": "omit with bare string key 'width' (strict es-toolkit omit iterates characters)",
+          "passesAtBase": true,
+          "failsOnHumanPR": false
+        },
+        {
+          "id": "recharts-lodash-23",
+          "file": "lodash-parity.spec.tsx",
+          "test": "lodash parity (hidden) > component/ResponsiveContainer.tsx:throttle: leading=false/trailing=true call timing with debounce",
+          "srcFile": "src/component/ResponsiveContainer.tsx",
+          "lodashFn": "throttle",
+          "divergence": "leading:false/trailing:true timing; strict es-toolkit throttle(edges:['trailing']) cancels the pending trailing call when a later call arrives after wait",
+          "passesAtBase": true,
+          "failsOnHumanPR": true
+        },
+        {
+          "id": "recharts-lodash-24",
+          "file": "lodash-parity.spec.tsx",
+          "test": "lodash parity (hidden) > cartesian/Area.tsx:max: animated clip rect width uses the max x of points/baseLine",
+          "srcFile": "src/cartesian/Area.tsx",
+          "lodashFn": "max",
+          "divergence": "smoke: max over non-empty points (empty array unreachable: points[0] is read first)",
+          "passesAtBase": true,
+          "failsOnHumanPR": false
+        },
+        {
+          "id": "recharts-lodash-25",
+          "file": "lodash-parity.spec.tsx",
+          "test": "lodash parity (hidden) > cartesian/CartesianAxis.tsx:get: axisLine/tickLine className from object, boolean true tolerated",
+          "srcFile": "src/cartesian/CartesianAxis.tsx",
+          "lodashFn": "get",
+          "divergence": "get(true,'className') must be undefined; className from object",
+          "passesAtBase": true,
+          "failsOnHumanPR": false
+        },
+        {
+          "id": "recharts-lodash-26",
+          "file": "lodash-parity.spec.tsx",
+          "test": "lodash parity (hidden) > cartesian/ReferenceLine.tsx:some: ifOverflow=\"discard\" drops a segment with any point out of range",
+          "srcFile": "src/cartesian/ReferenceLine.tsx",
+          "lodashFn": "some",
+          "divergence": "smoke: some over segment points with ifOverflow=discard",
+          "passesAtBase": true,
+          "failsOnHumanPR": false
+        },
+        {
+          "id": "recharts-lodash-27",
+          "file": "lodash-parity.spec.tsx",
+          "test": "lodash parity (hidden) > cartesian/Brush.tsx+state/selectors/axisSelectors.ts:range: index domain for axis without dataKey and brush",
+          "srcFile": ["src/cartesian/Brush.tsx", "src/state/selectors/axisSelectors.ts"],
+          "lodashFn": "range",
+          "divergence": "smoke: range(0, n) index domain for axis and brush scale",
+          "passesAtBase": true,
+          "failsOnHumanPR": false
+        },
+        {
+          "id": "recharts-lodash-28",
+          "file": "lodash-parity.spec.tsx",
+          "test": "lodash parity (hidden) > state/selectors/selectChartOffset.ts:get: top-oriented XAxis height is added to offset.top",
+          "srcFile": "src/state/selectors/selectChartOffset.ts",
+          "lodashFn": "get",
+          "divergence": "smoke: get(result, orientation) accumulation of axis heights",
+          "passesAtBase": true,
+          "failsOnHumanPR": false
+        },
+        {
+          "id": "recharts-lodash-29",
+          "file": "lodash-parity.spec.tsx",
+          "test": "lodash parity (hidden) > component/LabelList.tsx:last: range values label with their last element",
+          "srcFile": "src/component/LabelList.tsx",
+          "lodashFn": "last",
+          "divergence": "smoke: last of range tuple",
+          "passesAtBase": true,
+          "failsOnHumanPR": false
+        },
+        {
+          "id": "recharts-lodash-30",
+          "file": "lodash-parity.spec.tsx",
+          "test": "lodash parity (hidden) > polar/Radar.tsx:last+first: range radar uses last for outer and first for base radius",
+          "srcFile": "src/polar/Radar.tsx",
+          "lodashFn": ["last", "first"],
+          "divergence": "smoke: last/first of range values, scalar values pass through",
+          "passesAtBase": true,
+          "failsOnHumanPR": false
+        },
+        {
+          "id": "recharts-lodash-31",
+          "file": "lodash-parity.spec.tsx",
+          "test": "lodash parity (hidden) > polar/PolarRadiusAxis.tsx:maxBy+minBy: label viewBox spans min..max tick radius",
+          "srcFile": "src/polar/PolarRadiusAxis.tsx",
+          "lodashFn": ["maxBy", "minBy"],
+          "divergence": "smoke: maxBy/minBy over ticks with iteratee",
+          "passesAtBase": true,
+          "failsOnHumanPR": false
+        },
+        {
+          "id": "recharts-lodash-32",
+          "file": "lodash-parity.spec.tsx",
+          "test": "lodash parity (hidden) > polar/Pie.tsx:get: paddingAngle read from sector entries during animation",
+          "srcFile": "src/polar/Pie.tsx",
+          "lodashFn": "get",
+          "divergence": "smoke: get(entry,'paddingAngle',0) in animated branch",
+          "passesAtBase": true,
+          "failsOnHumanPR": false
+        }
+      ],
+      "hiddenHashes": {
+        "lodash-parity.spec.tsx": "fd77b28b7c8266b13a25f1b22db1860367e66adebf683dec01f459f779cb7a30",
+        "manifest.json": "d156df07871c89201c4812ed27b63b1664db934c55367df0c7b8605140a748fe"
+      }
+    },
+    "swagger-typescript-api": {
+      "fixture": {
+        "name": "swagger-typescript-api",
+        "upstream": "acacode/swagger-typescript-api",
+        "baseSha": "65addaf1a68a3cf136d7ccb20dff3899bb7718b0",
+        "packageManager": "yarn@4.12.0",
+        "testCommand": "CI=true node_modules/.bin/vitest run --testTimeout=60000",
+        "testArgv": ["node", "node_modules/vitest/vitest.mjs", "run", "--testTimeout=60000"],
+        "testEnv": {
+          "CI": "true"
+        },
+        "typecheckCommand": "node_modules/.bin/tsdown",
+        "typecheckArgv": ["node", "node_modules/tsdown/dist/run.mjs"],
+        "typecheckShell": false,
+        "fixtureDir": "D:\\Develop\\eval-projects\\fixtures\\swagger-typescript-api",
+        "fixtureBaseCommit": "b534490298a5c0fdf00a32c7a623d35c6c41440b",
+        "fixtureBaseTag": "base",
+        "fixtureFileCount": 271,
+        "nodeModulesBytes": 221315522,
+        "nodeModulesCopyMs": 2259,
+        "esToolkit": {
+          "installed": "1.53.2",
+          "replaced": null
+        },
+        "networkEnv": {
+          "HTTP_PROXY": "http://127.0.0.1:9",
+          "HTTPS_PROXY": "http://127.0.0.1:9",
+          "http_proxy": "http://127.0.0.1:9",
+          "https_proxy": "http://127.0.0.1:9",
+          "NO_PROXY": "api.anthropic.com,claude.ai,platform.claude.com",
+          "no_proxy": "api.anthropic.com,claude.ai,platform.claude.com",
+          "NODE_USE_ENV_PROXY": "1"
+        },
+        "workspaceCopyMs": 4814,
+        "baselineFailingTests": [
+          "tests/extended.test.ts > extended > 'full-swagger-scheme'",
+          "tests/extended.test.ts > extended > 'link-example'",
+          "tests/simple.test.ts > simple > 'full-swagger-scheme'",
+          "tests/simple.test.ts > simple > 'link-example'"
+        ],
+        "testCounts": {
+          "files": 47,
+          "failedFiles": 0,
+          "suites": 94,
+          "total": 134,
+          "passed": 134,
+          "failed": 0,
+          "skipped": 0,
+          "todo": 0
+        },
+        "baselineTestDurationMs": 42722,
+        "baselineTestExitCode": 0,
+        "baselineTypecheck": {
+          "exitCode": 0,
+          "durationMs": 6958
+        },
+        "workspaceRemoveMs": 2472,
+        "preparedAt": "2026-11-14T13:09:57.922Z",
+        "baselineFailingNote": "네트워크를 막으면 외부  때문에 실행마다 2~4건 실패한다(채점기 관문에서 관측). 통과·실패와 무관하게 판정에서 뺀다."
+      },
+      "grading": {
+        "hiddenDest": "tests/__hidden__",
+        "lodashScanGlobs": [
+          "src/**/*.{ts,mts,cts,js,mjs,cjs}",
+          "tests/**/*.{ts,mts,cts,js,mjs,cjs}",
+          "templates/**/*.{ejs,eta}",
+          "types/**/*.ts",
+          "*.{ts,mts,cts,js,mjs,cjs}"
+        ],
+        "packageJsonPaths": ["package.json"],
+        "testEnv": {
+          "HTTP_PROXY": "http://127.0.0.1:9",
+          "HTTPS_PROXY": "http://127.0.0.1:9",
+          "http_proxy": "http://127.0.0.1:9",
+          "https_proxy": "http://127.0.0.1:9",
+          "ALL_PROXY": "http://127.0.0.1:9",
+          "NODE_USE_ENV_PROXY": "1",
+          "CI": "1",
+          "FORCE_COLOR": "0"
+        },
+        "timeoutsSec": {
+          "typecheck": 1200,
+          "tests": 1800,
+          "hidden": 900
+        }
+      },
+      "hiddenManifest": [
+        {
+          "id": "sta-01",
+          "file": "hidden-config.test.ts",
+          "title": "configuration.ts:constructor/objectAssign(primitiveTypeConstructs): function result is deep-merged into primitiveTypes",
+          "srcFile": "src/configuration.ts (src/util/object-assign.ts)",
+          "lodashFn": "merge (inside objectAssign)",
+          "divergence": "Deep merge of the primitiveTypeConstructs() result: only string/date-time changes, sibling formats ($default, binary) survive. Shallow Object.assign drops siblings; Object.assign(target, fn) ignores the function entirely.",
+          "passesAtBase": true,
+          "failsOnHumanPR": true
+        },
+        {
+          "id": "sta-02",
+          "file": "hidden-config.test.ts",
+          "title": "configuration.ts:constructor/objectAssign(codeGenConstructs): partial Keyword override keeps the other keywords",
+          "srcFile": "src/configuration.ts (src/util/object-assign.ts)",
+          "lodashFn": "merge (inside objectAssign)",
+          "divergence": "Deep merge of codeGenConstructs() result: overriding Keyword.Any keeps Keyword.Number/String; shallow assign replaces the Keyword map, Object.assign(target, fn) ignores the function.",
+          "passesAtBase": true,
+          "failsOnHumanPR": true
+        },
+        {
+          "id": "sta-03",
+          "file": "hidden-config.test.ts",
+          "title": "configuration.ts:update/objectAssign(extractingOptions): partial extractingOptions keeps default suffix lists",
+          "srcFile": "src/configuration.ts (src/util/object-assign.ts)",
+          "lodashFn": "merge (inside objectAssign)",
+          "divergence": "Nested extractingOptions merged deeply and arrays index-wise (['Form','Body','Input']); shallow assign loses the default suffix lists.",
+          "passesAtBase": true,
+          "failsOnHumanPR": true
+        },
+        {
+          "id": "sta-04",
+          "file": "hidden-config.test.ts",
+          "title": "configuration.ts:update/objectAssign(fileNames): partial fileNames keeps the other modular file names",
+          "srcFile": "src/configuration.ts (src/util/object-assign.ts)",
+          "lodashFn": "merge (inside objectAssign)",
+          "divergence": "Partial fileNames keeps httpClient/routeTypes defaults; shallow assign leaves them undefined (TypeError in modular output).",
+          "passesAtBase": true,
+          "failsOnHumanPR": true
+        },
+        {
+          "id": "sta-05",
+          "file": "hidden-config.test.ts",
+          "title": "request.ts:download(lodash.merge): requestOptions headers are deep-merged with the Authorization header",
+          "srcFile": "src/util/request.ts",
+          "lodashFn": "merge",
+          "divergence": "lodash.merge deep-merges requestOptions.headers with the Authorization header from authorizationToken; a shallow merge/spread drops one of them.",
+          "passesAtBase": true,
+          "failsOnHumanPR": false
+        },
+        {
+          "id": "sta-06",
+          "file": "hidden-config.test.ts",
+          "title": "code-gen-process.ts:createApiConfig(lodash.merge externalDocs / compact tags): defaults filled, missing values tolerated",
+          "srcFile": "src/code-gen-process.ts",
+          "lodashFn": "merge, compact",
+          "divergence": "merge(defaults, externalDocs) fills description:'' and tolerates missing externalDocs; compact(undefined tags) -> [] (strict merge/compact throw on undefined).",
+          "passesAtBase": true,
+          "failsOnHumanPR": false
+        },
+        {
+          "id": "sta-07",
+          "file": "hidden-config.test.ts",
+          "title": "schema-parser.ts:parseSchema(lodash.merge onPreParseSchema): hook result is deep-merged into the schema",
+          "srcFile": "src/schema-parser/schema-parser.ts",
+          "lodashFn": "merge",
+          "divergence": "Hook result deep-merged into the schema (nested property patch keeps type and sibling properties); shallow assign replaces properties; strict merge(target, undefined) throws for hooks returning nothing.",
+          "passesAtBase": true,
+          "failsOnHumanPR": false
+        },
+        {
+          "id": "sta-08",
+          "file": "hidden-naming.test.ts",
+          "title": "type-name-formatter.ts:format/fixModelName(lodash.startCase): acronym, kebab-case and accented model names",
+          "srcFile": "src/type-name-formatter.ts",
+          "lodashFn": "startCase",
+          "divergence": "lodash keeps acronym runs (APIError, OAuth2Token, XMLDocument) and deburrs (Rechnungsübersicht -> Rechnungsubersicht); strict es-toolkit startCase yields 'Api Error' and keeps the umlaut.",
+          "passesAtBase": true,
+          "failsOnHumanPR": false
+        },
+        {
+          "id": "sta-09",
+          "file": "hidden-naming.test.ts",
+          "title": "type-name-formatter.ts:format(lodash.startCase): CJK model names split from the Latin suffix",
+          "srcFile": "src/type-name-formatter.ts",
+          "lodashFn": "startCase",
+          "divergence": "lodash splits '用户' from 'Controller' and keeps the capital; es-toolkit/compat and strict give Type用户controller.",
+          "passesAtBase": true,
+          "failsOnHumanPR": false,
+          "note": "es-toolkit 1.53.2 fixture 관문에서 사람 PR이 통과(서수·한자 처리는 v1.50.0에서 lodash와 같아짐). 이 버전에서는 사람 PR을 판별하지 않지만 strict 치환은 잡는다."
+        },
+        {
+          "id": "sta-10",
+          "file": "hidden-naming.test.ts",
+          "title": "type-name-formatter.ts:format(lodash.startCase enum-key): ordinal enum values keep 1st/2nd/3rd/4th intact",
+          "srcFile": "src/type-name-formatter.ts",
+          "lodashFn": "startCase",
+          "divergence": "lodash keeps ordinals as one word (Value1st); es-toolkit/compat and strict split '1st' -> Value1St.",
+          "passesAtBase": true,
+          "failsOnHumanPR": false,
+          "note": "es-toolkit 1.53.2 fixture 관문에서 사람 PR이 통과(서수·한자 처리는 v1.50.0에서 lodash와 같아짐). 이 버전에서는 사람 PR을 판별하지 않지만 strict 치환은 잡는다."
+        },
+        {
+          "id": "sta-11",
+          "file": "hidden-naming.test.ts",
+          "title": "enum.ts:parse(lodash.size/lodash.get x-enumNames): x-enumNames with ordinals map to the enum values by index",
+          "srcFile": "src/schema-parser/base-schema-parsers/enum.ts",
+          "lodashFn": "size, get",
+          "divergence": "x-enumNames mapped by index with get(enum, i); keys formatted via startCase (Review1st vs compat Review1St).",
+          "passesAtBase": true,
+          "failsOnHumanPR": false,
+          "note": "es-toolkit 1.53.2 fixture 관문에서 사람 PR이 통과(서수·한자 처리는 v1.50.0에서 lodash와 같아짐). 이 버전에서는 사람 PR을 판별하지 않지만 strict 치환은 잡는다."
+        },
+        {
+          "id": "sta-12",
+          "file": "hidden-naming.test.ts",
+          "title": "schema-routes.ts:getRouteName/moduleName(lodash.camelCase firstTag): tags with umlauts/accents become deburred module names",
+          "srcFile": "src/schema-routes/schema-routes.ts",
+          "lodashFn": "camelCase",
+          "divergence": "camelCase(firstTag) deburrs (Rechnungsübersicht -> rechnungsubersicht, Café -> cafe); strict es-toolkit camelCase keeps accents.",
+          "passesAtBase": true,
+          "failsOnHumanPR": false
+        },
+        {
+          "id": "sta-13",
+          "file": "hidden-naming.test.ts",
+          "title": "route-name.ejs:_.camelCase(operationId)/createCustomOperationId: Springfox, ordinal and accented route names",
+          "srcFile": "templates/base/route-name.ejs (+ src/schema-routes/schema-routes.ts path params)",
+          "lodashFn": "_.camelCase, _.compact, _.replace, _.lowerCase, camelCase",
+          "divergence": "Template route names: Springfox ids, ordinal ids (list2ndFactorMethods vs compat list2NdFactorMethods), deburred custom ids (cremeBruleeList), camelCased path params.",
+          "passesAtBase": true,
+          "failsOnHumanPR": false,
+          "note": "es-toolkit 1.53.2 fixture 관문에서 사람 PR이 통과(서수·한자 처리는 v1.50.0에서 lodash와 같아짐). 이 버전에서는 사람 PR을 판별하지 않지만 strict 치환은 잡는다."
+        },
+        {
+          "id": "sta-14",
+          "file": "hidden-naming.test.ts",
+          "title": "util/pascal-case.ts:pascalCase(lodash.upperFirst+camelCase): @name JSDoc of ordinal / Springfox routes",
+          "srcFile": "src/util/pascal-case.ts",
+          "lodashFn": "upperFirst, camelCase",
+          "divergence": "pascalCase(routeName) in @name JSDoc: List2ndFactorMethods (lodash) vs List2NdFactorMethods (es-toolkit compat/strict).",
+          "passesAtBase": true,
+          "failsOnHumanPR": false,
+          "note": "es-toolkit 1.53.2 fixture 관문에서 사람 PR이 통과(서수·한자 처리는 v1.50.0에서 lodash와 같아짐). 이 버전에서는 사람 PR을 판별하지 않지만 strict 치환은 잡는다."
+        },
+        {
+          "id": "sta-15",
+          "file": "hidden-naming.test.ts",
+          "title": "schema-utils.ts:buildTypeNameFromPath(lodash.uniq/compact/camelCase): extracted inline enum names",
+          "srcFile": "src/schema-parser/schema-utils.ts",
+          "lodashFn": "uniq, compact, camelCase",
+          "divergence": "Extracted inline enum names pascalCase(camelCase(typeName_prop)) + Enum: ApiErrorLevelEnum, deburred RechnungsubersichtStatusEnum (strict camelCase keeps 'ü').",
+          "passesAtBase": true,
+          "failsOnHumanPR": false
+        },
+        {
+          "id": "sta-16",
+          "file": "hidden-schema.test.ts",
+          "title": "object.ts:getObjectSchemaContent(lodash.map(allOf, 'description')/lodash.get rawTypeData): property descriptions from allOf members and referenced schemas",
+          "srcFile": "src/schema-parser/base-schema-parsers/object.ts",
+          "lodashFn": "map (property shorthand), compact, get (default {})",
+          "divergence": "Property description from allOf member descriptions via map(allOf,'description') and from the referenced schema via get(refType,'rawTypeData',{}).",
+          "passesAtBase": true,
+          "failsOnHumanPR": false
+        },
+        {
+          "id": "sta-17",
+          "file": "hidden-schema.test.ts",
+          "title": "complex.ts:parse(lodash.omit/clone/keys/compact/map): allOf plus sibling properties becomes an intersection with the description of an allOf member",
+          "srcFile": "src/schema-parser/base-schema-parsers/complex.ts",
+          "lodashFn": "omit, clone, keys, compact, map",
+          "divergence": "allOf with sibling properties -> 'Pet & { bark?: boolean }', description taken from the allOf member.",
+          "passesAtBase": true,
+          "failsOnHumanPR": false
+        },
+        {
+          "id": "sta-18",
+          "file": "hidden-schema.test.ts",
+          "title": "discriminator.ts:createMappingContent(lodash.entries mapping, lodash.reduce enum keys, lodash.get): mapping with an enum-typed discriminator property, with and without union enums",
+          "srcFile": "src/schema-parser/base-schema-parsers/discriminator.ts",
+          "lodashFn": "entries, reduce, get, keys, omit",
+          "divergence": "Mapping via entries(mapping) (undefined mapping -> []), enum-key map built by reduce over the enum array, union-enum literal keys.",
+          "passesAtBase": true,
+          "failsOnHumanPR": false
+        },
+        {
+          "id": "sta-19",
+          "file": "hidden-schema.test.ts",
+          "title": "schema-utils.ts:getInternalSchemaType(lodash.isEmpty enum): an empty enum array is not treated as an enum",
+          "srcFile": "src/schema-parser/schema-utils.ts",
+          "lodashFn": "isEmpty",
+          "divergence": "isEmpty([]) is true so enum: [] stays a primitive string; a truthiness check would route it to the enum parser.",
+          "passesAtBase": true,
+          "failsOnHumanPR": false
+        },
+        {
+          "id": "sta-20",
+          "file": "hidden-schema.test.ts",
+          "title": "schema-utils.ts:getSchemaPrimitiveType(internalCase type) / isNullMissingInType(lodash.get x-nullable): nullable types",
+          "srcFile": "src/schema-parser/schema-utils.ts",
+          "lodashFn": "camelCase+lowerCase (internalCase), get",
+          "divergence": "OAS 3.1 type ['string','null'] and Swagger 2 x-nullable both yield 'string | null'.",
+          "passesAtBase": true,
+          "failsOnHumanPR": false
+        },
+        {
+          "id": "sta-21",
+          "file": "hidden-schema.test.ts",
+          "title": "schema-utils.ts:makeAddRequiredToChildSchema(lodash.uniq/keys): parent `required` propagates into allOf members",
+          "srcFile": "src/schema-parser/schema-utils.ts",
+          "lodashFn": "uniq, keys",
+          "divergence": "Parent required list propagated into inline allOf members (street/city required, zip optional).",
+          "passesAtBase": true,
+          "failsOnHumanPR": false
+        },
+        {
+          "id": "sta-22",
+          "file": "hidden-schema.test.ts",
+          "title": "configuration.ts:Ts.UnionType(lodash.join(lodash.uniq)): duplicate oneOf members are de-duplicated",
+          "srcFile": "src/configuration.ts",
+          "lodashFn": "join, uniq",
+          "divergence": "oneOf [string, integer, string, number] -> 'string | number'.",
+          "passesAtBase": true,
+          "failsOnHumanPR": false
+        },
+        {
+          "id": "sta-23",
+          "file": "hidden-routes.test.ts",
+          "title": "schema-routes.ts:createRequestsMap(lodash.reduce/concat/compact/get): path-level parameters merged into every method, x-* keys skipped",
+          "srcFile": "src/schema-routes/schema-routes.ts",
+          "lodashFn": "reduce, concat, compact, get",
+          "divergence": "Path-level parameters concatenated into each method (concat(undefined, ...) + compact); x-* path-item keys and 'parameters' skipped while reducing over an object.",
+          "passesAtBase": true,
+          "failsOnHumanPR": false
+        },
+        {
+          "id": "sta-24",
+          "file": "hidden-routes.test.ts",
+          "title": "schema-routes.ts:getContentTypes(lodash.flatten/map/keys/uniq/compact): content kinds for multipart, text/plain, 204 and $ref responses",
+          "srcFile": "src/schema-routes/schema-routes.ts",
+          "lodashFn": "flatten, map, keys, uniq, compact",
+          "divergence": "map over a responses object, keys(undefined content) for 204/$ref responses; native .map / Object.keys(undefined) would throw. flatten vs flattenDeep is not observable here (inner arrays only hold strings).",
+          "passesAtBase": true,
+          "failsOnHumanPR": false
+        },
+        {
+          "id": "sta-25",
+          "file": "hidden-routes.test.ts",
+          "title": "swagger-schema-resolver.ts:fixSwaggerSchema(lodash.each/get/uniq/compact): Swagger 2 consumes merged and path params restored",
+          "srcFile": "src/swagger-schema-resolver.ts",
+          "lodashFn": "each, get, uniq, compact",
+          "divergence": "Swagger 2: duplicated op-level consumes de-duplicated and merged (UrlEncoded); path-level params pushed back to every method; get with [] default.",
+          "passesAtBase": true,
+          "failsOnHumanPR": false
+        },
+        {
+          "id": "sta-26",
+          "file": "hidden-routes.test.ts",
+          "title": "schema-formatters.ts:formatDescription(lodash chain compact, inline) + route-docs.ejs(_.replace): @response lines",
+          "srcFile": "src/schema-parser/schema-formatters.ts (+ templates/base/route-docs.ejs)",
+          "lodashFn": "chain split/map/compact/join, _.replace",
+          "divergence": "Inline multi-line description collapsed with compact (blank lines dropped) into @response lines; route-docs _.replace escaping.",
+          "passesAtBase": true,
+          "failsOnHumanPR": false
+        },
+        {
+          "id": "sta-27",
+          "file": "hidden-routes.test.ts",
+          "title": "schema-routes.ts:getRouteName(lodash.camelCase(lodash.compact(route.split('/'))[moduleNameIndex])) + getGroupedRoutes(lodash.reduce/each): module grouping by path index",
+          "srcFile": "src/schema-routes/schema-routes.ts",
+          "lodashFn": "camelCase, compact, reduce, each",
+          "divergence": "camelCase(compact(route.split('/'))[1]) -> 'storeId'; camelCase(undefined) -> '' puts /health out of module (strict camelCase(undefined) throws); grouping reduce over an object.",
+          "passesAtBase": true,
+          "failsOnHumanPR": false
+        },
+        {
+          "id": "sta-28",
+          "file": "hidden-templates.test.ts",
+          "title": "code-gen-process.ts:getRenderTemplateData(_): every lodash function used by the default templates is still provided",
+          "srcFile": "src/code-gen-process.ts",
+          "lodashFn": "_ object (isUndefined, compact, camelCase, map, replace, get, upperCase, values, lowerCase, join, isObject, uniq, size, isString, isEmpty)",
+          "divergence": "The `_` passed to templates must still expose every lodash function the bundled templates call (strict es-toolkit lacks map/get/values/size/join/replace/isObject).",
+          "passesAtBase": true,
+          "failsOnHumanPR": false
+        },
+        {
+          "id": "sta-29",
+          "file": "hidden-templates.test.ts",
+          "title": "templates(_.camelCase/_.lowerCase/_.upperCase): route-name / route-docs casing on Springfox, ordinal and accented inputs",
+          "srcFile": "templates/base/route-name.ejs, templates/base/route-docs.ejs",
+          "lodashFn": "_.camelCase, _.lowerCase, _.upperCase",
+          "divergence": "Ordinals (list2ndFactorMethods, 'LIST 2ND'), deburr (postUbersicht), Springfox ids through the template `_`; es-toolkit/compat splits ordinals.",
+          "passesAtBase": true,
+          "failsOnHumanPR": false,
+          "note": "es-toolkit 1.53.2 fixture 관문에서 사람 PR이 통과(서수·한자 처리는 v1.50.0에서 lodash와 같아짐). 이 버전에서는 사람 PR을 판별하지 않지만 strict 치환은 잡는다."
+        },
+        {
+          "id": "sta-30",
+          "file": "hidden-templates.test.ts",
+          "title": "templates(_.compact/_.uniq/_.join/_.size/_.isEmpty/_.isUndefined/_.isObject/_.isString): falsy filtering, de-duplication, size/emptiness and type guards on edge values",
+          "srcFile": "templates/base/data-contract-jsdoc.ejs, object-field-jsdoc.ejs, route-docs.ejs, default/procedure-call.ejs",
+          "lodashFn": "_.compact, _.uniq, _.join, _.size, _.isEmpty, _.isUndefined, _.isObject, _.isString",
+          "divergence": "compact with 0/NaN/''/null, size of undefined/object/string, isEmpty of numbers/Map/strings, isObject(function/null/Date).",
+          "passesAtBase": true,
+          "failsOnHumanPR": false
+        },
+        {
+          "id": "sta-31",
+          "file": "hidden-templates.test.ts",
+          "title": "templates(_.map/_.values/_.get/_.replace): property shorthand over objects, undefined inputs, string paths, regex replace",
+          "srcFile": "templates/default/procedure-call.ejs, route-types.ejs, base/route-docs.ejs, default/api.ejs",
+          "lodashFn": "_.map, _.values, _.get, _.replace",
+          "divergence": "map(object,'name') shorthand, map/values of undefined, values of a string, get with dotted/array/bracket paths and default, regex replace.",
+          "passesAtBase": true,
+          "failsOnHumanPR": false
+        },
+        {
+          "id": "sta-32",
+          "file": "hidden-templates.test.ts",
+          "title": "code-gen-process.ts:getRenderTemplateData(utils.internalCase/pascalCase/formatDescription): helpers exposed to templates",
+          "srcFile": "src/code-gen-process.ts (src/util/internal-case.ts, src/util/pascal-case.ts)",
+          "lodashFn": "camelCase+lowerCase (internalCase), upperFirst+camelCase (pascalCase), chain compact (formatDescription)",
+          "divergence": "utils.internalCase('list_2nd') -> 'list2nd' (compat 'list2Nd'), pascalCase keeps the CJK capital, inline description collapse.",
+          "passesAtBase": true,
+          "failsOnHumanPR": false,
+          "note": "es-toolkit 1.53.2 fixture 관문에서 사람 PR이 통과(서수·한자 처리는 v1.50.0에서 lodash와 같아짐). 이 버전에서는 사람 PR을 판별하지 않지만 strict 치환은 잡는다."
+        },
+        {
+          "id": "sta-33",
+          "file": "hidden-e2e.test.ts",
+          "title": "code-gen-process.ts:generateApi(e2e naming.json): full output equals lodash-era golden",
+          "srcFile": "src/code-gen-process.ts (whole pipeline)",
+          "lodashFn": "startCase, camelCase, upperFirst, lowerCase, compact, uniq, get, size, template _",
+          "divergence": "Whole-file golden of a spec with acronym/accented/CJK/ordinal names, tag modules, x-enumNames, extracted enums and route types.",
+          "passesAtBase": true,
+          "failsOnHumanPR": false,
+          "note": "es-toolkit 1.53.2 fixture 관문에서 사람 PR이 통과(서수·한자 처리는 v1.50.0에서 lodash와 같아짐). 이 버전에서는 사람 PR을 판별하지 않지만 strict 치환은 잡는다."
+        },
+        {
+          "id": "sta-34",
+          "file": "hidden-e2e.test.ts",
+          "title": "code-gen-process.ts:generateApi(e2e schemas.json): full output equals lodash-era golden",
+          "srcFile": "src/code-gen-process.ts (whole pipeline)",
+          "lodashFn": "map, get, omit, clone, keys, entries, reduce, isEmpty, uniq, join, compact, merge",
+          "divergence": "Whole-file golden of allOf/discriminator/nullable/empty-enum schemas with every extract flag and @response docs.",
+          "passesAtBase": true,
+          "failsOnHumanPR": false
+        },
+        {
+          "id": "sta-35",
+          "file": "hidden-e2e.test.ts",
+          "title": "code-gen-process.ts:generateApi(e2e routes.json modular): full multi-file output equals lodash-era golden",
+          "srcFile": "src/code-gen-process.ts (whole pipeline)",
+          "lodashFn": "reduce, concat, compact, flatten, keys, uniq, each, camelCase, merge",
+          "divergence": "Whole multi-file golden of a modular build (path-level params, $ref responses, multipart, route types, sortRoutes).",
+          "passesAtBase": true,
+          "failsOnHumanPR": false
+        }
+      ],
+      "hiddenHashes": {
+        "hidden-config.test.ts": "adc0725d2bf106cb8c05cfdfd084d6af75ffca29b8ab2a7e1bc008ff8c8693f1",
+        "hidden-e2e.test.ts": "c58605ec26dfaae7104e18cde71afb63364d8665af9b0df2c8c58901d8f01715",
+        "hidden-fixtures/golden/naming.txt": "fa3299bb2eec3d182c06903ce10c9f204788926371082327d935dc568046e186",
+        "hidden-fixtures/golden/routesModular.txt": "2da50946e0e763b539b42db04c972d76faf3702fef97d1cb6e9f23cbd32d42fc",
+        "hidden-fixtures/golden/schemas.txt": "3c9a2dc5778a9da67dbb4bb22811d237cd064b73abafefafc0b01e90292a13b4",
+        "hidden-fixtures/naming.json": "2cfe2811e4ff55e18b3ce036a33ab8b97110dcd7f98202b37e5c4a2827253b44",
+        "hidden-fixtures/routes.json": "a3d51ad9aef4b0382cc0c053c73d96456023cef8d034c627ed52db77d8abda3f",
+        "hidden-fixtures/schemas.json": "0305e56a2f9538fbc554cf9f7289a5b7a6ea92e73258742a86e03e2303d982cd",
+        "hidden-fixtures/swagger2.json": "c6a8894ae2114cf979add6abbe7d20fece4c77f0f127017d53f2efd47f981c73",
+        "hidden-fixtures/templates/lodash-surface.ejs": "10bc993c4de047e16964d437fe292a5be271ef6a30f34c1bb360d67227fbfff2",
+        "hidden-naming.test.ts": "2f6ae765455c13fedf75ea2ec6fa8beed11d5825b410216d5e7c9bd063fb74ac",
+        "hidden-routes.test.ts": "3e9341d45ec3ca33bbf284b465c023e1110ddfa74bc3bc45ae276d5e5f40dd8c",
+        "hidden-schema.test.ts": "c6e6168a613634a2cfd1038139318b0b4c66818be5a326069f62931a083af541",
+        "hidden-templates.test.ts": "1d4f2ac8c9cb49b7807a1efea72112750ee0d93a85219bec4da02e1463e17745",
+        "hidden-utils.ts": "7eed17c9410b536d32e666b62aef231eca5372613315dd5ffb65724200d4e867",
+        "manifest.json": "a9dde9a08155c53b6f9d4f99dddd6d2305ffc8fdea1b6271c63f55627fb4dffc"
+      }
+    }
+  },
+  "scoring": "실행 점수 = 통과한 채점 항목의 비율(설계 5절). 시간·턴 한도는 0점, 오염은 제외.",
+  "delta": 0.15,
+  "alpha": 0.05,
+  "K": 8,
+  "limits": {
+    "maxTurns": 182,
+    "timeoutMin": 29
+  },
+  "pricing": {
+    "claude-sonnet-5-5": {
+      "input": 2,
+      "output": 10,
+      "cacheRead": 0.1,
+      "cacheWrite": 2.5
+    },
+    "claude-haiku-5-5": {
+      "input": 0.1,
+      "output": 0.5,
+      "cacheRead": 0.01,
+      "cacheWrite": 0.125
+    }
+  },
+  "smoke": {
+    "label": "smoke-project",
+    "note": "스모크 실행은 본 실험 분석에 쓰지 않는다."
+  },
+  "power": "# 검출력 계산: smoke-project\n\n실행 점수 모형은 베타-이항이다. 표준편차는 조건별 평균에서 잰 편차를 합친 값이고, 시뮬레이션에는 카이제곱 95% 상한을 쓴다. baseline 평균은 skill 평균(+δ)이 1을 넘지 않게 1 − δ 이하로 자른다.\n\n| 프로젝트                 | 모델       | 실행 (baseline/skill/placebo) | baseline 평균 | 합친 SD | 자유도 | SD 95% 상한 | 항목 수 | 시뮬레이션 baseline 평균 | 실행 간 상관 ρ | 시뮬레이션 SD              |\n| ------------------------ | ---------- | ----------------------------- | ------------- | ------- | ------ | ----------- | ------- | ------------------------ | -------------- | -------------------------- |\n| recharts                 | Sonnet 5.5 | 2/2/2                         | 0.973         | 0.000   | 3      | 0.000       | 37      | 0.850                    | 0.000          | 0.059 (이항 분산이 하한)   |\n| recharts                 | Haiku 5.5  | 2/2/2                         | 0.973         | 0.000   | 3      | 0.000       | 37      | 0.850                    | 0.000          | 0.059 (이항 분산이 하한)   |\n| swagger-typescript-api   | Sonnet 5.5 | 2/2/2                         | 0.988         | 0.014   | 3      | 0.042       | 40      | 0.850                    | 0.000          | 0.056 (이항 분산이 하한)   |\n| swagger-typescript-api   | Haiku 5.5  | 2/2/2                         | 0.500         | 0.408   | 3      | 1.192       | 40      | 0.500                    | 1.000          | 0.500 (최대 분산에서 자름) |\n| K = 3 계산 완료 (0.2초)  |\n| K = 4 계산 완료 (0.3초)  |\n| K = 5 계산 완료 (0.4초)  |\n| K = 6 계산 완료 (0.5초)  |\n| K = 7 계산 완료 (0.6초)  |\n| K = 8 계산 완료 (0.7초)  |\n| K = 9 계산 완료 (1.4초)  |\n| K = 10 계산 완료 (1.9초) |\n| K = 11 계산 완료 (1.7초) |\n| K = 12 계산 완료 (2.0초) |\n| K = 13 계산 완료 (2.3초) |\n| K = 14 계산 완료 (2.6초) |\n| K = 15 계산 완료 (3.3초) |\n\n데이터셋 1000개씩, α = 0.05, δ = 0.15, Holm 보정은 가설 8개 전체에 적용했다. 효과 시나리오의 참 차이는 두 가설 모두 +δ다.\n\n## recharts · Sonnet 5.5\n\n| K   | 높음 (skill vs baseline) | 높음 (skill vs placebo) | 동등 (skill vs baseline) | 동등 (skill vs placebo) | 0.8 충족 |\n| --- | ------------------------ | ----------------------- | ------------------------ | ----------------------- | -------- |\n| 3   | 0.000                    | 0.000                   | 0.000                    | 0.000                   | 아니오   |\n| 4   | 0.000                    | 0.000                   | 0.000                    | 0.000                   | 아니오   |\n| 5   | 0.000                    | 0.000                   | 0.516                    | 0.491                   | 아니오   |\n| 6   | 0.999                    | 0.999                   | 0.901                    | 0.898                   | 예       |\n| 7   | 1.000                    | 1.000                   | 0.959                    | 0.973                   | 예       |\n| 8   | 1.000                    | 1.000                   | 0.986                    | 0.991                   | 예       |\n| 9   | 1.000                    | 1.000                   | 0.994                    | 0.995                   | 예       |\n| 10  | 1.000                    | 1.000                   | 0.992                    | 0.996                   | 예       |\n| 11  | 1.000                    | 1.000                   | 0.995                    | 0.998                   | 예       |\n| 12  | 1.000                    | 1.000                   | 0.994                    | 0.994                   | 예       |\n| 13  | 1.000                    | 1.000                   | 0.993                    | 0.999                   | 예       |\n| 14  | 1.000                    | 1.000                   | 0.995                    | 0.999                   | 예       |\n| 15  | 1.000                    | 1.000                   | 0.994                    | 0.995                   | 예       |\n\n## recharts · Haiku 5.5\n\n| K   | 높음 (skill vs baseline) | 높음 (skill vs placebo) | 동등 (skill vs baseline) | 동등 (skill vs placebo) | 0.8 충족 |\n| --- | ------------------------ | ----------------------- | ------------------------ | ----------------------- | -------- |\n| 3   | 0.000                    | 0.000                   | 0.000                    | 0.000                   | 아니오   |\n| 4   | 0.000                    | 0.000                   | 0.000                    | 0.000                   | 아니오   |\n| 5   | 0.000                    | 0.000                   | 0.518                    | 0.508                   | 아니오   |\n| 6   | 1.000                    | 1.000                   | 0.886                    | 0.904                   | 예       |\n| 7   | 1.000                    | 1.000                   | 0.966                    | 0.968                   | 예       |\n| 8   | 1.000                    | 1.000                   | 0.981                    | 0.985                   | 예       |\n| 9   | 1.000                    | 1.000                   | 0.995                    | 0.990                   | 예       |\n| 10  | 1.000                    | 1.000                   | 0.994                    | 0.996                   | 예       |\n| 11  | 1.000                    | 1.000                   | 0.997                    | 0.997                   | 예       |\n| 12  | 1.000                    | 1.000                   | 0.997                    | 0.995                   | 예       |\n| 13  | 1.000                    | 1.000                   | 0.997                    | 1.000                   | 예       |\n| 14  | 1.000                    | 1.000                   | 0.995                    | 0.993                   | 예       |\n| 15  | 1.000                    | 1.000                   | 0.996                    | 0.998                   | 예       |\n\n## swagger-typescript-api · Sonnet 5.5\n\n| K   | 높음 (skill vs baseline) | 높음 (skill vs placebo) | 동등 (skill vs baseline) | 동등 (skill vs placebo) | 0.8 충족 |\n| --- | ------------------------ | ----------------------- | ------------------------ | ----------------------- | -------- |\n| 3   | 0.000                    | 0.000                   | 0.000                    | 0.000                   | 아니오   |\n| 4   | 0.000                    | 0.000                   | 0.000                    | 0.000                   | 아니오   |\n| 5   | 0.000                    | 0.000                   | 0.464                    | 0.457                   | 아니오   |\n| 6   | 1.000                    | 1.000                   | 0.890                    | 0.880                   | 예       |\n| 7   | 1.000                    | 1.000                   | 0.971                    | 0.963                   | 예       |\n| 8   | 1.000                    | 1.000                   | 0.980                    | 0.983                   | 예       |\n| 9   | 1.000                    | 1.000                   | 0.993                    | 0.993                   | 예       |\n| 10  | 1.000                    | 1.000                   | 0.996                    | 0.994                   | 예       |\n| 11  | 1.000                    | 1.000                   | 0.997                    | 0.994                   | 예       |\n| 12  | 1.000                    | 1.000                   | 0.994                    | 0.996                   | 예       |\n| 13  | 1.000                    | 1.000                   | 0.994                    | 0.995                   | 예       |\n| 14  | 1.000                    | 1.000                   | 0.995                    | 0.999                   | 예       |\n| 15  | 1.000                    | 1.000                   | 0.995                    | 0.990                   | 예       |\n\n## swagger-typescript-api · Haiku 5.5\n\n| K   | 높음 (skill vs baseline) | 높음 (skill vs placebo) | 동등 (skill vs baseline) | 동등 (skill vs placebo) | 0.8 충족 |\n| --- | ------------------------ | ----------------------- | ------------------------ | ----------------------- | -------- |\n| 3   | 0.000                    | 0.000                   | 0.000                    | 0.000                   | 아니오   |\n| 4   | 0.000                    | 0.000                   | 0.000                    | 0.000                   | 아니오   |\n| 5   | 0.000                    | 0.000                   | 0.001                    | 0.002                   | 아니오   |\n| 6   | 0.010                    | 0.014                   | 0.000                    | 0.000                   | 아니오   |\n| 7   | 0.019                    | 0.017                   | 0.000                    | 0.000                   | 아니오   |\n| 8   | 0.014                    | 0.014                   | 0.000                    | 0.000                   | 아니오   |\n| 9   | 0.021                    | 0.022                   | 0.000                    | 0.000                   | 아니오   |\n| 10  | 0.033                    | 0.033                   | 0.000                    | 0.000                   | 아니오   |\n| 11  | 0.030                    | 0.028                   | 0.000                    | 0.000                   | 아니오   |\n| 12  | 0.029                    | 0.030                   | 0.000                    | 0.000                   | 아니오   |\n| 13  | 0.024                    | 0.045                   | 0.000                    | 0.000                   | 아니오   |\n| 14  | 0.044                    | 0.043                   | 0.000                    | 0.000                   | 아니오   |\n| 15  | 0.029                    | 0.028                   | 0.000                    | 0.000                   | 아니오   |\n\n## K별 실행 수와 예상 소요 시간\n\n실행당 6.0분(--run-minutes), 동시 실행 4개로 계산했다. 동시 실행 묶음마다 실행 하나의 시간이 걸린다고 본다.\n\n| K   | 실행 수 | 예상 소요  |\n| --- | ------- | ---------- |\n| 3   | 36      | 54분       |\n| 4   | 48      | 1시간 12분 |\n| 5   | 60      | 1시간 30분 |\n| 6   | 72      | 1시간 48분 |\n| 7   | 84      | 2시간 6분  |\n| 8   | 96      | 2시간 24분 |\n| 9   | 108     | 2시간 42분 |\n| 10  | 120     | 3시간 0분  |\n| 11  | 132     | 3시간 18분 |\n| 12  | 144     | 3시간 36분 |\n| 13  | 156     | 3시간 54분 |\n| 14  | 168     | 4시간 12분 |\n| 15  | 180     | 4시간 30분 |\n\n## 결과\n\n- recharts · Sonnet 5.5: 두 가설의 높음·동등 비율이 모두 0.8 이상이 되는 가장 작은 K = 6 (실행 18개).\n- recharts · Haiku 5.5: 두 가설의 높음·동등 비율이 모두 0.8 이상이 되는 가장 작은 K = 6 (실행 18개).\n- swagger-typescript-api · Sonnet 5.5: 두 가설의 높음·동등 비율이 모두 0.8 이상이 되는 가장 작은 K = 6 (실행 18개).\n- swagger-typescript-api · Haiku 5.5: K = 3..15 어느 값에서도 두 가설의 높음·동등 비율이 모두 0.8 이상이 되지 않는다.\n",
+  "decisions": {
+    "K": "설계 7.1에 따라 스모크 실행(프로젝트·모델·조건마다 2회, 24회)의 점수 분산으로 모의실험했다. recharts·Sonnet, recharts·Haiku, swagger-typescript-api·Sonnet은 K=6부터 높음·동등 비율이 0.8을 넘었다. swagger-typescript-api·Haiku는 스모크 6회 가운데 1회가 턴 한도로 0점이 되어 표준편차 상한이 커졌고, K=3..15 어디서도 0.8에 닿지 않았다. 7.1의 4번 규칙대로 마감(2026-11-15 23:59) 안에 실행과 채점을 끝낼 수 있는 K=8로 정했다. K=8의 검출력은 세 칸에서 높음 1.000, 동등 0.98 이상이고, swagger-typescript-api·Haiku 칸은 높음 0.014, 동등 0.000이다. 이 칸의 판정 불가는 검출력 부족으로 해석한다.",
+    "limits": "설계 7.1의 2번 규칙(스모크 실행 최대값의 2배)을 정상 종료 실행에 적용했다. 턴 한도에 걸린 실행은 자연 종료 최대값이 없어 제외했다. 정상 종료 최대 91턴(recharts·Haiku·placebo), 최대 866초 → 182턴, 1,732초를 올려 29분.",
+    "runOrder": "두 모델을 동시에 실행한다(모델당 동시 2개). 실행 순서는 시드 20261115로 섞는다."
+  }
+}

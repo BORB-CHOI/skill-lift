@@ -2,7 +2,7 @@ import { mkdtempSync, rmSync, writeFileSync } from 'node:fs';
 import { tmpdir } from 'node:os';
 import { join } from 'node:path';
 import { afterAll, beforeAll, describe, expect, it } from 'vitest';
-import { buildArgs, runProcess } from '../../src/runner/claude.js';
+import { API_HOSTS, buildArgs, networkBlockEnv, runProcess } from '../../src/runner/claude.js';
 
 let dir = '';
 
@@ -35,15 +35,48 @@ describe('buildArgs', () => {
     const args = buildArgs({ ...base, pluginDir: null });
     expect(args[args.indexOf('--setting-sources') + 1]).toBe('');
     expect(args).toContain('--strict-mcp-config');
-    expect(args).toContain('--no-session-persistence');
+    // 두 번째 턴이 세션을 이어 받아야 하므로 세션 저장을 끄지 않는다.
+    expect(args).not.toContain('--no-session-persistence');
     const denied = args.slice(args.indexOf('--disallowedTools') + 1);
     expect(denied).toEqual(
       expect.arrayContaining(['WebFetch', 'Bash(curl:*)', 'Bash(npm install:*)']),
     );
   });
+
+  it('두 번째 턴은 --resume만 더한다', () => {
+    const first = buildArgs({ ...base, pluginDir: '/tmp/plugin' });
+    const second = buildArgs({ ...base, pluginDir: '/tmp/plugin', resumeSessionId: 'abc' });
+    expect(second.filter((a) => a !== '--resume' && a !== 'abc')).toEqual(first);
+    expect(second[second.indexOf('--resume') + 1]).toBe('abc');
+  });
+});
+
+describe('networkBlockEnv', () => {
+  it('닿지 않는 프록시를 걸고 API 호스트만 뺀다', () => {
+    const env = networkBlockEnv();
+    for (const key of ['HTTP_PROXY', 'HTTPS_PROXY', 'http_proxy', 'https_proxy']) {
+      expect(env[key]).toBe('http://127.0.0.1:9');
+    }
+    expect(env['NODE_USE_ENV_PROXY']).toBe('1');
+    expect(env['NO_PROXY']?.split(',')).toEqual([...API_HOSTS]);
+    expect(env['no_proxy']).toBe(env['NO_PROXY']);
+  });
 });
 
 describe('runProcess', () => {
+  it('지정한 환경 변수를 자식 프로세스에 넘긴다', async () => {
+    const show = script('env.mjs', `process.stdout.write(process.env.SKILL_EVAL_PROBE ?? 'none');`);
+    const r = await runProcess({
+      command: process.execPath,
+      args: [show],
+      cwd: dir,
+      prompt: '',
+      timeoutMs: 10_000,
+      env: { SKILL_EVAL_PROBE: 'yes' },
+    });
+    expect(r.stdout).toBe('yes');
+  });
+
   it('stdin으로 받은 한글 프롬프트와 출력이 깨지지 않는다', async () => {
     const echo = script(
       'echo.mjs',

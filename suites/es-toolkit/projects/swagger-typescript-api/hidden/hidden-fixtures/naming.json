@@ -1,0 +1,205 @@
+{
+  "openapi": "3.0.3",
+  "info": {
+    "title": "Naming edge cases",
+    "version": "1.0.0"
+  },
+  "servers": [
+    {
+      "url": "https://api.example.com"
+    }
+  ],
+  "paths": {
+    "/users/{user_id}": {
+      "get": {
+        "tags": [
+          "Rechnungsübersicht"
+        ],
+        "operationId": "getUserUsingGET",
+        "parameters": [
+          {
+            "name": "user_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "include_2nd_factor",
+            "in": "query",
+            "schema": {
+              "type": "boolean"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "ok",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/APIError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/users": {
+      "get": {
+        "tags": [
+          "Rechnungsübersicht"
+        ],
+        "operationId": "listUsingGET_1",
+        "responses": {
+          "200": {
+            "description": "ok"
+          }
+        }
+      }
+    },
+    "/auth/2nd-factor/methods": {
+      "get": {
+        "tags": [
+          "Café"
+        ],
+        "operationId": "list_2nd_factor_methods",
+        "responses": {
+          "200": {
+            "description": "ok",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/OAuth2Token"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/reports/{report_id}/crème-brûlée": {
+      "get": {
+        "tags": [
+          "Café"
+        ],
+        "parameters": [
+          {
+            "name": "report_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "ok"
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "APIError": {
+        "type": "object",
+        "properties": {
+          "code": {
+            "type": "integer"
+          },
+          "message": {
+            "type": "string"
+          },
+          "level": {
+            "type": "string",
+            "enum": [
+              "warning",
+              "fatal"
+            ]
+          }
+        }
+      },
+      "OAuth2Token": {
+        "type": "object",
+        "properties": {
+          "access_token": {
+            "type": "string"
+          }
+        }
+      },
+      "XMLDocument": {
+        "type": "object",
+        "properties": {
+          "body": {
+            "type": "string"
+          }
+        }
+      },
+      "HTTPStatusInfo": {
+        "type": "object",
+        "properties": {
+          "code": {
+            "type": "integer"
+          }
+        }
+      },
+      "api-error-detail": {
+        "type": "object",
+        "properties": {
+          "field": {
+            "type": "string"
+          }
+        }
+      },
+      "Rechnungsübersicht": {
+        "type": "object",
+        "properties": {
+          "summe": {
+            "type": "number"
+          },
+          "status": {
+            "type": "string",
+            "enum": [
+              "offen",
+              "bezahlt"
+            ]
+          }
+        }
+      },
+      "用户Controller": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          }
+        }
+      },
+      "Placement": {
+        "type": "string",
+        "enum": [
+          "1st",
+          "2nd",
+          "3rd",
+          "4th"
+        ]
+      },
+      "ReviewRound": {
+        "type": "integer",
+        "enum": [
+          1,
+          2,
+          3
+        ],
+        "x-enumNames": [
+          "Review1st",
+          "Review2nd",
+          "ReviewFinal"
+        ]
+      }
+    }
+  }
+}
