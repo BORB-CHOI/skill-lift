@@ -1,5 +1,10 @@
 import { describe, expect, it } from 'vitest';
-import { PROJECT_PROMPT, SKILL_PREFIX, projectPrompt } from '../../src/runner/prompts.js';
+import {
+  MINIMAL_PROMPT,
+  PROJECT_PROMPT,
+  SKILL_PREFIX,
+  projectPrompt,
+} from '../../src/runner/prompts.js';
 
 /** 사전 등록한 지시문 원문. 코드의 값이 바뀌면 이 테스트가 깨진다. */
 const REGISTERED =
@@ -14,5 +19,12 @@ describe('지시문', () => {
   it('arm별 접두만 앞에 붙인다', () => {
     expect(projectPrompt('')).toBe(PROJECT_PROMPT);
     expect(projectPrompt(SKILL_PREFIX)).toBe(`/es-toolkit:migrate ${PROJECT_PROMPT}`);
+  });
+
+  it('짧은 지시문은 채점 항목을 드러내는 문장을 담지 않는다', () => {
+    expect(MINIMAL_PROMPT).not.toMatch(/every use|dependencies|behaviou?r|package\.json/i);
+    expect(projectPrompt(SKILL_PREFIX, MINIMAL_PROMPT)).toBe(
+      `/es-toolkit:migrate ${MINIMAL_PROMPT}`,
+    );
   });
 });

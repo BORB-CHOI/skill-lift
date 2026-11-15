@@ -27,6 +27,8 @@ export interface SessionOptions {
   readonly workspace: string;
   /** 지시문 앞에 붙일 슬래시 명령. baseline은 ''. */
   readonly prefix: string;
+  /** 지시문 본문. 없으면 사전 등록한 PROJECT_PROMPT. */
+  readonly body?: string;
   readonly config: Omit<RunConfig, 'resumeSessionId'>;
   readonly expectation: ArmExpectation;
   readonly timeoutMs: number;
@@ -72,7 +74,7 @@ export async function runProjectSession(options: SessionOptions): Promise<Sessio
     command: options.command,
     args: [...(options.commandPrefixArgs ?? []), ...buildArgs(options.config)],
     cwd: options.workspace,
-    prompt: projectPrompt(options.prefix),
+    prompt: projectPrompt(options.prefix, options.body),
     timeoutMs: options.timeoutMs,
     env: options.env,
   });

@@ -7,7 +7,7 @@
  *     --max-turns <N> --timeout-min <분> [--projects recharts,swagger-typescript-api]
  *     [--arms baseline,skill,placebo] [--model claude-sonnet-5-5|claude-haiku-5-5]
  *     [--concurrency 4] [--seed 20261114] [--fixtures D:\Develop\eval-projects\fixtures]
- *     [--workspace-root <임시 폴더 위치>]
+ *     [--workspace-root <임시 폴더 위치>] [--prompt registered|minimal]
  *
  *   full   세 arm 전부. --arms로 줄일 수 있다.
  *   smoke  --projects와 --arms를 반드시 준다. 한도 설정과 파이프라인 확인용이다.
@@ -30,7 +30,7 @@ import { fileURLToPath } from 'node:url';
 import { parseArgs } from 'node:util';
 import { networkBlockEnv } from '../src/runner/claude.js';
 import { buildRunPlan, executePlan, type ArmPlan, type RunSpec } from '../src/runner/plan.js';
-import { PROJECT_PROMPT, SKILL_PREFIX } from '../src/runner/prompts.js';
+import { PROMPT_VARIANTS, SKILL_PREFIX, type PromptVariant } from '../src/runner/prompts.js';
 import { runProjectSession } from '../src/runner/session.js';
 import type { RunState } from '../src/runner/state.js';
 import {
@@ -55,6 +55,7 @@ const { values: opts } = parseArgs({
     'workspace-root': { type: 'string' },
     'max-turns': { type: 'string' },
     'timeout-min': { type: 'string' },
+    prompt: { type: 'string', default: 'registered' },
   },
   strict: true,
 });
@@ -104,6 +105,11 @@ const timeoutMin = Number(opts['timeout-min'] ?? process.env['SKILL_EVAL_TIMEOUT
 if (!(timeoutMin > 0)) throw new Error('--timeout-min(분)을 지정해야 한다');
 const timeoutMs = Math.round(timeoutMin * 60_000);
 const range = repeatRange(opts.repeats);
+if (!Object.hasOwn(PROMPT_VARIANTS, opts.prompt)) {
+  throw new Error(`--prompt는 ${Object.keys(PROMPT_VARIANTS).join(', ')} 가운데 하나여야 한다`);
+}
+const promptVariant = opts.prompt as PromptVariant;
+const promptBody = PROMPT_VARIANTS[promptVariant];
 
 const repoRoot = fileURLToPath(new URL('../', import.meta.url));
 const fixturesRoot = opts.fixtures;
@@ -219,7 +225,7 @@ writeFileSync(
     outRoot,
     `plan-${modelTag}-${mode}-${String(range.fromRepeat)}-${String(range.toRepeat)}.json`,
   ),
-  `${JSON.stringify({ label, mode, model, concurrency, seed, maxTurns, timeoutMs, fixturesRoot, workspaceRoot, fixtures, prompt: PROJECT_PROMPT, env, arms, repeats: range, plan }, null, 2)}\n`,
+  `${JSON.stringify({ label, mode, model, concurrency, seed, maxTurns, timeoutMs, fixturesRoot, workspaceRoot, fixtures, promptVariant, prompt: promptBody, env, arms, repeats: range, plan }, null, 2)}\n`,
   'utf8',
 );
 
@@ -250,6 +256,7 @@ async function attemptOnce(
       command: 'claude',
       workspace: ws.dir,
       prefix: arm.prefix,
+      body: promptBody,
       config: { model, maxTurns, emptyMcpConfig, pluginDir: arm.pluginDir },
       expectation: { expectedSkill: arm.expectedSkill, targetPrefix: TARGET_PREFIX },
       timeoutMs,
@@ -262,6 +269,7 @@ async function attemptOnce(
     state = result.state;
     meta = {
       ...spec,
+      promptVariant,
       state,
       attempt,
       model: result.model,

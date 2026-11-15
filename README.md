@@ -6,6 +6,8 @@ LLM 에이전트에게 Agent Skill(`SKILL.md`)을 줬을 때 **Skill이 내세�
 
 ## 결과
 
+**개발자가 Skill 없이 "lodash를 es-toolkit으로 바꿔줘"라고만 해도 결과는 Skill을 쓴 실행과 같았다. 이 과제에서 공식 Skill의 이점은 측정되지 않았다.**
+
 recharts와 swagger-typescript-api 전체를 lodash에서 es-toolkit으로 옮기는 과제에서 공식 Skill은 Sonnet 5.5와 Haiku 5.5의 실행 점수를 ±15pp 밖으로 바꾸지 않았다. 96회 실행, 오염 0회, 한도 도달 0회다.
 
 | 프로젝트               | 모델       | Skill − baseline    | Skill − placebo      | 판정                             |
@@ -15,7 +17,29 @@ recharts와 swagger-typescript-api 전체를 lodash에서 es-toolkit으로 옮�
 | swagger-typescript-api | Sonnet 5.5 | −0.9pp [−2.5, +0.0] | +6.3pp [−0.6, +16.7] | baseline 동등, placebo 판정 불가 |
 | swagger-typescript-api | Haiku 5.5  | −0.0pp [−1.3, +1.3] | +0.6pp [−0.8, +1.9]  | 둘 다 동등                       |
 
-괄호는 순열 검정을 뒤집은 95% 구간이다. 차이가 없었던 이유는 Skill 없는 baseline이 이미 97~100%를 통과했기 때문이다. baseline도 Skill이 권하는 "compat 먼저" 전략을 스스로 썼다(호출 지점의 77~99%). 남은 실패는 모든 조건에 공통이었다. recharts의 `throttle` 타이밍 차이(사람이 머지한 PR에도 있음)와 swagger-typescript-api의 d.ts 생성 오류(TS2742)다.
+괄호는 순열 검정을 뒤집은 95% 구간이다. 차이가 없었던 이유는 Skill 없는 baseline이 이미 97~100%를 통과했기 때문이다. Skill의 핵심은 함수마다 strict 진입점과 compat 진입점 가운데 무엇을 쓸지 정하는 절차인데, baseline도 Skill이 권하는 "compat 먼저" 전략을 스스로 썼다(호출 지점의 77~99%). strict로 바꿨다가 기존 테스트가 깨지면 compat으로 되돌리기도 했다. 남은 실패는 모든 조건에 공통이었다. recharts의 `throttle` 타이밍 차이(사람이 머지한 PR에도 있음)와 swagger-typescript-api의 d.ts 생성 오류(TS2742)다.
+
+`throttle` 실패는 에이전트의 실수가 아니라 es-toolkit 1.53.2의 compat 버그다. `{ leading: false, trailing: true }`에서 lodash는 대기 중인 trailing 호출을 실행하는데, compat은 이 호출을 버린다. 같은 문제가 [toss/es-toolkit#1611](https://github.com/toss/es-toolkit/issues/1611)로 보고됐고, [toss/es-toolkit#2201](https://github.com/toss/es-toolkit/pull/2201)이 2026-11-11에 고쳤다. 이 수정은 실험에 쓴 1.53.2(2026-11-06 릴리스)에 들어 있지 않고, 2026-11-15 기준 아직 릴리스되지 않았다. 숨김 검사가 upstream에서 실제로 고친 호환성 버그를 따로 잡아낸 셈이다.
+
+### 짧은 지시문으로 다시 측정
+
+위 판정은 요구사항(전부 교체, 의존성 제거, 기존 동작 유지)을 적은 지시문으로 실행한 결과다. 실제 개발자의 요청에 가깝게 요구사항을 뺀 지시문으로 baseline과 skill을 다시 8회씩 실행했다. 사전 등록 이후 추가한 탐색 실험이라 판정 대신 차이만 적는다.
+
+> Migrate this project from lodash to es-toolkit. es-toolkit 1.53.2 is already installed in node_modules. The network is offline, so do not run package installs. Do not ask questions; decide yourself.
+
+| 프로젝트               | 모델       | baseline | skill | Skill − baseline    |
+| ---------------------- | ---------- | -------- | ----- | ------------------- |
+| recharts               | Sonnet 5.5 | 97.3%    | 97.3% | +0.0pp [−0.0, +0.0] |
+| recharts               | Haiku 5.5  | 97.3%    | 96.3% | −1.0pp [−2.0, −0.0] |
+| swagger-typescript-api | Sonnet 5.5 | 98.1%    | 97.5% | −0.6pp [−2.5, +1.3] |
+| swagger-typescript-api | Haiku 5.5  | 99.6%    | 99.4% | −0.3pp [−1.3, +0.9] |
+
+점수 차이는 여전히 없었다. 행동 차이는 하나 있었다. lodash를 일부 남긴 실행이 skill 조건에서만 5회 나왔고 baseline에서는 0회였다.
+
+- swagger-typescript-api · Sonnet 5.5, 2회: 사용자 템플릿에 넘기는 `_` 객체를 lodash로 두고 의존성도 남겼다. 템플릿이 compat에 없는 lodash 함수를 부를 수 있다는 이유였다.
+- recharts · Haiku 5.5, 3회: 소스의 lodash는 모두 바꿨지만 `lodash`나 `@types/lodash`를 package.json에 남겼다.
+
+Skill의 "동작이 다르면 사용자에게 고르게 하라" 규칙을 따라 교체 범위를 보수적으로 잡은 것으로 보인다. 채점에서는 lodash 제거 항목 실패로 잡혀 Skill 쪽 점수가 조금 낮아졌다. swagger-typescript-api · Haiku 5.5의 baseline 1회는 정답 접근 검사에 걸려 집계에서 뺐다. 에이전트가 비교용으로 자기 작업 폴더의 HEAD를 임시 폴더에 `git worktree add`로 풀었는데, 이 경로가 검사 패턴에 걸렸다. 오탐에 가깝지만 본 실험과 같은 규칙을 적용했다. 전체 집계는 [docs/data/prompt-comparison.md](docs/data/prompt-comparison.md)에 있고 `pnpm tsx scripts/compare-prompts.ts 상세=main-project 짧음=minimal-prompt`로 다시 만들 수 있다.
 
 채점기는 lodash 제거 여부만 보는 검사가 놓치는 회귀도 잡았다. placebo 실행 1개가 lodash 체이닝 래퍼 `_(...)`를 남겨 런타임에 깨졌는데, lodash 제거·의존성 항목은 통과하고 기존 테스트 31개와 숨김 검사 17개가 실패했다.
 
@@ -126,6 +150,8 @@ docs/                           설계, 결과
 ## 한계
 
 - 프로젝트 두 개와 모델 두 개에 대한 판정이다. 다른 프로젝트로 일반화하지 않는다.
+- 두 프로젝트 모두 기존 테스트와 타입 검사가 있어 에이전트가 잘못 바꾼 곳을 스스로 찾을 수 있었다. 테스트가 부족한 프로젝트에서는 Skill의 판단 절차가 더 쓸모 있을 수 있지만 측정하지 않았다.
+- recharts는 전부 compat으로 기계적으로 바꿔도 `throttle` 1개만 실패하는 과제라 Skill이 개입할 여지가 처음부터 작았다.
 - 숨김 검사는 동작이 갈리는 지점을 사람이 골라 만든 것이라 모든 차이를 잡지는 못한다.
 - 슬래시 명령으로 Skill 호출을 강제했다. 자연어 요청에서 Skill이 자동으로 불리는지는 측정하지 않았다.
 - Skill이 내는 설명(기능 비교표, 문서 링크)의 품질은 채점하지 않는다.
