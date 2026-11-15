@@ -3,7 +3,7 @@
 **결론:** recharts와 swagger-typescript-api 전체를 lodash에서 es-toolkit으로 옮기는 과제에서, 공식 Skill `es-toolkit:migrate`는 Sonnet 5.5와 Haiku 5.5의 실행 점수를 Skill 없는 실행 대비 ±15pp 밖으로 바꾸지 않았다. 사전 등록한 판정 8개 가운데 7개가 "동등"이고, swagger-typescript-api · Sonnet 5.5의 placebo 대조 1개가 "판정 불가"다. "높다" 또는 "낮다"로 나온 판정은 없다.
 
 - 실행: 96회(프로젝트 2 × 모델 2 × 조건 3 × 반복 8), 2026-11-15
-- 사전 등록: 태그 `prereg-project-v1`(커밋 `c5ba9e9`), 판정 규칙은 [design.md](design.md) 6~8절
+- 사전 등록: 태그 `prereg-project-v1`(커밋 `c5ba9e9`), 판정 규칙은 [design.md](design.md) 6\~8절
 - 판정 보고서 원본: [data/main-project-report.md](data/main-project-report.md)
 - 실행별 요약: [data/main-project-runs.csv](data/main-project-runs.csv)
 
@@ -34,14 +34,14 @@ swagger-typescript-api · Sonnet 5.5의 placebo 판정이 불가로 나온 원�
 
 ## 2. 왜 차이가 없었나
 
-Skill 없는 baseline이 이미 97~100%를 통과했다. 세 조건이 공통으로 놓친 항목은 두 종류뿐이었고, 둘 다 Skill 내용과 상관없이 생겼다.
+Skill 없는 baseline이 이미 97\~100%를 통과했다. 세 조건이 공통으로 놓친 항목은 두 종류뿐이었고, 둘 다 Skill 내용과 상관없이 생겼다.
 
 | 공통 실패 항목                                      | 실패 실행                                                                                   | 원인                                                                                                                                                                                                         |
 | --------------------------------------------------- | ------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
 | recharts 숨김 검사 `recharts-lodash-23`(`throttle`) | 48/48, 모든 조건                                                                            | `ResponsiveContainer`의 `throttle(leading: false, trailing: true)`를 es-toolkit으로 옮기면, `wait` 이후에 들어온 호출이 대기 중인 trailing 호출을 취소한다. 사람이 머지한 PR #5811도 같은 지점에서 실패한다. |
 | swagger-typescript-api `typecheck`(tsdown 빌드)     | Sonnet: baseline 1/8, skill 4/8, placebo 6/8<br>Haiku: baseline 2/8, skill 2/8, placebo 3/8 | `lodash` 기본 객체를 `es-toolkit/compat`의 `_`로 바꾸면 공개 API `generateApi`의 타입이 `es-toolkit/dist/compat/toolkit.mjs`를 참조하게 되어 d.ts 생성이 TS2742로 실패한다.                                  |
 
-Skill이 권하는 전략을 따랐는지도 측정했다. Skill(`SKILL.md` Option B)과 es-toolkit 문서는 "먼저 `es-toolkit/compat`으로 바꾸고, 그다음 본체로 옮긴다"를 권한다. 그런데 baseline도 lodash 호출 지점의 77~99%를 compat으로 옮겼다. 모델이 이미 이 전략을 알고 있어서 Skill이 덧붙일 정보가 거의 없었다.
+Skill이 권하는 전략을 따랐는지도 측정했다. Skill(`SKILL.md` Option B)과 es-toolkit 문서는 "먼저 `es-toolkit/compat`으로 바꾸고, 그다음 본체로 옮긴다"를 권한다. 그런데 baseline도 lodash 호출 지점의 77\~99%를 compat으로 옮겼다. 모델이 이미 이 전략을 알고 있어서 Skill이 덧붙일 정보가 거의 없었다.
 
 | 프로젝트 · 모델                     | compat으로 옮긴 호출 지점 비율 (baseline / skill / placebo) |
 | ----------------------------------- | ----------------------------------------------------------- |
@@ -89,7 +89,7 @@ swagger-typescript-api의 `SchemaFormatters.formatDescription`은 lodash 체이�
 | `b857ead`           | `vitest.config.ts` 추가. 저장소 자체 테스트가 숨김 검사 파일까지 실행하던 CI 문제를 고쳤다.                                                                                                                                                       | 없음      |
 | 이 결과와 같은 커밋 | 보고서 6·7절 집계 수정. 비용·시간·턴 함수가 파일 단위 설계의 `meta.turns`만 읽어 빈 값이 나왔고, "Skill 로드"가 Skill 목록이 비어 있지 않은지만 봐서 baseline도 100%로 나왔다. `meta.turn`도 읽고 `es-toolkit:migrate` 포함 여부를 세도록 고쳤다. | 없음      |
 
-두 변경 모두 실행기, 채점기, 판정 계산(1~5절)을 건드리지 않았다.
+두 변경 모두 실행기, 채점기, 판정 계산(1\~5절)을 건드리지 않았다.
 
 ## 7. 이 결과로 말할 수 있는 것과 없는 것
 
