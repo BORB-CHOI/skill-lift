@@ -19,8 +19,6 @@ recharts와 swagger-typescript-api 전체를 lodash에서 es-toolkit으로 옮�
 
 괄호는 순열 검정을 뒤집은 95% 구간이다. 차이가 없었던 이유는 Skill 없는 baseline이 이미 97~100%를 통과했기 때문이다. Skill의 핵심은 함수마다 strict 진입점과 compat 진입점 가운데 무엇을 쓸지 정하는 절차인데, baseline도 Skill이 권하는 "compat 먼저" 전략을 스스로 썼다(호출 지점의 77~99%). strict로 바꿨다가 기존 테스트가 깨지면 compat으로 되돌리기도 했다. 남은 실패는 모든 조건에 공통이었다. recharts의 `throttle` 타이밍 차이(사람이 머지한 PR에도 있음)와 swagger-typescript-api의 d.ts 생성 오류(TS2742)다.
 
-`throttle` 실패는 에이전트의 실수가 아니라 es-toolkit 1.53.2의 compat 버그다. `{ leading: false, trailing: true }`에서 lodash는 대기 중인 trailing 호출을 실행하는데, compat은 이 호출을 버린다. 같은 문제가 [toss/es-toolkit#1611](https://github.com/toss/es-toolkit/issues/1611)로 보고됐고, [toss/es-toolkit#2201](https://github.com/toss/es-toolkit/pull/2201)이 2026-11-11에 고쳤다. 이 수정은 실험에 쓴 1.53.2(2026-11-06 릴리스)에 들어 있지 않고, 2026-11-15 기준 아직 릴리스되지 않았다. 숨김 검사가 upstream에서 실제로 고친 호환성 버그를 따로 잡아낸 셈이다.
-
 ### 짧은 지시문으로 다시 측정
 
 위 판정은 요구사항(전부 교체, 의존성 제거, 기존 동작 유지)을 적은 지시문으로 실행한 결과다. 실제 개발자의 요청에 가깝게 요구사항을 뺀 지시문으로 baseline과 skill을 다시 8회씩 실행했다. 사전 등록 이후 추가한 탐색 실험이라 판정 대신 차이만 적는다.
